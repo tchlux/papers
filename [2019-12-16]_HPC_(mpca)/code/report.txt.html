@@ -1,0 +1,802 @@
+
+    <!doctype html>
+    <meta charset="utf-8">
+
+    
+    <!-- Include Distill -->
+    <!-- <script src="https://distill.pub/template.v1.js"></script> -->
+     <script src="http://people.cs.vt.edu/tchlux/distill.template.v1.no-banner.js"></script> 
+    <!-- <script src="/Users/thomaslux/Git/txt_to_html/txt_to_html/resources/distill.template.v1.no-banner.js"></script> -->
+    
+    
+    <!-- Include MathJax -->
+     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+    <!-- <script type="text/javascript" async src="/Users/thomaslux/Git/txt_to_html/txt_to_html/resources/MathJax-2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML,local/local"></script> -->
+    
+    
+
+    <!-- Script for setting up the author block -->
+    <script type="text/front-matter">
+      title: On Identifying Important Subspaces for Approximation
+      description: 
+      authors:
+       - Tyler Chang: https://people.cs.vt.edu/thchang
+       - Thomas Lux: https://people.cs.vt.edu/tchlux
+
+      affiliations:
+       - thchang@vt.edu
+       - tchlux@vt.edu
+
+    </script>
+
+    <style type="text/css">
+
+
+      dt-article p {
+        text-align: justify;
+      }
+
+
+      dt-article ol, dt-article ul {
+        padding-left: 50px;
+      }
+
+      dt-article ul {
+        list-style: none;
+      }
+
+      dt-article h2 {
+        border-bottom: 1px solid #aaa;
+      }
+
+      dt-article h3 {
+        font-style: normal;
+      }
+
+      dt-article h4 {
+        font-size: 12pt;
+      }
+
+      dt-article li {
+        margin-bottom: 10px;
+      }
+
+      ul li:before {
+        content: "–  ";
+        margin-left: -1em
+      }
+
+      td {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-top: 7px !important;
+        padding-bottom: 7px !important;
+        line-height: 1.3 !important;
+      }
+
+      p.caption {
+        line-height: 1.3;
+        font-family: sans-serif;
+        font-size: 15px;
+        text-align: center;
+        color: #777;
+        margin-top: -30px;
+        padding-top: 0px;
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+
+    span.header {
+      display: block;
+      height: 3vh;
+      margin-top: -3vh;
+      visibility: hidden;
+    }
+
+    span.caption {
+      display: block;
+      height: 65vh;
+      margin-top: -65vh;
+      visibility: hidden;
+    }
+
+    .jump {
+      color: #333;
+      border-bottom: 1px solid #eee;
+    }
+
+    .jump:hover {
+      color: #888;
+      border-bottom: 1px dotted #eee;
+    }
+
+    </style>
+
+    <dt-article>
+    <h1>On Identifying Important Subspaces for Approximation</h1>
+    <p></p>
+    <dt-byline></dt-byline>
+
+    
+<p>
+
+</p><span class='header' id='Introduction'></span><h2> Introduction</h2>
+
+<p>Dimension reduction is an important problem in data science and, more
+generally, function approximation. Consider a multivariable function
+\(f : \mathbb{R}^d \rightarrow (S, d)\) where \((S,d)\) denotes a metric
+space with metric \(d\). In the context of data science, \((S,d)\) could
+represent a discrete classification space, a continuous real-valued
+space, or could be descriptive of some graph structure. In this paper,
+the supervised learning problem is considered, where a finite set \(X
+\subset \mathbb{R}^d\) of data points are given along with labeled
+function values \(Y = \{y_i = f(x_i) | x_i \in X\}\).  There are many
+algorithms in the field of data science, mathematics, and machine
+learning for predicting such functions such as multivariate spline
+approximations, neural networks, clustering algorithms, support vector
+machines/regressors, and many more. One particularly common yet
+effective class of solutions to these problems are distance based
+approximations such as k-nearest neighbor (KNN).  Though effective for
+many classes of problems, these methods depend on the premise that
+distance in the input space can be associated with change in the
+output class or value. While this assumption holds for most of the
+common "big data" problems, it is often the case that some number of
+directions in the input space have no bearing on the output
+class/value. Without applying dimension reduction, these directions
+will increase the cost of any distance based approximation techniques,
+in some cases making the techniques computationally intractable.
+Furthermore, such "meaningless directions" cannot improve prediction
+accuracy, and often decrease accuracy by disassociating distance from
+change in class/value.</p>
+
+<p>In this paper, a novel technique for performing dimension reduction is
+proposed that considers how the output \(f(x)\) changes given the data
+\(X\) and function value/labels \(Y\). Using this information, an
+orthonormal basis is constructed for a new subspace of \(\mathbb{R}^d\)
+where every direction is associated with some change in \(f\), thereby
+increasing the accuracy of distance based methods while often
+significantly reducing the dimension. The technique is model agnostic,
+meaning that it can be applied as a "pre-conditioning" step before any
+distance based approximation. The effectiveness of the technique is
+demonstrated on one theoretical and three real-world functions, using
+four different distance based approximation algorithms and a
+multi-layer perceptron (MLP).</p>
+<span class='header' id='Background'></span><h2> Background</h2>
+<span class='header' id='Related Work'></span><h3> Related Work</h3>
+
+<p>One of the most standard methods for performing dimension reduction is
+correlation analysis, whereby a general model<dt-fn>The model may be a
+multivariable linear or quadratic model, possibly with interaction
+terms.</dt-fn> is fit<dt-fn>Most commonly fits are performed via least-squares
+approximation.</dt-fn> to the data and the coefficients of each term are
+analyzed to determine whether that term has any effect on the
+output. After dropping all terms that have no statistically
+significant effect on the function value, it can be inferred that only
+the directions associated with the remaining terms affect the output
+class or function value. These techniques are highly effective when an
+appropriate model is chosen, but are highly model dependent and
+generally fail for a black-box output function \(f\). For example, this
+technique is most commonly applied by fitting a linear model to
+labeled data. Then, if the function \(f\) is not itself approximately
+linear, the above technique can fail to produce any meaningful
+results.</p>
+
+<p>Principle component analysis (PCA) is another commonly used as a
+dimension reduction technique. An explanation of Principle Component
+Analysis and its applications can be found in
+<dt-cite key="PCAtutorial,powell_lehe_2014"></dt-cite>. Given a finite set of unlabeled
+points \(X \subset \mathbb{R}^d\), PCA identifies an ordered set of
+orthonormal basis vectors \(\{v_1, \ldots, v_d\},\) such that the
+projection of \(X\) onto any subspace defined by the span of \(\{v_1,
+\ldots, v_k\},\) \(k \leq d\) has maximal variance. Equivalently, PCA is
+the dimension reduction technique that minimizes reconstruction error
+for \(X\) with respect to mean squared error (MSE). In its standard
+application, PCA is an unsupervised technique, and does not consider
+the effect of each dimension on output class or function values.</p>
+
+<p>Recently a modified variant of PCA was proposed which incorporates
+function values into the subspace basis and the technique is referred
+to as <i>supervised PCA</i> <dt-cite key="barshan2011supervised"></dt-cite>. However this
+technique relies on the coefficients of a linear fit and faces the
+same nonlinear approximation weaknesses (as will be demonstrated in a
+theoretical example).</p>
+
+<p>Other notable techniques include linear discriminant analysis (LDA)
+and neural network autoencoders. LDA depends heavily on linear
+separability of the output classes, and therefore can fail for a
+general function \(f\). In their most naive implementation,
+autoencoders are equivalent to standard PCA. However, they can be
+modified to also consider output labels, though no convergence
+guarantees can be made and the results are purely heuristic. Other
+feature weighting techniques have been studied for clustering and
+generic learning algorithms
+<dt-cite key="FeatureWeightingForClustering,FeatureWeightingReview"></dt-cite>, and in
+general a lot of work has been done on feature selection given a model
+<dt-cite key="FeatureSurvey,tenenbaum2000global"></dt-cite>. Those survey papers
+extensively cover existing techniques and approaches for weighting
+(continuous valued) and selecting (binary operation) features of data
+for making accurate approximations.</p>
+<span class='header' id='Approximation Techniques'></span><h3> Approximation Techniques</h3>
+
+<p>Four distance based approximation techniques are used to validate the
+proposed dimension reduction technique and additionally a classic
+neural network is tested. The first approximation algorithm is
+k-nearest neighbor using the 2-norm distance with \(k=1,\) and the
+second is the same method with \(k=10.\) By sorting points in a tree,
+k-nearest neighbors is able to scale linearly with the input dimension
+and near logarithmically with respect to number of input points. The
+second technique is the modified linear Shepard's method called LSHEP
+<dt-cite key="thacker2010algorithm"></dt-cite>. LSHEP incorporates a local linear fit into
+the the original Shepard's method <dt-cite key="shepard1968two"></dt-cite>, an inverse
+distance weighting technique that scales linearly with dimension and
+linearly with number of points. The final distance based technique
+uses the Delaunay triangulation, a piecewise linear interpolant based
+on a simplicial mesh of the same name <dt-cite key="chang2018polynomial"></dt-cite>. Of the
+above techniques, Delaunay is the most computationally expensive,
+scaling approximately linearly with number of points, but growing
+prohibitively expensive in dimension greater than 50. The last
+technique for general comparison is a classic neural network called a
+Multi-Layer Perceptron (MLP). This work uses the implementation
+available at <dt-cite key="scikit-learn"></dt-cite> while choosing the Rectified Linear Unit
+(ReLU) activation function and Stochastic Gradient Descent (SGD) error
+minimizer. 1000 gradient steps are allowed to be taken and the
+default number of hidden nodes (100) is used with one hidden layer.</p>
+<span class='header' id='Methodology'></span><h2> Methodology</h2>
+
+<p>A a novel application of Principle Component Analysis is proposed in
+order to perform dimension reduction in a supervised learning
+context. The method will be referred to as Metric PCA (MPCA).</p>
+
+<p>Let \(f : \mathbb{R}^d \rightarrow (S,d)\) be an arbitrary function of
+interest, where \((S,d)\) is a metric space.
+Let \(X \subset \mathbb{R}^d\) be a finite set of points with known
+function values (labels) \(Y = \{y_i = f(x_i) | x_i \in X\}\).</p>
+
+<p>Consider the set \(Z\) of vectors</p>
+
+<p>
+$$ Z = \bigg\{ \frac{(x_i - x_j)\  d(y_i, y_j)}{\|(x_i - x_j)\|_2^2} : \quad x_i, x_j \in X, \quad y_i, y_j \in Y, \bigg\}$$</p>
+
+<p>with covariance matrix \(Cov(Z).\) Note that since \(Cov(Z)\) is
+symmetric, its Eigenvectors are orthogonal and form a basis for
+\(\mathbb{R}^d\). Note that if the original set \(X\) contains
+\(n\) points, then the new set \(Z\) must contain \(\sim n^2\)
+points, since it consists of all vectors <i>between</i> points in \(X\),
+rescaled by change in their corresponding function values (in \(Y\)).</p>
+
+<p>An Eigenvector decomposition is performed on \(Cov(Z),\) then reduce to
+the lower-dimensional space spanned by its first \(k\) Eigenvectors,
+ranked by the magnitude of their corresponding Eigenvalues (i.e., PCA
+on the new set \(Z\)). A <i>magnitude</i> is assigned to each vector by
+computing the <i>total variation</i> of the function along each Eigenvector
+and normalizing the sum of magnitudes to be one. In practice, instead
+of performing an Eigenvector decomposition on \(Cov(Z),\) a singular
+value decomposition is performed on the matrix \(\displaystyle
+Z^\star\), whose rows are transposed vectors in \(Z\). Then, \(Z^\star = U
+\Sigma V^T\), and the columns of \(V\) are exactly the Eigenvectors of
+\(Cov(Z).\)</p>
+<span class='header' id='Equivalence of PCA and MPCA Under Distance Metric'></span><h3> Equivalence of PCA and MPCA Under Distance Metric</h3>
+
+<p>In this section it is shown that in the special case where \(d(y_i,y_j)
+= \|x_i - x_j\|_2\), MPCA is identical to PCA.</p>
+
+<p>Given \(X\) as stated above, if the set of all pairwise difference
+vectors \(Z\) is considered, then \(PCA(Z) = PCA(X).\) Denote \(Z_j\) to be
+the subset of \(Z\) about vertex \(x_j \in X,\) \(Z_j = \{x_j - x_i : x_i
+\in X\}.\)</p>
+
+<p>This conclusion is achieved by considering the first principle
+component of \(X,\) \(v_1 \in \mathbb{R}^d.\) It is noted that the first
+principle component of \(Z\) is the same.</p>
+
+<p><p style='padding-left: 60px; margin-top: 0px; margin-bottom: 0px;'>
+$$\begin{align}
+      \max_{\|v\|_2 = 1} \|Zv\|_2 = &\max_{\|v\|_2 = 1} \|Zv\|_2^2 \\
+      = &\max_{\|v\|_2 = 1} \textstyle{\sum_{z \in Z}} \langle z, v \rangle^2 \\
+      = &\max_{\|v\|_2 = 1} \textstyle{\sum_{Z_j \subset Z} \sum_{z \in Z_j}} \langle z, v \rangle^2 \\
+      \leq &\ \textstyle{\sum_{Z_j \subset Z} \max_{\|v\|_2 = 1} \sum_{z \in Z_j}} \langle z, v \rangle^2 \\
+      = &\ \textstyle{\sum_{Z_j \subset Z} \sum_{z \in Z_j}} \langle z, v_1 \rangle^2 \\
+      = &\ \textstyle{\sum_{z \in Z}} \langle z, v_1 \rangle^2 \\
+      = &\ \|Zv_1\|_2^2 \\
+      \\
+      \implies\max_{\|v\|_2 = 1} \|Zv\|_2 &= \|Zv_1\|_2.
+     \end{align}$$</p></p>
+
+<p>After removing the first component from each vector in \(Z\), the same
+technique can be reapplied to find the second component. This
+methdology can be applied to the remaining components in an inductive
+fashion, to show total equivalence of the principle components for \(X\)
+and \(Z.\)</p>
+<span class='header' id='Demonstration'></span><h3> Demonstration</h3>
+
+<p>Consider the following example. In this, \(X^{(50\ \times\ 2)}\) is a
+random sample of points drawn from the unit cube and the values come from a
+function \(f: \mathbb{R}^2 \rightarrow \mathbb{R},\) defined as \(f(x,y)
+= x^2\) and note that this only depends on the \(x\) direction. On the
+right the set \(Z\) can be seen with the computed (and scaled) principle
+components.</p>
+
+<p><iframe src='https://people.cs.vt.edu/tchlux/files/[2018-11-28]_mpca_demo_2.html' frameBorder='0' style='height: 420px; width: 510px;'></iframe></p>
+
+<p>
+The above plot displays a characteristic example of a set of points
+that are not distributed according the direction of greatest change in
+the underlying function. This causes PCA to produce distinctly
+different vectors from MPCA, noting that the standard principle
+components are not even ordered correctly in terms of importance. The
+symmetric underlying function would also cause <i>supervised PCA</i> to
+fail on this problem as well, since no meaningful linear fit can be
+produced.</p>
+<span class='header' id='Evaluation'></span><h3> Evaluation</h3>
+
+<p>To further evaluate the performance of MPCA, it is applied on three
+real-world problems. Specifically, MPCA is applied on two image
+classification problems and one regression problem (Yelp rating
+prediction). First, the performance of four common approximation
+algorithms applied to the raw training data is evaluated using
+four-fold cross validation. Then, the dimension is reduced to various
+percentages of the total dimension using both MPCA and PCA and the
+performance of each algorithm is reevaluated. Recall that when \(X\)
+contains \(n\) data points, the transformed set \(Z\) contains \(\sim n^2\)
+points. Therefore, MPCA requires the singular value decomposition of a
+matrix \(\displaystyle Z^\star\) with \(d\) columns and \(\mathcal{O}(n^2)\)
+rows.  Since this is not computationally feasible when \(n\) is large,
+instead a random sample of some subset of vectors in \(Z\) is taken.</p>
+
+<p>In particular, all combinations of the following are tested:</p>
+
+<table>
+<tr><td> </td><td> </td></tr>
+
+<tr><td> Methods </td><td> PCA, MPCA </td></tr>
+
+<tr><td> Approximators </td><td> KNN (1), KNN (10), LSHEP, Delaunay, MLP </td></tr>
+
+<tr><td> Number of samples (for MPCA) </td><td> n, 10n </td></tr>
+
+<tr><td> Fraction of original dimension (for reduction) </td><td> \(\frac{1}{3},\) \(\frac{1}{10},\) \(\frac{1}{100}\) </td></tr></table>
+<span class='header' id='Results'></span><h2> Results</h2>
+
+<p><i> <b>Yelp</b> </i> <dt-cite key="yelp2018vegas"></dt-cite> is a collection of 479 American-style
+restaurant ratings from Las Vegas. Most of the data is composed of
+categorical descriptors, there are 63 features. This is a regression
+problem, where the algorithm predicts the star rating of a restaurant
+on 0-5 scale with .5 intervals.</p>
+
+<p><i> <b>MNIST</b> </i> <dt-cite key="lecun_cortes_burges_2008"></dt-cite> is a collection 60,000
+images that are randomly reduced to 10,000 black and white images,
+each with shape [28 x 28] having 784 channels. The data poses a
+classification problem with 10 unique classes, which are 10 digits
+handwritten.</p>
+
+<p><i> <b>CIFAR10</b> </i> <dt-cite key="krizhevsky2009learning"></dt-cite> is a collection of 50,000
+images that are randomly reduced to 10,000 color images, each with
+shape [32 x 32 x 3] having 3072 channels in total. The data poses a
+classification problem with 10 unique classes that are common objects.</p>
+
+<p>Following are the first 12 vectors obtained by metric principle
+components analysis on the MNIST data.</p>
+
+<p><p style='margin-top:0; margin-bottom:0;'><img src='https://people.cs.vt.edu/tchlux/files/[2018-11-28]_MNIST_12_MPCA_Components.png' width='90%' style='margin: 0px 20px 0px 20px; display: inline-block;'></p></p>
+
+<p>Following are the first 12 vectors obtained by metric principle
+components analysis on the CIFAR10 data.</p>
+
+<p><p style='margin-top:0; margin-bottom:0;'><img src='https://people.cs.vt.edu/tchlux/files/[2018-11-28]_CIFAR10_12_MPCA_Components.png' width='90%' style='margin: 0px 20px 0px 20px; display: inline-block;'></p></p>
+
+<p>Notice how the first components are drastically different even though
+both tasks are for computer vision classification. This is expected,
+because recognizing the differences between handwritten digits and
+generic objects (with 3-dimensional orientations) are drastically
+different problems. Next, prediction errors with varying dimension for
+MPCA versus PCA are presented.</p>
+
+<p><iframe src='https://people.cs.vt.edu/tchlux/files/[2018-11-28]_tgds_errors_hist.html' frameBorder='0' style='height: 420px; width: 510px;'></iframe></p>
+
+<p>In the above histogram, the prediction errors of KNN are computed via
+4-fold cross validation. From left to right, the three bars within
+each section show the performance of KNN with \(\{1/100,\) \(1/10,\)
+\(1/3\}\) of all features respectively.</p>
+
+<table>
+<tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+
+<tr><td><b>Data Name</b></td><td><b>Raw data</b></td><td><b>1/3 MPCA components</b></td><td><b>1/10 MPCA components</b></td><td><b>1/100 MPCA components</b></td></tr>
+
+<tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+
+<tr><td><i>Yelp<br>64 dim</i></td><td>0.493 (stars)</td><td><u>0.493 (stars)</u></td><td>0.496 (stars)</td><td>0.530 (stars)</td></tr>
+
+<tr><td><i>MNIST<br>784 dim</i></td><td>5.29%</td><td>5.26%</td><td><u>4.63%</u></td><td>13.43%</td></tr>
+
+<tr><td><i>CIFAR10<br>3072 dim</i></td><td>70.99%</td><td>70.23%</td><td>69.46%</td><td><u>62.46%</u></td></tr></table>
+
+<p>This table shows the prediction errors achieved with varying amounts
+of reduction. The underlined entries are the best observed prediction
+performance with the KNN algorithm. The <i>raw</i> column indicates that
+distance were computed over the original features.</p>
+
+<p>Finally, the best prediction results for each algorithm are presented.</p>
+
+<table>
+<tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+
+<tr><td><b>Data Set</b></td><td><b>Approximator</b></td><td><b>Reduction<br>Technique</b></td><td><b>Reduced<br>Dimension</b></td><td><b>Lowest<br>Mean<br>Error</b></td></tr>
+
+<tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+
+<tr><td> <i>Yelp</i> </td><td> Delaunay </td><td> PCA </td><td> 21 </td><td> 0.512 </td><td> </td></tr>
+
+<tr><td> <i>Yelp</i> </td><td> KNN (1) </td><td> MPCA </td><td> 6 </td><td> 0.610 </td><td> </td></tr>
+
+<tr><td> <i>Yelp</i> </td><td> KNN (10) </td><td> PCA </td><td> 6 </td><td> <u>0.493</u> </td><td> </td></tr>
+
+<tr><td> <i>Yelp</i> </td><td> LSHEP </td><td> raw </td><td> 63 </td><td> 0.678 </td><td> </td></tr>
+
+<tr><td> <i>Yelp</i> </td><td> MLPRegressor </td><td> PCA </td><td> 1 </td><td> 0.515 </td><td> </td></tr>
+
+<tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+
+<tr><td> <i>MNIST</i> </td><td> Delaunay </td><td> PCA </td><td> 8 </td><td> 0.132 </td><td> </td></tr>
+
+<tr><td> <i>MNIST</i> </td><td> KNN (1) </td><td> MPCA </td><td> 78 </td><td> <u>0.046</u> </td><td> </td></tr>
+
+<tr><td> <i>MNIST</i> </td><td> KNN (10) </td><td> MPCA </td><td> 78 </td><td> 0.051 </td><td> </td></tr>
+
+<tr><td> <i>MNIST</i> </td><td> LSHEP </td><td> PCA </td><td> 8 </td><td> 0.139 </td><td> </td></tr>
+
+<tr><td> <i>MNIST</i> </td><td> MLPRegressor </td><td> PCA </td><td> 261 </td><td> 0.133 </td><td> </td></tr>
+
+<tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+
+<tr><td> <i>CIFAR10</i> </td><td> Delaunay </td><td> PCA </td><td> 31 </td><td> <u>0.631</u> </td><td> </td></tr>
+
+<tr><td> <i>CIFAR10</i> </td><td> KNN (1) </td><td> MPCA </td><td> 31 </td><td> 0.681 </td><td> </td></tr>
+
+<tr><td> <i>CIFAR10</i> </td><td> KNN (10) </td><td> MPCA </td><td> 31 </td><td> 0.643 </td><td> </td></tr>
+
+<tr><td> <i>CIFAR10</i> </td><td> LSHEP </td><td> PCA </td><td> 31 </td><td> 0.650 </td><td> </td></tr>
+
+<tr><td> <i>CIFAR10</i> </td><td> MLPRegressor </td><td> raw </td><td> 3072 </td><td> 0.897 </td><td> </td></tr></table>
+
+<p>Notice that the empirical results demonstrate that MPCA is not
+guaranteed to be the best reduction technique even for strictly
+distance based prediction techniques. On the <i>Yelp</i> data, PCA still
+produces better results for 10-nearest neighbors. We suspect this is
+due to the reduction on \(Z\) and the increased variability introduced
+by the metric scaling.</p>
+
+<p>We do not consider these results exhaustive, nor do we devalue MPCA
+accordingly. In almost all cases the differences between the best PCA
+and MPCA predictors are less than \(1\%.\)</p>
+<span class='header' id='Discussion'></span><h2> Discussion</h2>
+
+<p>The error results for reduced-dimension problems using PCA and Metric
+PCA (MPCA) are remarkably similar. In almost all cases the MPCA
+reduction causes an improvement in prediction accuracy for nearest
+neighbor predictions, though the improvement is small. Although the
+theoretical examples demonstrate the potentially large difference
+between MPCA and PCA, in practice they appear to often be nearly
+equivalent. One could speculate that this is a contrived phenomenon,
+the only data that is kept in curated sets is data that represents a
+phenomenon of interest. MPCA is constructed to disregard data that is
+not useful, but for the data sets chosen in this work the underlying
+data is already distributed according to the functions being modeled.</p>
+<span class='header' id='Conclusion'></span><h2> Conclusion</h2>
+
+<p>The proposed technique, Metric PCA, demonstrates strong potential as a
+dimension reduction strategy for approximation problems. Analytically,
+Metric PCA is not susceptible to adverse data conditions that may
+cause PCA to disregard important dimensions for
+approximation. Empirically, the results obtained by MPCA and PCA are
+quite similar, suggesting that many curated data sets have the
+property that data descriptor variance corresponds closely to variance
+in the underlying function. Analytic and empirical results combined
+demonstrate the effectiveness of MPCA as a robust dimension reduction
+strategy for approximation.</p>
+
+
+    </dt-article>
+
+    
+<dt-appendix>
+</dt-appendix>
+
+
+    <script type="text/bibliography">
+
+
+
+@article{barshan2011supervised,
+  title={Supervised principal component analysis: Visualization, classification and regression on subspaces and submanifolds},
+  author={Barshan, Elnaz and Ghodsi, Ali and Azimifar, Zohreh and Jahromi, Mansoor Zolghadri},
+  journal={Pattern Recognition},
+  volume={44},
+  number={7},
+  pages={1357--1371},
+  year={2011},
+  publisher={Elsevier},
+  url={https://www.sciencedirect.com/science/article/abs/pii/S0031320310005819},
+}
+
+@article{FeatureSurvey,
+  title={Feature selection: A data perspective},
+  author={Li, Jundong and Cheng, Kewei and Wang, Suhang and Morstatter, Fred and Trevino, Robert P and Tang, Jiliang and Liu, Huan},
+  journal={ACM Computing Surveys (CSUR)},
+  volume={50},
+  number={6},
+  pages={94},
+  year={2017},
+  publisher={ACM},
+  url={https://arxiv.org/pdf/1601.07996},
+}
+
+@article{PCAtutorial,
+  title={A tutorial on principal component analysis},
+  author={Shlens, Jonathon},
+  journal={arXiv preprint arXiv:1404.1100},
+  year={2014},
+  url={https://arxiv.org/pdf/1404.1100.pdf},
+}
+
+@article{FeatureWeightingReview,
+  title={A review and empirical evaluation of feature weighting methods for a class of lazy learning algorithms},
+  author={Wettschereck, Dietrich and Aha, David W and Mohri, Takao},
+  journal={Artificial Intelligence Review},
+  volume={11},
+  number={1-5},
+  pages={273--314},
+  year={1997},
+  publisher={Springer},
+  url={https://search.proquest.com/docview/198027865},
+}
+
+ @article{FeatureWeightingForClustering,
+  title={Feature weighting in k-means clustering},
+  author={Modha, Dharmendra S and Spangler, W Scott},
+  journal={Machine learning},
+  volume={52},
+  number={3},
+  pages={217--237},
+  year={2003},
+  publisher={Springer},
+  url={https://link.springer.com/content/pdf/10.1023/A:1024016609528.pdf},
+}
+
+@misc{powell_lehe_2014, 
+  title={Principal Component Analysis explained visually},
+  journal={Explained Visually},
+  publisher={setosa.io},
+  author={Powell, Victor and Lehe, Lewis},
+  year={2014},
+  month={Oct},
+  url={http://setosa.io/ev/principal-component-analysis/},
+}
+
+@article{tenenbaum2000global,
+  title={A global geometric framework for nonlinear dimensionality reduction},
+  author={Tenenbaum, Joshua B and De Silva, Vin and Langford, John C},
+  journal={science},
+  volume={290},
+  number={5500},
+  pages={2319--2323},
+  year={2000},
+  publisher={American Association for the Advancement of Science},
+  url={http://science.sciencemag.org/content/sci/290/5500/2319.full.pdf},
+}
+
+@misc{lecun_cortes_burges_2008,
+  title={THE MNIST DATABASE},
+  journal={MNIST handwritten digit database, Yann LeCun, Corinna Cortes and Chris Burges},
+  publisher={Yann LeCun},
+  author={LeCun, Yann and Cortes, Corinna and Burges, Christopher J.C.},
+  year={2008},
+  month={Apr},
+  url={http://yann.lecun.com/exdb/mnist/},
+}
+
+@inproceedings{lux2018predictive,
+  title={Predictive modeling of I/O characteristics in high performance computing systems},
+  author={Lux, Thomas CH and Watson, Layne T and Chang, Tyler H},
+  booktitle={Proceedings of the High Performance Computing Symposium},
+  pages={8},
+  year={2018},
+  organization={Society for Computer Simulation International},
+  url={https://dl.acm.org/citation.cfm?id=3213077},
+}
+
+@inproceedings{shepard1968two,
+  title={A two-dimensional interpolation function for irregularly-spaced data},
+  author={Shepard, Donald},
+  booktitle={Proceedings of the 1968 23rd ACM national conference},
+  pages={517--524},
+  year={1968},
+  organization={ACM},
+  url={http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.154.6880&rep=rep1&type=pdf},
+}
+
+@inproceedings{chang2018polynomial,
+  title={A polynomial time algorithm for multivariate interpolation in arbitrary dimension via the Delaunay triangulation},
+  author={Chang, Tyler H and Watson, Layne T and Lux, Thomas CH and Li, Bo and Xu, Li and Butt, Ali R and Cameron, Kirk W and Hong, Yili},
+  booktitle={Proceedings of the ACMSE 2018 Conference},
+  pages={12},
+  year={2018},
+  organization={ACM},
+  url={http://people.cs.vt.edu/~thchang/files/delaunay-acmse.pdf},
+}
+
+@inproceedings{krizhevsky2009learning,
+  title={Learning multiple layers of features from tiny images},
+  author={Krizhevsky, Alex and Hinton, Geoffrey},
+  year={2009},
+  institution={Citeseer},
+  url={http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.222.9220&rep=rep1&type=pdf},
+}
+
+@misc{yelp2018vegas, 
+  title={American Style Restaurant Ratings in Las Vegas Nevada},
+  author={Yelp Incorporated},
+  publisher={World Wide Web},
+  year={2018},
+  month={Nov},
+  url={https://www.yelp.com/dataset},
+}
+
+@article{thacker2010algorithm,
+  title={Algorithm 905: SHEPPACK: Modified Shepard algorithm for interpolation of scattered multivariate data},
+  author={Thacker, William I and Zhang, Jingwei and Watson, Layne T and Birch, Jeffrey B and Iyer, Manjula A and Berry, Michael W},
+  journal={ACM Transactions on Mathematical Software (TOMS)},
+  volume={37},
+  number={3},
+  pages={34},
+  year={2010},
+  publisher={ACM},
+  url={https://vtechworks.lib.vt.edu/bitstream/handle/10919/20262/sheppack.pdf},
+}
+
+@article{scikit-learn,
+ title={Scikit-learn: Machine Learning in Python},
+ author={Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V.
+         and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P.
+         and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and
+         Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.},
+ journal={Journal of Machine Learning Research},
+ volume={12},
+ pages={2825--2830},
+ year={2011},
+ url={https://scikit-learn.org/stable/index.html},
+}
+</script>
+
+    
+<!--
+     ============================================= 
+          DISTILL PROPER USAGE AND FORMATTING      
+     ============================================= 
+
+        Article Foundation (can use h2 for description)    
+    =======================================================
+    <dt-article>
+      <h1> [title text] </h1>
+      <p> [description text] </p>
+      <dt-byline></dt-byline>
+      [article content]
+    </dt-article>
+    <dt-appendix>
+    </dt-appendix>
+    <script type="text/bibliography">
+      @article{,
+      title={},
+      author={},
+      journal={},
+      year={},
+      url={}
+      }
+      ...
+    </script>
+
+        Body and Headers    
+    ========================
+    <p></p>
+    <h1></h1>
+    <h2></h2>
+    <h3></h3>
+    <h4></h4>
+
+        Citations    
+    =================
+    <dt-cite key="[key name]"></dt-cite>
+
+        Code (use block for multiple lines)    
+    ===========================================
+    <dt-code block language="[language]">
+      [code]
+    </dt-code>
+
+        Footnotes    
+    =================
+    <dt-fn> [text] </dt-fn>
+
+        Lists (unordered uses <ul> instead)    
+    ===========================================
+    <p>
+      <ol>
+	<li> [entry text]
+      </ol>
+    </p>
+
+        Math    
+    ============
+    \( [inline math text] \)
+    $$ [newline math text]  $$
+
+        Styling    
+    ===============
+    <i> [italics] </i> 
+    <b> [bold] </b>
+    <br> [line break]
+    <font color="[color]"> [colored text] </font>
+
+        Tables    
+    ==============
+    <table>
+      <tr> [table row]
+	<td> [table column] </td> ...
+      </tr>
+    </table>
+
+         Custom Widths for Tables     
+    ==================================
+    <style type="text/css">
+      td {
+        width: 200px;
+        padding: 0px 0px 0px 50px;
+        background-color: #eee;
+      }
+    </style>
+
+
+    =======================
+        EXAMPLE ARTICLE
+    =======================
+
+    <!doctype html>
+    <meta charset="utf-8">
+    <script src="https://distill.pub/template.v1.js"></script>
+
+    <script type="text/front-matter">
+      title: "Article Title"
+      description: "Description of the post"
+      authors:
+      - Chris Olah: http://colah.github.io
+      - Shan Carter: http://shancarter.com
+      affiliations:
+      - Google Brain: http://g.co/brain
+      - Google Brain: http://g.co/brain
+    </script>
+
+    <dt-article>
+      <h1>Hello World</h1>
+      <h2>A description of the article</h2>
+      <dt-byline></dt-byline>
+      <p>This is the first paragraph of the article.</p>
+      <p>We can also cite <dt-cite key="gregor2015draw"></dt-cite> external publications.</p>
+    </dt-article>
+
+    <dt-appendix>
+    </dt-appendix>
+
+    <script type="text/bibliography">
+      @article{gregor2015draw,
+      title={DRAW: A recurrent neural network for image generation},
+      author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
+      journal={arXivreprint arXiv:1502.04623},
+      year={2015},
+      url={https://arxiv.org/pdf/1502.04623.pdf}
+      }
+    </script>
+
+-->
+
+
+    

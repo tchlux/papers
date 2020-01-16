@@ -1,0 +1,329 @@
+
+    <!doctype html>
+    <meta charset="utf-8">
+
+    
+    <!-- Include Distill -->
+    <!-- <script src="https://distill.pub/template.v1.js"></script> -->
+    <!-- <script src="http://people.cs.vt.edu/tchlux/distill.template.v1.no-banner.js"></script> -->
+     <script src="/Users/thomaslux/Git/txt_to_html/resources/distill.template.v1.no-banner.js"></script> 
+    
+    
+    <!-- Include MathJax -->
+    <!-- <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"> </script> -->
+     <script type="text/javascript" async src="/Users/thomaslux/Git/txt_to_html/resources/MathJax-2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML,local/local"></script> 
+    
+    
+
+    <!-- Script for setting up the author block -->
+    <script type="text/front-matter">
+      title: Useful Tidbits
+      description: 
+      authors:
+
+      affiliations:
+
+    </script>
+
+    <style type="text/css">
+      dt-article ol, dt-article ul {
+        padding-left: 50px;
+      }
+
+      dt-article ul {
+        list-style: none;
+      }
+
+      dt-article li {
+        margin-bottom: 10px;
+      }
+
+      ul li:before {
+        content: "–  ";
+        margin-left: -1em
+      }
+
+      td {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+    </style>
+
+    <dt-article>
+    <h1>Useful Tidbits</h1>
+    <p></p>
+    <dt-byline></dt-byline>
+
+    
+<p>
+</p><h2 id="Wrong \(p\)-norm Error Bound"> Wrong \(p\)-norm Error Bound</h2>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>Let \(X^{(n\ \times\ d)} \subset \mathbb{R}^d.\) Let</p>
+<p style='padding-left: 60px; margin-top: 0px; margin-bottom: 0px;'>
+$$\begin{align}
+        v_1 &= \max_{\substack{\|v\| = 1 \\ v \in \mathbb{R}^d}} \|X v\|_1, \text{ and } \\
+        v_2 &= \max_{\substack{\|v\| = 1 \\ v \in \mathbb{R}^d}} \|X v\|_2.
+      \end{align}$$</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>Notice that \(v_2\) is the first principle component of \(X.\) Now we have</p>
+<p style='padding-left: 60px; margin-top: 0px; margin-bottom: 0px;'>
+$$ \frac{\|Xv_1\|_1}{\sqrt{d}} \leq \|Xv_1\|_2 \leq \|Xv_2\|_2 \leq \|X v_2\|_1 \leq \|Xv_1\|_1, $$</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>which implies</p>
+<p style='padding-left: 60px; margin-top: 0px; margin-bottom: 0px;'>
+$$ \|Xv_1\|_1 \leq \sqrt{d} \|Xv_2\|_1, $$</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>and also</p>
+<p style='padding-left: 60px; margin-top: 0px; margin-bottom: 0px;'>
+$$\begin{align}
+        \|Xv_1\|_1 - \|Xv_2\|_1 &\leq \|Xv_1\|_1\big(1 - \textstyle{\frac{1}{\sqrt{d}}}\big) \\
+        &\leq \sqrt{d} \|Xv_2\|_1\big(1 - \textstyle{\frac{1}{\sqrt{d}}}\big) \\
+        &= \|Xv_2\|_1 (\sqrt{d} - 1).
+      \end{align}$$</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>This final inequality is a bound on the maximum difference between the absolute sum (\(1\)-norm) of the \(2\)-norm maximizing vector and the correct \(1\)-norm maximizing vector.</p></p>
+
+<p>\( \)</p>
+
+<p>
+<p style="page-break-after: always;"></p>
+</p>
+<h2 id="Equivalence of PCA Under Difference Operator"> Equivalence of PCA Under Difference Operator</h2>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>Given \(X\) as stated above, if we consider the set of all pairwise difference vectors \(Z,\) then \(PCA(Z) = PCA(X).\) Denote \(Z_j\) to be the subset of \(Z\) about vertex \(x_j \in X,\) \(Z_j = \{x_j - x_i : x_i \in X\}.\)</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>We will analyze this by considering the first principle component of \(X,\) \(v_1 \in \mathbb{R}^d.\) We will note that the first principle component of \(Z\) is the same.</p></p>
+
+<p><p style='padding-left: 60px; margin-top: 0px; margin-bottom: 0px;'>
+$$\begin{align}
+      &\max_{\|v\|_2 = 1} \|Zv\|_2 \\
+      = &\max_{\|v\|_2 = 1} \|Zv\|_2^2 \\
+      = &\max_{\|v\|_2 = 1} \textstyle{\sum_{z \in Z}} \langle z, v \rangle^2 \\
+      = &\max_{\|v\|_2 = 1} \textstyle{\sum_{Z_j \subset Z} \sum_{z \in Z_j}} \langle z, v \rangle^2 \\
+      \leq &\ \textstyle{\sum_{Z_j \subset Z} \max_{\|v\|_2 = 1} \sum_{z \in Z_j}} \langle z, v \rangle^2 \\
+      = &\ \textstyle{\sum_{Z_j \subset Z} \sum_{z \in Z_j}} \langle z, v_1 \rangle^2 \\
+      = &\ \textstyle{\sum_{z \in Z}} \langle z, v_1 \rangle^2 \\
+      = &\ \|Zv_1\|_2 \\
+      \\
+      \implies \|Zv_1\|_2 &= \displaystyle{\max_{\|v\|_2 = 1}} \|Zv\|_2.
+     \end{align}$$</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>The same methodology extended to the remaining components achieves total equivalence of the principle components for \(X\) and \(Z.\)</p></p>
+
+<p>\( \)</p>
+
+<p>
+<p style="page-break-after: always;"></p>
+
+</p><h2 id="Direction of Maximum Average Change"> Direction of Maximum Average Change</h2>
+<h3 id="Theorem"> Theorem</h3>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>Let \(S \subset \mathbb{R}^d\) be open and convex, let \(f: \mathbb{R}^d \rightarrow \mathbb{R}\) with \(\nabla f\) being \(\gamma\)-Lipschitz continuous under the \(2\)-norm in \(S.\) Let \(X = [x_1,\) \(x_2,\) \(\ldots,\) \(x_n],\) \(x_i \in S.\) We denote \(X_k = [x_1,\) \(\ldots,\) \(x_k]\) for \(k < n.\) Now, let \(M_{X_k}\) be the matrix that conditions the vectors in \(X_k\) such that the conditioning of the set of between vectors is maximized.</p></p>
+
+<p>\( \)</p>
+
+<p>
+<p style="page-break-after: always;"></p>
+</p>
+<h2 id="Maximizing the One-Norm"> Maximizing the One-Norm</h2>
+
+<p>\(\DeclareMathOperator*{\argmax}{arg\,max} \DeclareMathOperator*{\argmin}{arg\,min}\) The goal, stated formally is to compute </p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>
+$$ \max_{\|v\|_2 = 1} \big \| X^T v \big \|_1, $$</p></p>
+
+<p>given \(X = [x_1,\) \(\ldots,\) \(x_n],\) \(v, x_i \in \mathbb{R}^d.\) We start with the following theorem.</p>
+<h3 id="Theorem 2"> Theorem 2</h3>
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>Let \(X = \{x^{(1)},\) \(\ldots,\) \(x^{(n)}\},\) \(x^{(i)} \in \mathbb{R}^d,\) then</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>
+$$ \argmax_{\|v\|_2 = 1} \sum_{x^{(i)} \in X} \langle x^{(i)}, v \rangle = \frac{\sum_{x^{(i)} \in X} x^{(i)}}{\big \| \sum_{x^{(i)} \in X} x^{(i)} \big \|_2}. $$</p></p>
+
+<p><i> <b>Proof</b> </i>
+<p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>Let \(c \in \mathbb{R}^d,\) such that \(c_j = \sum_{x^{(i)} \in X} x^{(i)}_j,\) \(1 \leq j \leq d.\)</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>
+$$\begin{align}
+      \argmax_{\|v\|_2 = 1} \sum_{x^{(i)} \in X} \langle x^{(i)}, v \rangle &= \argmax_{\|v\|_2 = 1} \sum_{1 \leq j \leq d} \sum_{x^{(i)} \in X} v_j x_j^{(i)} \\
+      &= \argmax_{\|v\|_2 = 1} \sum_{1 \leq j \leq d} v_j \sum_{x^{(i)} \in X} x_j^{(i)} \\
+      &= \argmax_{\|v\|_2 = 1} \sum_{1 \leq j \leq d} v_j c_j \\
+      &= \argmax_{\|v\|_2 = 1} \langle v, c \rangle \\
+      &= \big \langle \textstyle{\frac{c}{\|c\|_2}}, c \big \rangle \\
+      \\
+      \implies v &= \frac{\sum_{x^{(i)} \in X} x^{(i)}}{\big \| \sum_{x^{(i)} \in X} x^{(i)} \big \|_2}.
+    \end{align} $$</p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>\(\square\)</p></p>
+
+<p>
+<p style="page-break-after: always;"></p>
+</p>
+
+<p>Let \(v_1\) be the unit length vector that achieves the maximum value of \(\| X^t v \|_1,\) \(v \in \mathbb{R}^d.\) Now we have</p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>
+$$\begin{align}
+      v_1 &= \argmax_{\|v\|_2 = 1} \| X^t v \|_1 \\
+          &= \argmax_{\|v\|_2 = 1} \sum_{x_i \in X} |\langle x_i, v \rangle| \\
+          &= \argmax_{\|v\|_2 = 1} \sum_{x_i \in X} \textstyle{\frac{|\langle x_i, v \rangle|}{\langle x_i, v \rangle}} \langle x_i, v \rangle \\
+        \\
+        \implies v_1 &= \frac{\sum_{x_i \in X} \textstyle{\frac{|\langle x_i, v_1 \rangle|}{\langle x_i, v_1 \rangle}} x_i}{\big \| \sum_{x_i \in X} \textstyle{\frac{|\langle x_i, v_1 \rangle|}{\langle x_i, v_1 \rangle}} x_i  \big \|_2}, \\
+    \end{align}$$</p></p>
+
+<p>where the last step is achieved by applying <a href="#Theorem 1"><i>Theorem 1</i></a> to the set of sign-adjusted vectors in \(X.\)</p>
+
+<p>From this necessary condition for achieving the maximum, one may construct the iterative technique</p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>
+$$ v_{t+1} = \sum_{x_i} \big( \textstyle{\frac{|\langle x_i, v_t \rangle|}{\langle x_i, v_t \rangle}} \big) x_i \ \bigg / \  \bigg \| \displaystyle{\sum_{x_i}} \big( \textstyle{\frac{|\langle x_i, v_t \rangle|}{\langle x_i, v_t \rangle}} \big) x_i \bigg \|_2. $$</p></p>
+
+<p>Unfortunately, it is possible for this iterative technique to fail to converge on the maximum.</p>
+
+<p>
+
+</p>
+
+<p>
+</p>
+
+    </dt-article>
+
+    
+
+    
+<script type="text/bibliography">
+</script>
+
+
+    
+<!--
+     ============================================= 
+          DISTILL PROPER USAGE AND FORMATTING      
+     ============================================= 
+
+        Article Foundation (can use h2 for description)    
+    =======================================================
+    <dt-article>
+      <h1> [title text] </h1>
+      <p> [description text] </p>
+      <dt-byline></dt-byline>
+      [article content]
+    </dt-article>
+    <dt-appendix>
+    </dt-appendix>
+    <script type="text/bibliography">
+      @article{,
+      title={},
+      author={},
+      journal={},
+      year={},
+      url={}
+      }
+      ...
+    </script>
+
+        Body and Headers    
+    ========================
+    <p></p>
+    <h1></h1>
+    <h2></h2>
+    <h3></h3>
+    <h4></h4>
+
+        Citations    
+    =================
+    <dt-cite key="[key name]"></dt-cite>
+
+        Code (use block for multiple lines)    
+    ===========================================
+    <dt-code block language="[language]">
+      [code]
+    </dt-code>
+
+        Footnotes    
+    =================
+    <dt-fn> [text] </dt-fn>
+
+        Lists (unordered uses <ul> instead)    
+    ===========================================
+    <p>
+      <ol>
+	<li> [entry text]
+      </ol>
+    </p>
+
+        Math    
+    ============
+    \( [inline math text] \)
+    $$ [newline math text]  $$
+
+        Styling    
+    ===============
+    <i> [italics] </i> 
+    <b> [bold] </b>
+    <br> [line break]
+    <font color="[color]"> [colored text] </font>
+
+        Tables    
+    ==============
+    <table>
+      <tr> [table row]
+	<td> [table column] </td> ...
+      </tr>
+    </table>
+
+         Custom Widths for Tables     
+    ==================================
+    <style type="text/css">
+      td {
+        width: 200px;
+        padding: 0px 0px 0px 50px;
+        background-color: #eee;
+      }
+    </style>
+
+
+    =======================
+        EXAMPLE ARTICLE
+    =======================
+
+    <!doctype html>
+    <meta charset="utf-8">
+    <script src="https://distill.pub/template.v1.js"></script>
+
+    <script type="text/front-matter">
+      title: "Article Title"
+      description: "Description of the post"
+      authors:
+      - Chris Olah: http://colah.github.io
+      - Shan Carter: http://shancarter.com
+      affiliations:
+      - Google Brain: http://g.co/brain
+      - Google Brain: http://g.co/brain
+    </script>
+
+    <dt-article>
+      <h1>Hello World</h1>
+      <h2>A description of the article</h2>
+      <dt-byline></dt-byline>
+      <p>This is the first paragraph of the article.</p>
+      <p>We can also cite <dt-cite key="gregor2015draw"></dt-cite> external publications.</p>
+    </dt-article>
+
+    <dt-appendix>
+    </dt-appendix>
+
+    <script type="text/bibliography">
+      @article{gregor2015draw,
+      title={DRAW: A recurrent neural network for image generation},
+      author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
+      journal={arXivreprint arXiv:1502.04623},
+      year={2015},
+      url={https://arxiv.org/pdf/1502.04623.pdf}
+      }
+    </script>
+
+-->
+
+
+    

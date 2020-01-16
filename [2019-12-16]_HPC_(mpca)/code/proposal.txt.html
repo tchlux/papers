@@ -1,0 +1,331 @@
+
+    <!doctype html>
+    <meta charset="utf-8">
+
+    
+    <!-- Include Distill -->
+    <!-- <script src="https://distill.pub/template.v1.js"></script> -->
+     <script src="http://people.cs.vt.edu/tchlux/distill.template.v1.no-banner.js"></script> 
+    <!-- <script src="/Users/thomaslux/Git/txt_to_html/resources/distill.template.v1.no-banner.js"></script> -->
+    
+    
+    <!-- Include MathJax -->
+     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"> </script> 
+    <!-- <script type="text/javascript" async src="/Users/thomaslux/Git/txt_to_html/resources/MathJax-2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML,local/local"></script> -->
+    
+    
+
+    <!-- Script for setting up the author block -->
+    <script type="text/front-matter">
+      title: Preconditioning Data to Improve Approximation Performance
+      description: 
+      authors:
+       - Tyler Chang: 
+       - Thomas Lux: 
+
+      affiliations:
+       - thchang@vt.edu
+       - tchlux@vt.edu
+
+    </script>
+
+    <style type="text/css">
+      dt-article ol, dt-article ul {
+        padding-left: 50px;
+      }
+
+      dt-article ul {
+        list-style: none;
+      }
+
+      dt-article li {
+        margin-bottom: 10px;
+      }
+
+      ul li:before {
+        content: "–  ";
+        margin-left: -1em
+      }
+
+      td {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+    </style>
+
+    <dt-article>
+    <h1>Preconditioning Data to Improve Approximation Performance</h1>
+    <p></p>
+    <dt-byline></dt-byline>
+
+    
+<p>
+</p><h2 id="TGDS Themes"> TGDS Themes</h2>
+
+<p><p style='padding-left: 15px; margin-top: 0px; margin-bottom: 0px;'><b>1) Theory-guided model design</b></p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>In this work we take advantage of data that is not properly scaled according to the phenomenon being modeled. We conjecture that we can improve the approximations of distance-based models by preconditioning the data such that each dimension is of nearly equal "importance".</p></p>
+
+<p><p style='padding-left: 15px; margin-top: 0px; margin-bottom: 0px;'><b>5) Creating Hybrid-Physics-Data (HPD) Models</b></p></p>
+
+<p><p style='padding-left: 30px; margin-top: 0px; margin-bottom: 0px;'>Natural physical phenomenon are not always measured on the same scale. (i.e. how do we weight resistance and length when predicting max-safe-amperage of a wire) This work provides a mathematical mechanism for determining the weights of observations when trying to predict an arbitrary phenomenon.</p></p>
+<h2 id="Outline of Idea"> Outline of Idea</h2>
+
+<p>We propose a novel application of Principle Component Analysis in order to precondition data according to the phenomenon being modeled.</p>
+
+<p>Let \(X \subset \mathbb{R}^d\) be a finite set of points with known response \(Y = \{y_i = f(x_i) | x_i \in X\}\) values for function \(f: \mathbb{R}^d \rightarrow (S,d)\), for some vector space \(S\) with metric \(d\).</p>
+
+<p>Consider the set \(Z\) of vectors</p>
+
+<p>
+$$ Z = \bigg\{ \frac{(x_i - x_j)\  d(y_i, y_j)}{\|(x_i - x_j)\|_2^2} : \quad x_i, x_j \in X, \quad y_i, y_j \in Y, \bigg\}$$</p>
+
+<p>with covariance matrix Cov(\(Z\)). Define the Eigenpairs of Cov(\(Z\)) to be \([(q_1, \lambda_1), \ldots, (q_d, \lambda_d)]\), where \(\|q_i\|_2 = 1\), and \(\lambda_i \geq \lambda_{i+1}\). Note that since Cov(\(Z\)) is symmetric, the Eigenvectors are orthogonal and form a basis for \(\mathbb{R}^d\). Notice that these vectors are the principle components of \(Z\).</p>
+
+<p>Finally define the transformation \(C = \big[ \lambda_1 q_1 \cdots \lambda_d q_d \big]\) to be the <b>response conditioning matrix</b> that moves \(X\) to a space with uniform response variance between points along each dimension. Our work aims to show that \(CX = \{ Cx : x \in X \}\) is better conditioned for approximation than \(X.\)</p>
+<h3 id="Demonstration"> Demonstration</h3>
+
+<p>Consider the following example. In this, \(X^{(20\ \times\ 2)}\) is a random sample of points drawn from the unit cube and response is a function \(f: \mathbb{R}^2 \rightarrow \mathbb{R}\). On the right the set \(Z\) can be seen with the computed (and scaled) principle components.</p>
+
+<p><iframe src='https://people.cs.vt.edu/tchlux/files/[2018-09-12]_pra_demo.html' frameBorder='0' style='height: 60vh; width: 70vw;'></iframe></p>
+<h2 id="Related Work"> Related Work</h2>
+
+<p>Arguably The most trivial way to select features is to fit a linear model to the data and use the slope (in each direction) of the linear model as the weights for each feature. However, this misses interaction between variables, and can fail for nonlinear functions (such as in the example above).</p>
+
+<p>Principle component analysis (PCA) is typically used as a dimension reduction technique. An explanation of Principle Component Analysis and its applications can be found in <dt-cite key="PCAtutorial,powell_lehe_2014"></dt-cite>. Given a set of points, it identifies the set of vectors (ordered by importance) that those points can be reduced to with minimal error. In standard application, the principle components do not attempt to capture the behavior of a function over the points.</p>
+
+<p>Feature weighting has been studied for clustering and generic learning algorithms <dt-cite key="FeatureWeightingForClustering,FeatureWeightingReview"></dt-cite>, and in general a lot of work has been done on feature selection given a model <dt-cite key="FeatureSurvey,tenenbaum2000global"></dt-cite>. Those survey papers extensively cover existing techniques and approaches for weighting (continuous valued) and selecting (binary operation) features of data for making accurate approximations. Most of these methods fail to capture interactions between features or do not guarantee convergence.</p>
+<h2 id="Proposed Evaluation"> Proposed Evaluation</h2>
+
+<p>We will demonstrate this method on at least two data sets. First we will use MNIST <dt-cite key="lecun_cortes_burges_2008"></dt-cite>, the handwritten digit recognition data set. Additionally we will test our methodology on High Performance Computer system variance data <dt-cite key="lux2018predictive"></dt-cite>.</p>
+
+
+    </dt-article>
+
+    
+<dt-appendix>
+</dt-appendix>
+
+
+    <script type="text/bibliography">
+
+
+
+@article{FeatureSurvey,
+  title={Feature selection: A data perspective},
+  author={Li, Jundong and Cheng, Kewei and Wang, Suhang and Morstatter, Fred and Trevino, Robert P and Tang, Jiliang and Liu, Huan},
+  journal={ACM Computing Surveys (CSUR)},
+  volume={50},
+  number={6},
+  pages={94},
+  year={2017},
+  publisher={ACM},
+  url={https://arxiv.org/pdf/1601.07996},
+}
+
+@article{PCAtutorial,
+  title={A tutorial on principal component analysis},
+  author={Shlens, Jonathon},
+  journal={arXiv preprint arXiv:1404.1100},
+  year={2014},
+  url={https://arxiv.org/pdf/1404.1100.pdf},
+}
+
+@article{FeatureWeightingReview,
+  title={A review and empirical evaluation of feature weighting methods for a class of lazy learning algorithms},
+  author={Wettschereck, Dietrich and Aha, David W and Mohri, Takao},
+  journal={Artificial Intelligence Review},
+  volume={11},
+  number={1-5},
+  pages={273--314},
+  year={1997},
+  publisher={Springer},
+  url={https://search.proquest.com/docview/198027865},
+}
+
+ @article{FeatureWeightingForClustering,
+  title={Feature weighting in k-means clustering},
+  author={Modha, Dharmendra S and Spangler, W Scott},
+  journal={Machine learning},
+  volume={52},
+  number={3},
+  pages={217--237},
+  year={2003},
+  publisher={Springer},
+  url={https://link.springer.com/content/pdf/10.1023/A:1024016609528.pdf},
+}
+
+@misc{powell_lehe_2014, 
+  title={Principal Component Analysis explained visually},
+  journal={Explained Visually},
+  publisher={setosa.io},
+  author={Powell, Victor and Lehe, Lewis},
+  year={2014},
+  month={Oct},
+  url={http://setosa.io/ev/principal-component-analysis/},
+}
+
+@article{tenenbaum2000global,
+  title={A global geometric framework for nonlinear dimensionality reduction},
+  author={Tenenbaum, Joshua B and De Silva, Vin and Langford, John C},
+  journal={science},
+  volume={290},
+  number={5500},
+  pages={2319--2323},
+  year={2000},
+  publisher={American Association for the Advancement of Science},
+  url={http://science.sciencemag.org/content/sci/290/5500/2319.full.pdf},
+}
+
+@misc{lecun_cortes_burges_2008,
+  title={THE MNIST DATABASE},
+  journal={MNIST handwritten digit database, Yann LeCun, Corinna Cortes and Chris Burges},
+  publisher={Yann LeCun},
+  author={LeCun, Yann and Cortes, Corinna and Burges, Christopher J.C.},
+  year={2008},
+  month={Apr},
+  url={http://yann.lecun.com/exdb/mnist/},
+}
+
+@inproceedings{lux2018predictive,
+  title={Predictive modeling of I/O characteristics in high performance computing systems},
+  author={Lux, Thomas CH and Watson, Layne T and Chang, Tyler H},
+  booktitle={Proceedings of the High Performance Computing Symposium},
+  pages={8},
+  year={2018},
+  organization={Society for Computer Simulation International}
+}
+</script>
+
+    
+<!--
+     ============================================= 
+          DISTILL PROPER USAGE AND FORMATTING      
+     ============================================= 
+
+        Article Foundation (can use h2 for description)    
+    =======================================================
+    <dt-article>
+      <h1> [title text] </h1>
+      <p> [description text] </p>
+      <dt-byline></dt-byline>
+      [article content]
+    </dt-article>
+    <dt-appendix>
+    </dt-appendix>
+    <script type="text/bibliography">
+      @article{,
+      title={},
+      author={},
+      journal={},
+      year={},
+      url={}
+      }
+      ...
+    </script>
+
+        Body and Headers    
+    ========================
+    <p></p>
+    <h1></h1>
+    <h2></h2>
+    <h3></h3>
+    <h4></h4>
+
+        Citations    
+    =================
+    <dt-cite key="[key name]"></dt-cite>
+
+        Code (use block for multiple lines)    
+    ===========================================
+    <dt-code block language="[language]">
+      [code]
+    </dt-code>
+
+        Footnotes    
+    =================
+    <dt-fn> [text] </dt-fn>
+
+        Lists (unordered uses <ul> instead)    
+    ===========================================
+    <p>
+      <ol>
+	<li> [entry text]
+      </ol>
+    </p>
+
+        Math    
+    ============
+    \( [inline math text] \)
+    $$ [newline math text]  $$
+
+        Styling    
+    ===============
+    <i> [italics] </i> 
+    <b> [bold] </b>
+    <br> [line break]
+    <font color="[color]"> [colored text] </font>
+
+        Tables    
+    ==============
+    <table>
+      <tr> [table row]
+	<td> [table column] </td> ...
+      </tr>
+    </table>
+
+         Custom Widths for Tables     
+    ==================================
+    <style type="text/css">
+      td {
+        width: 200px;
+        padding: 0px 0px 0px 50px;
+        background-color: #eee;
+      }
+    </style>
+
+
+    =======================
+        EXAMPLE ARTICLE
+    =======================
+
+    <!doctype html>
+    <meta charset="utf-8">
+    <script src="https://distill.pub/template.v1.js"></script>
+
+    <script type="text/front-matter">
+      title: "Article Title"
+      description: "Description of the post"
+      authors:
+      - Chris Olah: http://colah.github.io
+      - Shan Carter: http://shancarter.com
+      affiliations:
+      - Google Brain: http://g.co/brain
+      - Google Brain: http://g.co/brain
+    </script>
+
+    <dt-article>
+      <h1>Hello World</h1>
+      <h2>A description of the article</h2>
+      <dt-byline></dt-byline>
+      <p>This is the first paragraph of the article.</p>
+      <p>We can also cite <dt-cite key="gregor2015draw"></dt-cite> external publications.</p>
+    </dt-article>
+
+    <dt-appendix>
+    </dt-appendix>
+
+    <script type="text/bibliography">
+      @article{gregor2015draw,
+      title={DRAW: A recurrent neural network for image generation},
+      author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
+      journal={arXivreprint arXiv:1502.04623},
+      year={2015},
+      url={https://arxiv.org/pdf/1502.04623.pdf}
+      }
+    </script>
+
+-->
+
+
+    

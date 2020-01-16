@@ -1,0 +1,250 @@
+
+    <!doctype html>
+    <meta charset="utf-8">
+
+    
+    <!-- Include Distill -->
+    <!-- <script src="https://distill.pub/template.v1.js"></script> -->
+    <!-- <script src="http://people.cs.vt.edu/tchlux/distill.template.v1.no-banner.js"></script> -->
+     <script src="/Users/thomaslux/Git/txt_to_html/resources/distill.template.v1.no-banner.js"></script> 
+    
+    
+    <!-- Include MathJax -->
+    <!-- <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"> </script> -->
+     <script type="text/javascript" async src="/Users/thomaslux/Git/txt_to_html/resources/MathJax-2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML,local/local"></script> 
+    
+    
+
+    <!-- Script for setting up the author block -->
+    <script type="text/front-matter">
+      title: Notes
+      description: 
+      authors:
+
+      affiliations:
+
+    </script>
+
+    <style type="text/css">
+      dt-article ol, dt-article ul {
+        padding-left: 50px;
+      }
+
+      dt-article ul {
+        list-style: none;
+      }
+
+      dt-article li {
+        margin-bottom: 10px;
+      }
+
+      ul li:before {
+        content: "–  ";
+        margin-left: -1em
+      }
+
+      td {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-top: 7px !important;
+        padding-bottom: 7px !important;
+        line-height: 1.3 !important;
+      }
+    </style>
+
+    <dt-article>
+    <h1>Notes</h1>
+    <p></p>
+    <dt-byline></dt-byline>
+
+    
+<p></p>
+<h2 id="Demonstration"> Demonstration</h2>
+
+<p><iframe src='https://people.cs.vt.edu/tchlux/files/[2018-11-28]_mpca_demo_2.html' frameBorder='0' style='height: 60vh; width: 70vw;'></iframe></p>
+
+<p>The above plot displays another example of a set of points that are not distributed according the direction of greatest change in the underlying function. This causes PCA to produce distinctly different vectors from MPCA.</p>
+<h2 id="Results"> Results</h2>
+
+<p><i> <b>Yelp</b> </i> is a collection of 479 American-style restaurant ratings from Las Vegas. Most of the data is composed of categorical descriptors, there are 63 features. This is a regression problem, where the algorithm predicts the star rating of a restaurant on 0-5 scale with .5 intervals.</p>
+
+<p><i> <b>MNIST</b> </i> is a collection 60,000 images that we randomly reduce to 10,000 black and white images, each with shape [28 x 28] having 784 channels. The data poses a classification problem with 10 unique classes, which are 10 digits handwritten.</p>
+
+<p><i> <b>CIFAR10</b> </i> is a collection of 50,000 images that we randomly reduce to 10,000 color images, each with shape [32 x 32 x 3] having 3072 channels in total. The data poses a classification problem with 10 unique classes that are common objects.</p>
+
+<p>Following are the first 12 vectors obtained by metric principle components analysis on the MNIST data.</p>
+
+<p><img src='https://people.cs.vt.edu/tchlux/files/[2018-11-28]_MNIST_12_MPCA_Components.png' width='90%' style='margin: 20px; display: inline-block;'></p>
+
+<p>Following are the first 12 vectors obtained by metric principle components analysis on the CIFAR10 data.</p>
+
+<p><img src='https://people.cs.vt.edu/tchlux/files/[2018-11-28]_CIFAR10_12_MPCA_Components.png' width='90%' style='margin: 20px; display: inline-block;'></p>
+
+<p>Notice how the first components are drastically different even though both tasks are for computer vision classification. This is expected, because recognizing the differences between handwritten digits and generic objects (with 3-dimensional orientations) are drastically different problems. Next we look at the prediction errors with varying dimension for MPCA versus PCA.</p>
+
+<p><iframe src='https://people.cs.vt.edu/tchlux/files/[2018-11-28]_tgds_errors_hist.html' frameBorder='0' style='height: 60vh; width: 70vw;'></iframe></p>
+
+<p>In the above histogram, we observe the prediction errors of KNN computed via 4-fold cross validation. From left to right, the three bars within each section show the performance of KNN with \(\{1/100,\) \(1/10,\) \(1/3\}\) of all features respectively.</p>
+
+<table>
+<tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+
+<tr><td><b>Data Name</b></td><td><b>Raw data</b></td><td><b>1/3 MPCA components</b></td><td><b>1/10 MPCA components</b></td><td><b>1/100 MPCA components</b></td></tr>
+
+<tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+
+<tr><td><i>Yelp<br>64 dim</i></td><td>0.493 (stars)</td><td><u>0.493 (stars)</u></td><td>0.496 (stars)</td><td>0.530 (stars)</td></tr>
+
+<tr><td><i>MNIST<br>784 dim</i></td><td>5.29%</td><td>5.26%</td><td><u>4.63%</u></td><td>13.43%</td></tr>
+
+<tr><td><i>CIFAR10<br>3072 dim</i></td><td>70.99%</td><td>70.23%</td><td>69.46%</td><td><u>62.46%</u></td></tr></table>
+
+<p>This table shows the prediction errors achieved with varying amounts of reduction. The underlined entries are the best observed prediction performance with the KNN algorithm. The <i>raw</i> column indicates that distance were computed over the original features.</p>
+<h2 id="Discussion"> Discussion</h2>
+
+<p>The error results for reduced-dimension problems using PCA and Metric PCA (MPCA) are remarkably similar. In almost all cases the MPCA reduction causes an improvement in prediction accuracy, though the improvement is small. Although our theoretical examples demonstrate the potentially large difference between MPCA and PCA, in practice they appear to often be the same. One could speculate that this is a contrived phenomenon, the only data that is kept in curated sets is data that represents a phenomenon of interest. MPCA is constructed to disregard data that is not useful, but for the sets chosen in this work </p>
+<h2 id="Conclusion"> Conclusion</h2>
+
+<p>The proposed technique, Metric PCA, demonstrates strong potential as a dimension reduction strategy for approximation problems. Analytically, Metric PCA is not susceptible to adverse data conditions that may cause PCA to disregard important dimensions for approximation. Empirically, the results obtained by MPCA and PCA are quite similar, suggesting that many curated data sets have the property that data descriptor variance corresponds closely to variance in the underlying function. Analytic and empirical results combined demonstrate the effectiveness of MPCA as a robust dimension reduction strategy for approximation.</p>
+
+    </dt-article>
+
+    
+
+    
+<script type="text/bibliography">
+</script>
+
+
+    
+<!--
+     ============================================= 
+          DISTILL PROPER USAGE AND FORMATTING      
+     ============================================= 
+
+        Article Foundation (can use h2 for description)    
+    =======================================================
+    <dt-article>
+      <h1> [title text] </h1>
+      <p> [description text] </p>
+      <dt-byline></dt-byline>
+      [article content]
+    </dt-article>
+    <dt-appendix>
+    </dt-appendix>
+    <script type="text/bibliography">
+      @article{,
+      title={},
+      author={},
+      journal={},
+      year={},
+      url={}
+      }
+      ...
+    </script>
+
+        Body and Headers    
+    ========================
+    <p></p>
+    <h1></h1>
+    <h2></h2>
+    <h3></h3>
+    <h4></h4>
+
+        Citations    
+    =================
+    <dt-cite key="[key name]"></dt-cite>
+
+        Code (use block for multiple lines)    
+    ===========================================
+    <dt-code block language="[language]">
+      [code]
+    </dt-code>
+
+        Footnotes    
+    =================
+    <dt-fn> [text] </dt-fn>
+
+        Lists (unordered uses <ul> instead)    
+    ===========================================
+    <p>
+      <ol>
+	<li> [entry text]
+      </ol>
+    </p>
+
+        Math    
+    ============
+    \( [inline math text] \)
+    $$ [newline math text]  $$
+
+        Styling    
+    ===============
+    <i> [italics] </i> 
+    <b> [bold] </b>
+    <br> [line break]
+    <font color="[color]"> [colored text] </font>
+
+        Tables    
+    ==============
+    <table>
+      <tr> [table row]
+	<td> [table column] </td> ...
+      </tr>
+    </table>
+
+         Custom Widths for Tables     
+    ==================================
+    <style type="text/css">
+      td {
+        width: 200px;
+        padding: 0px 0px 0px 50px;
+        background-color: #eee;
+      }
+    </style>
+
+
+    =======================
+        EXAMPLE ARTICLE
+    =======================
+
+    <!doctype html>
+    <meta charset="utf-8">
+    <script src="https://distill.pub/template.v1.js"></script>
+
+    <script type="text/front-matter">
+      title: "Article Title"
+      description: "Description of the post"
+      authors:
+      - Chris Olah: http://colah.github.io
+      - Shan Carter: http://shancarter.com
+      affiliations:
+      - Google Brain: http://g.co/brain
+      - Google Brain: http://g.co/brain
+    </script>
+
+    <dt-article>
+      <h1>Hello World</h1>
+      <h2>A description of the article</h2>
+      <dt-byline></dt-byline>
+      <p>This is the first paragraph of the article.</p>
+      <p>We can also cite <dt-cite key="gregor2015draw"></dt-cite> external publications.</p>
+    </dt-article>
+
+    <dt-appendix>
+    </dt-appendix>
+
+    <script type="text/bibliography">
+      @article{gregor2015draw,
+      title={DRAW: A recurrent neural network for image generation},
+      author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
+      journal={arXivreprint arXiv:1502.04623},
+      year={2015},
+      url={https://arxiv.org/pdf/1502.04623.pdf}
+      }
+    </script>
+
+-->
+
+
+    
