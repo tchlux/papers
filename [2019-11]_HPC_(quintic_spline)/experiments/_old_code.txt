@@ -1,0 +1,62 @@
+
+# import plotly
+# help(plotly)
+# help(plotly.offline.iplot) #(fig, show_link=False)
+# plotly.offline.plot(fig, image="svg",
+#                     filename="cubic-quintic-sin-test.pdf", 
+#                     image_height=400, image_width=700)
+
+
+# help(plotly.offline.plot)
+
+# fig.write_image("cubic-quintic-test.pdf")
+
+# offline.iplot({'data': [{'y': [4, 2, 3, 4]}], 
+#                'layout': {'title': 'Test Plot'}},
+#              image='svg')
+
+
+        # Do NOT update this interval if it has been changed too many times.
+        if (change_counts[i] > max_steps):
+            print()
+            print(f"WARNING:  Skipping monotonicity fix on interval {i+1} because {change_counts[i]} changes have already")
+            print(f"          been made. Consider decreasing 'shrink_rate' or increasing 'max_steps'.")
+            continue
+
+
+
+y3 = [
+    [F(29, 54),F(5, 54),F(35, 18)],
+    [F(137, 108),F(55, 27),F(107, 18)],
+]
+
+# (x-1/5)(x-2/5)(x-3/5)(x-4/5)(x-5/5) + 1/2
+points = [F(1), F(1,60), F(2,6), F(3,6), F(4,6), F(59,60)]
+f = NewtonPolynomial([F(100)] + [F(0)]*(len(points)-2) + [F(1/2)], points)
+print("f: ")
+print(f)
+print(Polynomial(f))
+print()
+print("f(0): ",f(0))
+print("f.derivative(1)(0): ",f.derivative(1)(0))
+print("f.derivative(2)(0): ",f.derivative(2)(0))
+print()
+print("f(1): ",f(1))
+print("f.derivative(1)(1): ",f.derivative(1)(1))
+print("f.derivative(2)(1): ",f.derivative(2)(1))
+print()
+y3 = [
+    [f.derivative(i)(0) for i in (0,1,2)],
+    [f.derivative(i)(1) for i in (0,1,2)]
+]
+print()
+print("y3: ")
+print(y3[0])
+print(y3[1])
+print()
+
+
+# exit()
+
+
+

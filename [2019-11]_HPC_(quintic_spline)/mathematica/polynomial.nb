@@ -1,0 +1,2955 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    155054,       2947]
+NotebookOptionsPosition[    151776,       2896]
+NotebookOutlinePosition[    152114,       2911]
+CellTagsIndexPosition[    152071,       2908]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "This", " ", "function", " ", "constructs", " ", "the", " ", "lowest", " ",
+     "order", " ", "polynomial", " ", "that", " ", "matches", " ", "the", " ",
+     "provided", " ", 
+    RowBox[{"left", " ", "[", 
+     RowBox[{"value", ",", " ", "d1", ",", " ", "..."}], "]"}], " ", "and", 
+    " ", 
+    RowBox[{"right", " ", "[", 
+     RowBox[{"value", ",", " ", "d1", ",", " ", "..."}], "]"}], " ", "and", 
+    " ", "returns", " ", "that", " ", "polynomial", " ", "as", " ", "a", " ", 
+    "univariate", " ", 
+    RowBox[{"function", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"PolyPiece", "[", 
+      RowBox[{"LeftValues_", ",", "RightValues_", ",", 
+       RowBox[{"interval_:", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "1"}], "}"}]}]}], "]"}], ":=", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Clear", "[", 
+         RowBox[{
+         "i", ",", "j", ",", "left", ",", "right", ",", "dds", ",", 
+          "newDiffs", ",", "row", ",", "newRow"}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Clear", "[", 
+         RowBox[{"coefs", ",", "points", ",", "func"}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Make", " ", "\"\<left\>\"", " ", "and", " ", "\"\<right\>\"", " ", 
+          "the", " ", "same", " ", "length", " ", "by", " ", "matching", " ", 
+          "higher", " ", "derivatives", " ", "that", " ", "are", " ", "not", 
+          " ", "provided", " ", "for", " ", "the", " ", 
+          RowBox[{"other", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"left", "=", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"right", "=", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "1"}], ",", 
+          RowBox[{"i", "\[LessEqual]", 
+           RowBox[{"Max", "[", 
+            RowBox[{
+             RowBox[{"Length", "[", "LeftValues", "]"}], ",", 
+             RowBox[{"Length", "[", "RightValues", "]"}]}], "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"i", "\[LessEqual]", 
+               RowBox[{"Length", "[", "LeftValues", "]"}]}], ",", 
+              RowBox[{"AppendTo", "[", 
+               RowBox[{"left", ",", 
+                RowBox[{"LeftValues", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+              RowBox[{"AppendTo", "[", 
+               RowBox[{"left", ",", 
+                RowBox[{"RightValues", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"i", "\[LessEqual]", 
+               RowBox[{"Length", "[", "RightValues", "]"}]}], ",", 
+              RowBox[{"AppendTo", "[", 
+               RowBox[{"right", ",", 
+                RowBox[{"RightValues", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+              RowBox[{"AppendTo", "[", 
+               RowBox[{"right", ",", 
+                RowBox[{"LeftValues", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], "]"}], ";"}], 
+           "\[IndentingNewLine]", "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Rescale", " ", "the", " ", "left", " ", "and", " ", "right", " ", 
+          "derivaties", " ", "by", " ", "a", " ", "factorial", " ", "for", 
+          " ", "correct", " ", "usage", " ", "in", " ", "the", " ", "divided",
+           " ", "difference", " ", 
+          RowBox[{"table", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "3"}], ",", 
+          RowBox[{"i", "\[LessEqual]", 
+           RowBox[{"Length", "[", "left", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"left", "[", 
+              RowBox[{"[", "i", "]"}], "]"}], "/=", 
+             RowBox[{"Factorial", "[", 
+              RowBox[{"i", "-", "1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"right", "[", 
+              RowBox[{"[", "i", "]"}], "]"}], "/=", 
+             RowBox[{"Factorial", "[", 
+              RowBox[{"i", "-", "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+           "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+          RowBox[{
+          "Make", " ", "the", " ", "coefficients", " ", "a", " ", "copy", " ",
+            "of", " ", "the", " ", "\"\<left\>\"", " ", "set"}], ",", " ", 
+          RowBox[{
+          "they", " ", "will", " ", "be", " ", "the", " ", "first", " ", 
+           RowBox[{"coefficients", ".", " ", "We"}], " ", "will", " ", 
+           "compute", " ", "the", " ", "rest", " ", "and", " ", "add", " ", 
+           "them", " ", "to", " ", "the", " ", 
+           RowBox[{"end", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"coefs", "=", 
+         RowBox[{"left", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ";;", 
+            RowBox[{"-", "1"}]}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Initialize", " ", "the", " ", "divided", " ", "difference", " ", 
+          "table", " ", "to", " ", "have", " ", "the", " ", "first", " ", 
+          "difference", " ", "between", " ", "the", " ", "first", " ", "left",
+           " ", "and", " ", "the", " ", "first", " ", 
+          RowBox[{"right", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Length", "[", "left", "]"}], "\[Equal]", "1"}], ",", 
+          RowBox[{"dds", "=", 
+           RowBox[{"{", "}"}]}], ",", 
+          RowBox[{"dds", "=", " ", 
+           RowBox[{"{", 
+            FractionBox[
+             RowBox[{
+              RowBox[{"right", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "-", 
+              RowBox[{"left", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], 
+             RowBox[{
+              RowBox[{"interval", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "-", 
+              RowBox[{"interval", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}]], "}"}]}]}], " ", "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+          RowBox[{
+          "Compute", " ", "all", " ", "the", " ", "interaction", " ", "terms",
+            " ", "between", " ", "the", " ", "left", " ", "and", " ", 
+           "right"}], ",", " ", 
+          RowBox[{
+          "building", " ", "up", " ", "the", " ", "divided", " ", 
+           "difference", " ", "table", " ", "to", " ", "level", " ", "off", 
+           " ", "at", " ", "the", " ", "last", " ", "provided", " ", 
+           RowBox[{"derivative", "."}]}]}], " ", "*)"}], 
+        "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "2"}], ",", 
+          RowBox[{"i", "<", 
+           RowBox[{"Length", "[", "left", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+            "Compute", " ", "the", " ", "interaction", " ", "with", " ", 
+             "the", " ", 
+             RowBox[{"left", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"newDiffs", "=", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"dds", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "-", 
+               RowBox[{"left", "[", 
+                RowBox[{"[", "i", "]"}], "]"}]}], "}"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Compute", " ", "the", " ", "interaction", " ", "of", " ", "all",
+               " ", "middle", " ", 
+              RowBox[{"terms", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"For", "[", 
+             RowBox[{
+              RowBox[{"j", "=", "1"}], ",", 
+              RowBox[{"j", "<", 
+               RowBox[{"Length", "[", "dds", "]"}]}], ",", 
+              RowBox[{"j", "++"}], ",", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"AppendTo", "[", 
+                 RowBox[{"newDiffs", ",", 
+                  RowBox[{
+                   RowBox[{"dds", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"j", "+", "1"}], "]"}], "]"}], "-", 
+                   RowBox[{"dds", "[", 
+                    RowBox[{"[", "j", "]"}], "]"}]}]}], "]"}], ";"}], 
+               "\[IndentingNewLine]", "}"}]}], "]"}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Compute", " ", "the", " ", "interaction", " ", "with", " ", 
+              "the", " ", 
+              RowBox[{"right", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"AppendTo", "[", 
+             RowBox[{"newDiffs", ",", 
+              RowBox[{
+               RowBox[{"right", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "-", 
+               RowBox[{"dds", "[", 
+                RowBox[{"[", 
+                 RowBox[{"-", "1"}], "]"}], "]"}]}]}], "]"}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Add", " ", "the", " ", "newly", " ", "computed", " ", "row", 
+              " ", "to", " ", "the", " ", "divided", " ", "difference", " ", 
+              RowBox[{"table", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"dds", "=", 
+             FractionBox["newDiffs", 
+              RowBox[{
+               RowBox[{"interval", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "-", 
+               RowBox[{"interval", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}]]}], ";"}], 
+           "\[IndentingNewLine]", "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Compute", " ", "all", " ", "of", " ", "the", " ", "coefficients", 
+          " ", "for", " ", "the", " ", "Newton", " ", "polynomial", " ", "by",
+           " ", "completing", " ", "the", " ", "rest", " ", "of", " ", "the", 
+          " ", "divided", " ", "difference", " ", 
+          RowBox[{"table", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"row", "=", 
+         RowBox[{"Join", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"left", "[", 
+             RowBox[{"[", 
+              RowBox[{"-", "1"}], "]"}], "]"}], "}"}], ",", "dds", ",", 
+           RowBox[{"{", 
+            RowBox[{"right", "[", 
+             RowBox[{"[", 
+              RowBox[{"-", "1"}], "]"}], "]"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"While", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Length", "[", "row", "]"}], ">", "1"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"newRow", "=", 
+             RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"For", "[", 
+             RowBox[{
+              RowBox[{"i", "=", "1"}], ",", 
+              RowBox[{"i", "<", 
+               RowBox[{"Length", "[", "row", "]"}]}], ",", 
+              RowBox[{"i", "++"}], ",", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"AppendTo", "[", 
+                 RowBox[{"newRow", ",", 
+                  FractionBox[
+                   RowBox[{
+                    RowBox[{"row", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", "+", "1"}], "]"}], "]"}], "-", 
+                    RowBox[{"row", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}]}], 
+                   RowBox[{
+                    RowBox[{"interval", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "-", 
+                    RowBox[{"interval", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}]]}], "]"}], ";"}], 
+               "\[IndentingNewLine]", "}"}]}], "]"}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"AppendTo", "[", 
+             RowBox[{"coefs", ",", 
+              RowBox[{"newRow", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], "]"}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"row", "=", "newRow"}], ";"}], "\[IndentingNewLine]", 
+           "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Construct", " ", "the", " ", "coefficients", " ", "and", " ", "the",
+           " ", 
+          RowBox[{"points", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"points", "=", 
+         RowBox[{"Join", "[", 
+          RowBox[{
+           RowBox[{"ConstantArray", "[", 
+            RowBox[{
+             RowBox[{"interval", "[", 
+              RowBox[{"[", "2", "]"}], "]"}], ",", 
+             RowBox[{"Length", "[", "left", "]"}]}], "]"}], ",", 
+           RowBox[{"ConstantArray", "[", 
+            RowBox[{
+             RowBox[{"interval", "[", 
+              RowBox[{"[", "1", "]"}], "]"}], ",", 
+             RowBox[{"Length", "[", "left", "]"}]}], "]"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"coefs", "=", 
+         RowBox[{"Reverse", "[", "coefs", "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", "\"\<\>\"", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"\"\<Points copy:\>\"", ",", " ", 
+          RowBox[{"points", "[", 
+           RowBox[{"[", 
+            RowBox[{"1", ";;", 
+             RowBox[{"Length", "[", "points", "]"}]}], "]"}], "]"}]}], "]"}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"\"\<Coefs copy: \>\"", ",", " ", 
+          RowBox[{"coefs", "[", 
+           RowBox[{"[", 
+            RowBox[{"1", ";;", 
+             RowBox[{"Length", "[", "coefs", "]"}]}], "]"}], "]"}]}], "]"}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Now", " ", "we", " ", "have", " ", "all", " ", "the", " ", 
+          "coefficients", " ", "necessary", " ", "to", " ", "construct", " ", 
+          "a", " ", "Newton", " ", 
+          RowBox[{"interpolant", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        
+        RowBox[{
+         RowBox[{"func", "[", 
+          RowBox[{"x_", ",", 
+           RowBox[{"points_:", 
+            RowBox[{"points", "[", 
+             RowBox[{"[", 
+              RowBox[{"1", ";;", 
+               RowBox[{"Length", "[", "points", "]"}]}], "]"}], "]"}]}], ",", 
+           
+           RowBox[{"coefs_:", 
+            RowBox[{"coefs", "[", 
+             RowBox[{"[", 
+              RowBox[{"1", ";;", 
+               RowBox[{"Length", "[", "coefs", "]"}]}], "]"}], "]"}]}]}], 
+          "]"}], ":=", 
+         RowBox[{
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"total", "=", 
+             RowBox[{"coefs", "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"For", "[", 
+             RowBox[{
+              RowBox[{"d", "=", "2"}], ",", 
+              RowBox[{"d", "\[LessEqual]", 
+               RowBox[{"Length", "[", "coefs", "]"}]}], ",", 
+              RowBox[{"d", "++"}], ",", 
+              RowBox[{"total", "=", 
+               RowBox[{
+                RowBox[{"coefs", "[", 
+                 RowBox[{"[", "d", "]"}], "]"}], "+", 
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{"x", "-", 
+                   RowBox[{"points", "[", 
+                    RowBox[{"[", "d", "]"}], "]"}]}], ")"}], "total"}]}]}]}], 
+             "]"}], ";", "\[IndentingNewLine]", "total"}], 
+           "\[IndentingNewLine]", "}"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Clear", "[", 
+         RowBox[{
+         "i", ",", "j", ",", "left", ",", "right", ",", "dds", ",", 
+          "newDiffs", ",", "row", ",", "newRow"}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Now", " ", "we", " ", "can", " ", "return", " ", "the", " ", 
+          "polynomial", " ", 
+          RowBox[{"function", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        "func"}], "\[IndentingNewLine]", "}"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{
+     "Given", " ", "a", " ", "set", " ", "of", " ", "Newton", " ", 
+      "polynomial", " ", "coefficients", " ", "and", " ", "associated", " ", 
+      "points"}], ",", " ", 
+     RowBox[{
+     "convert", " ", "the", " ", "polynomial", " ", "to", " ", "a", " ", 
+      "Monomial", " ", "basis", " ", 
+      RowBox[{"(", 
+       RowBox[{
+       "with", " ", "all", " ", "points", " ", "equalling", " ", "0"}], ")"}],
+       " ", "by", " ", "transforming", " ", "the", " ", 
+      RowBox[{"coefficients", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"toMonomial", "[", 
+      RowBox[{"NewtonCoefs_", ",", "NewtonPoints_"}], "]"}], ":=", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Clear", "[", 
+         RowBox[{"i", ",", "newCoefs", ",", "coefs", ",", "points"}], "]"}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"coefs", "=", 
+         RowBox[{"{", 
+          RowBox[{"NewtonCoefs", "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "}"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "2"}], ",", 
+          RowBox[{"i", "\[LessEqual]", 
+           RowBox[{"Length", "[", "NewtonCoefs", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+            "Compute", " ", "the", " ", "old", " ", "coefficients", " ", 
+             "multiplied", " ", "by", " ", "a", " ", "constant", " ", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+               "no", " ", "shift", " ", "to", " ", "higher", " ", "power"}], 
+               ")"}], "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"newCoefs", "=", 
+             RowBox[{"Join", "[", 
+              RowBox[{
+               RowBox[{"{", "0", "}"}], ",", 
+               RowBox[{
+                RowBox[{"-", "coefs"}], "*", 
+                RowBox[{"NewtonPoints", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}]}]}], "]"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Add", " ", "the", " ", "last", " ", "result", " ", "to", " ", 
+              "all", " ", "existing", " ", "values", " ", "shifted", " ", 
+              "to", " ", "a", " ", "higher", " ", 
+              RowBox[{"power", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"coefs", "=", 
+             RowBox[{"newCoefs", "+", 
+              RowBox[{"Join", "[", 
+               RowBox[{"coefs", ",", 
+                RowBox[{"{", 
+                 RowBox[{"NewtonCoefs", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "}"}]}], "]"}]}]}], ";"}], 
+           "\[IndentingNewLine]", "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Set", " ", "the", " ", "variable", " ", "\"\<points\>\"", " ", "to",
+           " ", "be", " ", "all", " ", 
+          RowBox[{"zeros", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"points", "=", 
+         RowBox[{"ConstantArray", "[", 
+          RowBox[{"0", ",", 
+           RowBox[{"Length", "[", "coefs", "]"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Clear", "[", 
+         RowBox[{"i", ",", "newCoefs"}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{"Return", " ", "the", " ", "simplified", " ", 
+          RowBox[{"coefficients", "."}]}], " ", "*)"}], "\[IndentingNewLine]",
+         "coefs"}], "\[IndentingNewLine]", "}"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.767628490476214*^9, 3.767628597767571*^9}, {
+   3.767628633822714*^9, 3.767628981016274*^9}, {3.767629175565998*^9, 
+   3.767629253793003*^9}, {3.7676293630539513`*^9, 3.7676295819628973`*^9}, {
+   3.7676297713147078`*^9, 3.767630249624981*^9}, {3.767632394026225*^9, 
+   3.7676325030042458`*^9}, {3.767632771548544*^9, 3.7676328596450253`*^9}, {
+   3.767632920312784*^9, 3.76763299151448*^9}, {3.767633030492467*^9, 
+   3.767633047256283*^9}, {3.767633157236506*^9, 3.767633200336606*^9}, {
+   3.767634540500401*^9, 3.767634610906458*^9}, {3.767634673393291*^9, 
+   3.767634695168756*^9}, {3.767634814689486*^9, 3.7676348179214697`*^9}, {
+   3.7676348861093884`*^9, 3.7676349040424623`*^9}, {3.7676366297485123`*^9, 
+   3.767636633703246*^9}, {3.76856808682373*^9, 3.768568123744976*^9}, {
+   3.768568195826066*^9, 3.7685684111442823`*^9}, {3.7685687121186457`*^9, 
+   3.7685688634066753`*^9}, {3.768568903442775*^9, 3.7685689710452213`*^9}, {
+   3.7685906056515408`*^9, 3.768590652781603*^9}, {3.7685906865966597`*^9, 
+   3.768590761572666*^9}, {3.768591001618442*^9, 3.7685911101927834`*^9}, {
+   3.768591199810116*^9, 3.768591205101741*^9}, {3.768591286780175*^9, 
+   3.768591305784768*^9}, {3.768591446262617*^9, 3.768591484693431*^9}, {
+   3.768591571343856*^9, 3.7685915758134403`*^9}, {3.768591679304532*^9, 
+   3.768591721266522*^9}, {3.768591797194642*^9, 3.768591913182321*^9}, {
+   3.768591972401793*^9, 3.7685919842892637`*^9}, {3.768592018587048*^9, 
+   3.768592025792728*^9}, {3.768592062250991*^9, 3.7685921005723333`*^9}, {
+   3.7685922507737303`*^9, 3.7685922661185007`*^9}, {3.768592304020289*^9, 
+   3.768592375392667*^9}, {3.7685924074343348`*^9, 3.768592450293131*^9}, {
+   3.768592487925362*^9, 3.768592509858986*^9}, {3.768592558144312*^9, 
+   3.7685925765332193`*^9}, {3.768653258094533*^9, 3.768653259535964*^9}, {
+   3.768653296810239*^9, 3.768653325165263*^9}, {3.7686761080698023`*^9, 
+   3.768676118867145*^9}, {3.768676172170989*^9, 3.7686761737668552`*^9}, {
+   3.7686766193540277`*^9, 3.7686766720487213`*^9}, {3.768676735885503*^9, 
+   3.768676737811677*^9}, {3.768676768178195*^9, 3.76867681466817*^9}, {
+   3.7686768644291553`*^9, 3.7686768776196117`*^9}, {3.7686770571014023`*^9, 
+   3.768677058884285*^9}, {3.768729821764618*^9, 3.7687298465774107`*^9}, {
+   3.768729883907915*^9, 3.768730035982725*^9}, {3.768730078848673*^9, 
+   3.768730181008473*^9}, {3.768730383652111*^9, 3.768730514368084*^9}, {
+   3.76873218415434*^9, 3.7687323159144506`*^9}, {3.76873238864791*^9, 
+   3.768732553033031*^9}, {3.768732615213071*^9, 3.768732725391507*^9}, {
+   3.768733110092812*^9, 3.76873322806404*^9}, {3.768733267522666*^9, 
+   3.76873335113411*^9}, {3.768733415888152*^9, 3.768733475178681*^9}, {
+   3.7687344600067663`*^9, 3.7687344994803457`*^9}, {3.768734623423978*^9, 
+   3.7687346464149647`*^9}, {3.768734736201828*^9, 3.768734781859198*^9}, {
+   3.768735282144433*^9, 3.768735332120178*^9}, {3.7687353884798517`*^9, 
+   3.768735413766238*^9}, {3.768735445663417*^9, 3.768735478335383*^9}, {
+   3.768735529672339*^9, 3.7687355300552063`*^9}, {3.7687355619823437`*^9, 
+   3.768735574774289*^9}, {3.768736100215555*^9, 3.768736222267598*^9}, {
+   3.768736263124222*^9, 3.768736326994388*^9}, {3.768736372230199*^9, 
+   3.768736521790516*^9}, {3.7687365677643557`*^9, 3.7687365995823517`*^9}, {
+   3.768736636274397*^9, 3.768736679222097*^9}, {3.7687376228304167`*^9, 
+   3.7687377065096684`*^9}, {3.768737807536459*^9, 3.7687379171930637`*^9}, {
+   3.768738041302692*^9, 3.76873804161429*^9}, {3.768738093192936*^9, 
+   3.768738247861669*^9}, {3.768738295169847*^9, 3.768738393489613*^9}, {
+   3.7687384318312893`*^9, 3.7687386106389017`*^9}, {3.76873864932723*^9, 
+   3.768738845941983*^9}, {3.7687388852594147`*^9, 3.768738914559986*^9}, {
+   3.7687389673909273`*^9, 3.7687389803542833`*^9}, {3.7687390110838833`*^9, 
+   3.768739037537294*^9}, {3.768739171120747*^9, 3.7687391846740923`*^9}, {
+   3.768739217622841*^9, 3.7687393074985743`*^9}, {3.768739343682186*^9, 
+   3.768739345836684*^9}, {3.76873942073388*^9, 3.7687395199977083`*^9}, {
+   3.768739553334271*^9, 3.7687398482412367`*^9}, {3.76874047957277*^9, 
+   3.768740480528535*^9}, {3.768740668558861*^9, 3.768740772456313*^9}, {
+   3.768740843688095*^9, 3.768740843772547*^9}, {3.768740977573083*^9, 
+   3.768740978376157*^9}, {3.768749851949107*^9, 3.768749910167823*^9}, {
+   3.7687499452470703`*^9, 3.7687500133954773`*^9}, {3.768750043766117*^9, 
+   3.768750181710903*^9}, {3.768750213516508*^9, 3.768750230466379*^9}, {
+   3.768751234569219*^9, 3.768751284842965*^9}, {3.768756123153125*^9, 
+   3.7687563007332573`*^9}, {3.768756374526928*^9, 3.768756540001376*^9}, {
+   3.768756580020071*^9, 3.76875663522649*^9}, {3.7687567085590973`*^9, 
+   3.76875672476294*^9}, {3.7687567588976383`*^9, 3.768756786838594*^9}, {
+   3.768757038868623*^9, 3.768757058188838*^9}, {3.768757398429379*^9, 
+   3.768757637713222*^9}, {3.768757745304019*^9, 3.768757762898758*^9}, {
+   3.768757879212089*^9, 3.768757879328475*^9}, {3.768757956334897*^9, 
+   3.768757964508586*^9}, {3.768758014877239*^9, 3.768758025541852*^9}, {
+   3.7687580671912193`*^9, 3.768758121876737*^9}, {3.7687582028020067`*^9, 
+   3.768758239957334*^9}, {3.76875833493703*^9, 3.768758356396758*^9}, {
+   3.768758390110227*^9, 3.76875839916794*^9}, {3.7687584702881603`*^9, 
+   3.768758473865447*^9}, {3.768758551459173*^9, 3.768758552916029*^9}, {
+   3.7687590268158216`*^9, 3.7687590283772097`*^9}, {3.768759069963798*^9, 
+   3.768759071587318*^9}, 3.768760705971548*^9, {3.768760786266316*^9, 
+   3.768760814722495*^9}, {3.768760867281146*^9, 3.768760931172768*^9}, {
+   3.768761014762652*^9, 3.76876101555375*^9}, {3.768761079362214*^9, 
+   3.768761080425498*^9}, {3.7687611833630247`*^9, 3.768761226657323*^9}, {
+   3.768761272935933*^9, 3.768761276811248*^9}, {3.768761421606674*^9, 
+   3.7687614676075897`*^9}, {3.7687618448764353`*^9, 3.768762065926571*^9}, {
+   3.7687621045863323`*^9, 3.768762113063504*^9}, {3.768762250292325*^9, 
+   3.768762306603509*^9}, {3.7687626372457743`*^9, 3.768762644432589*^9}, {
+   3.7687626895488977`*^9, 3.768762716167983*^9}, {3.768767828558247*^9, 
+   3.768767846509819*^9}, {3.768768268552593*^9, 3.7687683161188097`*^9}, {
+   3.768768393729115*^9, 3.768768422317336*^9}, {3.76876855397223*^9, 
+   3.768768555542603*^9}, {3.76876858879904*^9, 3.7687686445037947`*^9}, 
+   3.768768680147538*^9, {3.768769801646264*^9, 3.7687698493503017`*^9}, {
+   3.7687700300410357`*^9, 3.768770123268009*^9}, {3.768770166758504*^9, 
+   3.768770175362609*^9}, {3.768771441811471*^9, 3.7687714641592617`*^9}, {
+   3.7687717700456457`*^9, 3.768771782061647*^9}, {3.7687728344501*^9, 
+   3.768772840387545*^9}, {3.7724682210435123`*^9, 3.772468256951792*^9}, {
+   3.781984016068774*^9, 3.7819840321299553`*^9}, {3.7819842557295837`*^9, 
+   3.781984315738921*^9}, {3.781984357498448*^9, 3.781984408386548*^9}, {
+   3.7819844443481703`*^9, 3.781984484464284*^9}, {3.7831973268525057`*^9, 
+   3.783197327674225*^9}},
+ CellLabel->
+  "In[1417]:=",ExpressionUUID->"1373ef42-201b-4efa-8d6e-d96c24b497f9"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Trying", " ", "to", " ", "figure", " ", "out", " ", "a", " ", "closed", 
+    " ", "form", " ", "expression", " ", "for", " ", "the", " ", "L2", " ", 
+    "difference", " ", "between", " ", "Hermite", " ", "inteprolating", " ", 
+    RowBox[{"polynomials", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"f", "=", 
+     RowBox[{"PolyPiece", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"f00", ",", "f01"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"f10", ",", "f11"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"l", ",", "u"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"g", "=", 
+     RowBox[{"PolyPiece", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"g00", ",", "g01"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"g10", ",", "g11"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"l", ",", "u"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"f", "[", "x", "]"}], "\[IndentingNewLine]", 
+   RowBox[{"g", "[", "x", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.781983463832871*^9, 3.781983498873098*^9}, {
+  3.781983532580777*^9, 3.781983554750843*^9}, {3.781983764596343*^9, 
+  3.7819837976897907`*^9}, {3.781983852188259*^9, 3.781983962890935*^9}, {
+  3.781984054205144*^9, 3.781984089509521*^9}, {3.7819842459731407`*^9, 
+  3.781984246300062*^9}, {3.781984421725375*^9, 3.781984422172401*^9}, {
+  3.7819845299841547`*^9, 
+  3.781984546387603*^9}},ExpressionUUID->"de4c4f4f-6b09-475d-b372-\
+4064624f6be9"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"\"\>"], "Print",
+ CellChangeTimes->{{3.781984463398161*^9, 3.781984487359519*^9}},
+ CellLabel->
+  "During evaluation of \
+In[80]:=",ExpressionUUID->"44975d07-bb26-4b88-8ed4-46fc7c5a0e28"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Points copy:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"u", ",", "u", ",", "l", ",", "l"}], "}"}]}],
+  SequenceForm[
+  "Points copy:", {$CellContext`u, $CellContext`u, $CellContext`l, \
+$CellContext`l}],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.781984463398161*^9, 3.781984487361464*^9}},
+ CellLabel->
+  "During evaluation of \
+In[80]:=",ExpressionUUID->"20694521-67b0-41d7-bfbf-e6e640f524b8"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Coefs copy: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     FractionBox[
+      RowBox[{
+       FractionBox[
+        RowBox[{"f11", "-", 
+         FractionBox[
+          RowBox[{
+           RowBox[{"-", "f00"}], "+", "f10"}], 
+          RowBox[{
+           RowBox[{"-", "l"}], "+", "u"}]]}], 
+        RowBox[{
+         RowBox[{"-", "l"}], "+", "u"}]], "-", 
+       FractionBox[
+        RowBox[{
+         RowBox[{"-", "f01"}], "+", 
+         FractionBox[
+          RowBox[{
+           RowBox[{"-", "f00"}], "+", "f10"}], 
+          RowBox[{
+           RowBox[{"-", "l"}], "+", "u"}]]}], 
+        RowBox[{
+         RowBox[{"-", "l"}], "+", "u"}]]}], 
+      RowBox[{
+       RowBox[{"-", "l"}], "+", "u"}]], ",", 
+     FractionBox[
+      RowBox[{
+       RowBox[{"-", "f01"}], "+", 
+       FractionBox[
+        RowBox[{
+         RowBox[{"-", "f00"}], "+", "f10"}], 
+        RowBox[{
+         RowBox[{"-", "l"}], "+", "u"}]]}], 
+      RowBox[{
+       RowBox[{"-", "l"}], "+", "u"}]], ",", "f01", ",", "f00"}], "}"}]}],
+  SequenceForm[
+  "Coefs copy: ", {(-$CellContext`l + $CellContext`u)^(-1) ((-$CellContext`l + \
+$CellContext`u)^(-1) ($CellContext`f11 - (-$CellContext`f00 + \
+$CellContext`f10)/(-$CellContext`l + $CellContext`u)) - (-$CellContext`l + \
+$CellContext`u)^(-1) (-$CellContext`f01 + (-$CellContext`f00 + \
+$CellContext`f10)/(-$CellContext`l + $CellContext`u))), (-$CellContext`l + \
+$CellContext`u)^(-1) (-$CellContext`f01 + (-$CellContext`f00 + \
+$CellContext`f10)/(-$CellContext`l + $CellContext`u)), $CellContext`f01, \
+$CellContext`f00}],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.781984463398161*^9, 3.7819844873642073`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[80]:=",ExpressionUUID->"03920cb3-aa52-4e98-bd0d-b7db4ca13fb1"],
+
+Cell[BoxData["\<\"\"\>"], "Print",
+ CellChangeTimes->{{3.781984463398161*^9, 3.781984487366274*^9}},
+ CellLabel->
+  "During evaluation of \
+In[80]:=",ExpressionUUID->"dc60c026-028e-49ec-b7fb-2a395a427a0d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Points copy:\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"u", ",", "u", ",", "l", ",", "l"}], "}"}]}],
+  SequenceForm[
+  "Points copy:", {$CellContext`u, $CellContext`u, $CellContext`l, \
+$CellContext`l}],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.781984463398161*^9, 3.781984487370379*^9}},
+ CellLabel->
+  "During evaluation of \
+In[80]:=",ExpressionUUID->"7e52b9f3-0316-49a2-af6d-4df267bced8f"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Coefs copy: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     FractionBox[
+      RowBox[{
+       FractionBox[
+        RowBox[{"g11", "-", 
+         FractionBox[
+          RowBox[{
+           RowBox[{"-", "g00"}], "+", "g10"}], 
+          RowBox[{
+           RowBox[{"-", "l"}], "+", "u"}]]}], 
+        RowBox[{
+         RowBox[{"-", "l"}], "+", "u"}]], "-", 
+       FractionBox[
+        RowBox[{
+         RowBox[{"-", "g01"}], "+", 
+         FractionBox[
+          RowBox[{
+           RowBox[{"-", "g00"}], "+", "g10"}], 
+          RowBox[{
+           RowBox[{"-", "l"}], "+", "u"}]]}], 
+        RowBox[{
+         RowBox[{"-", "l"}], "+", "u"}]]}], 
+      RowBox[{
+       RowBox[{"-", "l"}], "+", "u"}]], ",", 
+     FractionBox[
+      RowBox[{
+       RowBox[{"-", "g01"}], "+", 
+       FractionBox[
+        RowBox[{
+         RowBox[{"-", "g00"}], "+", "g10"}], 
+        RowBox[{
+         RowBox[{"-", "l"}], "+", "u"}]]}], 
+      RowBox[{
+       RowBox[{"-", "l"}], "+", "u"}]], ",", "g01", ",", "g00"}], "}"}]}],
+  SequenceForm[
+  "Coefs copy: ", {(-$CellContext`l + $CellContext`u)^(-1) ((-$CellContext`l + \
+$CellContext`u)^(-1) ($CellContext`g11 - (-$CellContext`g00 + \
+$CellContext`g10)/(-$CellContext`l + $CellContext`u)) - (-$CellContext`l + \
+$CellContext`u)^(-1) (-$CellContext`g01 + (-$CellContext`g00 + \
+$CellContext`g10)/(-$CellContext`l + $CellContext`u))), (-$CellContext`l + \
+$CellContext`u)^(-1) (-$CellContext`g01 + (-$CellContext`g00 + \
+$CellContext`g10)/(-$CellContext`l + $CellContext`u)), $CellContext`g01, \
+$CellContext`g00}],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.781984463398161*^9, 3.7819844873744183`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[80]:=",ExpressionUUID->"9719228f-5448-4d36-895b-651ad36e8abe"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"g00", "+", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"-", "l"}], "+", "x"}], ")"}], " ", 
+   RowBox[{"(", 
+    RowBox[{"g01", "+", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"-", "l"}], "+", "x"}], ")"}], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox[
+         RowBox[{
+          RowBox[{"-", "g01"}], "+", 
+          FractionBox[
+           RowBox[{
+            RowBox[{"-", "g00"}], "+", "g10"}], 
+           RowBox[{
+            RowBox[{"-", "l"}], "+", "u"}]]}], 
+         RowBox[{
+          RowBox[{"-", "l"}], "+", "u"}]], "+", 
+        FractionBox[
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox[
+             RowBox[{"g11", "-", 
+              FractionBox[
+               RowBox[{
+                RowBox[{"-", "g00"}], "+", "g10"}], 
+               RowBox[{
+                RowBox[{"-", "l"}], "+", "u"}]]}], 
+             RowBox[{
+              RowBox[{"-", "l"}], "+", "u"}]], "-", 
+            FractionBox[
+             RowBox[{
+              RowBox[{"-", "g01"}], "+", 
+              FractionBox[
+               RowBox[{
+                RowBox[{"-", "g00"}], "+", "g10"}], 
+               RowBox[{
+                RowBox[{"-", "l"}], "+", "u"}]]}], 
+             RowBox[{
+              RowBox[{"-", "l"}], "+", "u"}]]}], ")"}], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"-", "u"}], "+", "x"}], ")"}]}], 
+         RowBox[{
+          RowBox[{"-", "l"}], "+", "u"}]]}], ")"}]}]}], ")"}]}]}]], "Output",
+ CellChangeTimes->{
+  3.7819840906362543`*^9, 3.7819842470748997`*^9, 3.7819842839746857`*^9, 
+   3.781984318709731*^9, {3.781984382974082*^9, 3.78198442325277*^9}, {
+   3.781984463402639*^9, 3.781984487376873*^9}},
+ CellLabel->"Out[82]=",ExpressionUUID->"3633a70e-b1ff-41e1-aa0c-946a3828072c"],
+
+Cell[BoxData[
+ RowBox[{"g00", "+", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"-", "l"}], "+", "x"}], ")"}], " ", 
+   RowBox[{"(", 
+    RowBox[{"g01", "+", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"-", "l"}], "+", "x"}], ")"}], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox[
+         RowBox[{
+          RowBox[{"-", "g01"}], "+", 
+          FractionBox[
+           RowBox[{
+            RowBox[{"-", "g00"}], "+", "g10"}], 
+           RowBox[{
+            RowBox[{"-", "l"}], "+", "u"}]]}], 
+         RowBox[{
+          RowBox[{"-", "l"}], "+", "u"}]], "+", 
+        FractionBox[
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox[
+             RowBox[{"g11", "-", 
+              FractionBox[
+               RowBox[{
+                RowBox[{"-", "g00"}], "+", "g10"}], 
+               RowBox[{
+                RowBox[{"-", "l"}], "+", "u"}]]}], 
+             RowBox[{
+              RowBox[{"-", "l"}], "+", "u"}]], "-", 
+            FractionBox[
+             RowBox[{
+              RowBox[{"-", "g01"}], "+", 
+              FractionBox[
+               RowBox[{
+                RowBox[{"-", "g00"}], "+", "g10"}], 
+               RowBox[{
+                RowBox[{"-", "l"}], "+", "u"}]]}], 
+             RowBox[{
+              RowBox[{"-", "l"}], "+", "u"}]]}], ")"}], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"-", "u"}], "+", "x"}], ")"}]}], 
+         RowBox[{
+          RowBox[{"-", "l"}], "+", "u"}]]}], ")"}]}]}], ")"}]}]}]], "Output",
+ CellChangeTimes->{
+  3.7819840906362543`*^9, 3.7819842470748997`*^9, 3.7819842839746857`*^9, 
+   3.781984318709731*^9, {3.781984382974082*^9, 3.78198442325277*^9}, {
+   3.781984463402639*^9, 3.7819844873798103`*^9}},
+ CellLabel->"Out[83]=",ExpressionUUID->"552a1e5c-f8b2-4ee9-b1cd-4e0a9faa4a28"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"l", "=", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "x1", ",", "x2"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"r", "=", 
+   RowBox[{"{", 
+    RowBox[{"y", ",", "y1", ",", "y2"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"int", "=", 
+   RowBox[{"{", 
+    RowBox[{"u0", ",", "u1"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"f", "=", 
+   RowBox[{"PolyPiece", "[", 
+    RowBox[{"l", ",", "r", ",", "int"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"toMonomial", "[", 
+    RowBox[{"coefs", ",", "points"}], "]"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"coefs", "=", 
+     RowBox[{"Reverse", "[", "coefs", "]"}]}], ";"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fix", "[", "exp_", "]"}], ":=", 
+   RowBox[{"Collect", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"ExpandAll", "[", "exp", "]"}], "/.", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"u1", "-", "u0"}], ")"}], "\[Rule]", "w"}], "}"}]}], "/.", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"u0", "*", "u1"}], ")"}], "\[Rule]", "v"}], ",", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SuperscriptBox["u0", "2"], "u1"}], ")"}], "\[Rule]", 
+         RowBox[{"v", " ", "u0"}]}], ",", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"u0", " ", 
+           SuperscriptBox["u1", "2"]}], ")"}], "\[Rule]", 
+         RowBox[{"v", " ", "u1"}]}], ",", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SuperscriptBox["u0", "2"], 
+           SuperscriptBox["u1", "2"]}], ")"}], "\[Rule]", 
+         SuperscriptBox["v", "2"]}], ",", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SuperscriptBox["u0", "3"], "u1"}], ")"}], "\[Rule]", 
+         RowBox[{"v", " ", 
+          SuperscriptBox["u0", "2"]}]}], ",", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SuperscriptBox["u0", "3"], 
+           SuperscriptBox["u1", "2"]}], ")"}], "\[Rule]", " ", 
+         RowBox[{
+          SuperscriptBox["v", "2"], "u0"}]}]}], "}"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "x1", ",", "x2", ",", "y", ",", "y1", ",", "y2"}], 
+      "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"coefs", "=", 
+    RowBox[{"fix", "[", "coefs", "]"}]}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\!\(\*SuperscriptBox[\(x\), \(5\)]\)  =  \>\"", ",", 
+      RowBox[{"fix", "[", 
+       RowBox[{"coefs", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\!\(\*SuperscriptBox[\(x\), \(4\)]\)  =  \>\"", ",", 
+      RowBox[{"fix", "[", 
+       RowBox[{"coefs", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\!\(\*SuperscriptBox[\(x\), \(3\)]\)  =  \>\"", ",", 
+      RowBox[{"fix", "[", 
+       RowBox[{"coefs", "[", 
+        RowBox[{"[", "3", "]"}], "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\!\(\*SuperscriptBox[\(x\), \(2\)]\)  =  \>\"", ",", 
+      RowBox[{"fix", "[", 
+       RowBox[{"coefs", "[", 
+        RowBox[{"[", "4", "]"}], "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\!\(\*SuperscriptBox[\(x\), \(1\)]\)  =  \>\"", ",", 
+      RowBox[{"fix", "[", 
+       RowBox[{"coefs", "[", 
+        RowBox[{"[", "5", "]"}], "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<\!\(\*SuperscriptBox[\(x\), \(0\)]\)  =  \>\"", ",", 
+      RowBox[{"fix", "[", 
+       RowBox[{"coefs", "[", 
+        RowBox[{"[", "6", "]"}], "]"}], "]"}]}], "]"}]}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"f", "'"}], "[", "z", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Reduce", "[", 
+   RowBox[{
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"u0", "<", "u1"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"ConditionalExpression", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"f", "'"}], "[", "z", "]"}], ">", "0"}], ",", 
+        RowBox[{"u0", "\[LessEqual]", "z", "\[LessEqual]", "u1"}]}], "]"}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{"x1", "\[GreaterEqual]", "0"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"y1", "\[GreaterEqual]", "0"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"x", ",", "x1", ",", "x2", ",", "y", ",", "y1", ",", "y2"}], 
+        "}"}], "\[Element]", "Reals"}]}], "\[IndentingNewLine]", "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "x1", ",", "x2", ",", "y", ",", "y1", ",", "y2"}], 
+     "}"}]}], "]"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",\
+
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellChangeTimes->CompressedData["
+1:eJwdzjtIAgEABuArysEwqQgiMzjJHiphtVzW0qyQSE1J9KCnoQURNCZFBUKT
+YAhZEUUeZKhYCA0p2gvUSuowHCKJHiJGYUtK99/w800//0+OmHRjxQRB1LKB
+TsuldUqU7jGr0rvQ6I3sw0C78AAOfYdp2Ldk98DJ4M8plJiJG5h6Z6Iw8XUR
+gxZrlIENr6MJeKhRp+DW8FqW29lO/sHGeW8BKn77edOs/gqBADJlsmrYu3wu
+gg/8EhLKFCrOzcejuhnW7oX7JsjkaZuRlVJ12mFWl3TAdG6HhpmY2w0HFl0h
+OP4hjsNW58Yz9BfV+Ez49yQ5g+X6fAgO0voI9FcZ7mBBWx+HrlVJAoapFs4V
+j+8FXqn5KRiUi9+4XlflJwzczvFmWUszOQE81qyT8Fq5x5mdcEihkNLK4Umw
+WQnbbNIO+A8Qq8g4
+  "],
+ CellLabel->"In[3]:=",ExpressionUUID->"f4b33fa0-9232-4e2f-80e1-d74ad6468a9f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"--", 
+    RowBox[{"--", 
+     RowBox[{"--", 
+      RowBox[{"--", 
+       RowBox[{"--", 
+        RowBox[{"--", 
+         RowBox[{"--", 
+          RowBox[{"--", 
+           RowBox[{"--", 
+            RowBox[{"--", 
+             RowBox[{"--", 
+              RowBox[{"--", 
+               RowBox[{"--", 
+                RowBox[{"--", 
+                 RowBox[{"--", 
+                  RowBox[{"--", 
+                   RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", "-"}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}],
+    " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "TESTING", " ", "CODE", " ", "FOR", " ", "PRODUCING", " ", "A", " ", 
+    "DEMONSTRATION"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"int", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"l", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "2"}], ",", "2", ",", "3"}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"r", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "5"}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Left:  \>\"", ",", "l"}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Right: \>\"", ",", "r"}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Construct", " ", "polynomial", " ", 
+     RowBox[{"piece", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"f", "=", 
+     RowBox[{"PolyPiece", "[", 
+      RowBox[{"l", ",", "r", ",", "int"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Coefs:\\n \>\"", ",", " ", "coefs"}], "]"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Points:\\n \>\"", ",", " ", "points"}], "]"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"funcStr", "=", 
+     RowBox[{"StringForm", "[", 
+      RowBox[{"\"\<``\>\"", ",", 
+       RowBox[{"coefs", "[", 
+        RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"i", "=", "2"}], ",", 
+      RowBox[{"i", "\[LessEqual]", 
+       RowBox[{"Length", "[", "coefs", "]"}]}], ",", 
+      RowBox[{"i", "++"}], ",", 
+      RowBox[{"funcStr", "=", 
+       RowBox[{"StringForm", "[", 
+        RowBox[{"\"\<`` + (x - ``) (``)\>\"", ",", 
+         RowBox[{"coefs", "[", 
+          RowBox[{"[", "i", "]"}], "]"}], ",", 
+         RowBox[{"points", "[", 
+          RowBox[{"[", "i", "]"}], "]"}], ",", "funcStr"}], "]"}]}]}], "]"}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Function:\\n \>\"", ",", "funcStr"}], "]"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", "]"}], "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Function:\\n \>\"", ",", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"f", "[", "x", "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"toMonomial", "[", 
+     RowBox[{"coefs", ",", "points"}], "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Coefs:\\n \>\"", ",", " ", "coefs"}], "]"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Points:\\n \>\"", ",", " ", "points"}], "]"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Compute", " ", "all", " ", "of", " ", "the", " ", "derivatives", " ", 
+     "to", " ", "verify", " ", 
+     RowBox[{"correctness", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Print", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<f[x]:\\n \>\"", ",", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"f", "[", "x", "]"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"leftEvals", "=", 
+     RowBox[{"{", 
+      RowBox[{"f", "[", 
+       RowBox[{"int", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "]"}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rightEvals", "=", 
+     RowBox[{"{", 
+      RowBox[{"f", "[", 
+       RowBox[{"int", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "]"}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"i", "=", "2"}], ",", 
+      RowBox[{"i", "\[LessEqual]", 
+       RowBox[{"Max", "[", 
+        RowBox[{
+         RowBox[{"Length", "[", "l", "]"}], ",", 
+         RowBox[{"Length", "[", "r", "]"}]}], "]"}]}], ",", 
+      RowBox[{"i", "++"}], ",", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"df", "=", 
+         RowBox[{
+          RowBox[{"Derivative", "[", 
+           RowBox[{"i", "-", "1"}], "]"}], "[", "f", "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"StringForm", "[", 
+          RowBox[{
+          "\"\<\!\(\*SuperscriptBox[\(f\), \(``\)]\)[x]:\\n ``\>\"", ",", 
+           RowBox[{"i", "-", "1"}], ",", 
+           RowBox[{"Expand", "[", 
+            RowBox[{"df", "[", "x", "]"}], "]"}]}], "]"}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"leftEvals", ",", 
+          RowBox[{"df", "[", 
+           RowBox[{"int", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"rightEvals", ",", 
+          RowBox[{"df", "[", 
+           RowBox[{"int", "[", 
+            RowBox[{"[", "2", "]"}], "]"}], "]"}]}], "]"}], ";"}], 
+       "\[IndentingNewLine]", "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Print", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<f[\>\"", ",", 
+     RowBox[{"int", "[", 
+      RowBox[{"[", "1", "]"}], "]"}], ",", "\"\<] = \>\"", ",", "leftEvals", 
+     ",", "\"\<  \>\"", ",", "l"}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<f[\>\"", ",", 
+     RowBox[{"int", "[", 
+      RowBox[{"[", "2", "]"}], "]"}], ",", "\"\<] = \>\"", ",", "rightEvals", 
+     ",", "\"\<  \>\"", ",", "r"}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Print", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Compute", " ", "a", " ", "plot", " ", "to", " ", "see", " ", "a", " ", 
+     "visual", " ", "of", " ", "the", " ", 
+     RowBox[{"function", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"funcs", "=", 
+     RowBox[{"{", 
+      RowBox[{"Expand", "[", 
+       RowBox[{"f", "[", "x", "]"}], "]"}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"labels", "=", 
+     RowBox[{"{", "\"\<f[x]\>\"", "}"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"i", "=", "2"}], ",", 
+      RowBox[{"i", "\[LessEqual]", 
+       RowBox[{"Length", "[", "l", "]"}]}], ",", 
+      RowBox[{"i", "++"}], ",", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"funcs", ",", 
+          RowBox[{"Expand", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Derivative", "[", 
+              RowBox[{"i", "-", "1"}], "]"}], "[", "f", "]"}], "[", "x", 
+            "]"}], "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"labels", ",", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{"\"\<\!\(\*SuperscriptBox[\(f\), \(``\)]\)[x]\>\"", ",", 
+            RowBox[{"i", "-", "1"}]}], "]"}]}], "]"}], ";"}], 
+       "\[IndentingNewLine]", "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"Plot", "[", 
+    RowBox[{"funcs", ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", 
+       RowBox[{"int", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", 
+       RowBox[{"int", "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}], "}"}], ",", 
+     RowBox[{"PlotLabels", "\[Rule]", "labels"}]}], "]"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"--", 
+     RowBox[{"--", 
+      RowBox[{"--", 
+       RowBox[{"--", 
+        RowBox[{"--", 
+         RowBox[{"--", 
+          RowBox[{"--", 
+           RowBox[{"--", 
+            RowBox[{"--", 
+             RowBox[{"--", 
+              RowBox[{"--", 
+               RowBox[{"--", 
+                RowBox[{"--", 
+                 RowBox[{"--", 
+                  RowBox[{"--", 
+                   RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{
+                    "--", "-"}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}],
+     " ", "*)"}], "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.772468352613989*^9, 
+  3.7724683945889807`*^9}},ExpressionUUID->"c4a4799e-eecf-459c-b849-\
+d650f74806c3"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Left:  \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "2"}], ",", "2", ",", "3"}], "}"}]}],
+  SequenceForm["Left:  ", {-2, 2, 3}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.772468379283286*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"a037f0d9-2d72-4a95-877a-e3537cd3e38c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Right: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "5"}], "}"}]}],
+  SequenceForm["Right: ", {0, 1, 5}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.772468379296599*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"51f42156-61f6-4d1c-9957-44c4e0a48754"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Coefs:\\n \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"4", ",", 
+     FractionBox["1", "2"], ",", 
+     RowBox[{"-", 
+      FractionBox["3", "2"]}], ",", 
+     FractionBox["3", "2"], ",", "2", ",", 
+     RowBox[{"-", "2"}]}], "}"}]}],
+  SequenceForm["Coefs:\n ", {4, 
+    Rational[1, 2], 
+    Rational[-3, 2], 
+    Rational[3, 2], 2, -2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.772468379312779*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"beb07d52-68bb-41b0-90dd-61c4fc181634"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Points:\\n \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "1", ",", "1", ",", "0", ",", "0", ",", "0"}], "}"}]}],
+  SequenceForm["Points:\n ", {1, 1, 1, 0, 0, 0}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.772468379322052*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"966879ca-c30f-4f9b-a122-8d9f2841a2bd"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Function:\\n \"\>", "\[InvisibleSpace]", 
+   InterpretationBox["\<\"\\!\\(\\*RowBox[{\\\"-\\\", \\\"2\\\"}]\\) + (x - \
+\\!\\(\\*RowBox[{\\\"0\\\"}]\\)) \
+(\\!\\(\\*RowBox[{\\\"\\\\\\\"\\\\\\\\!\\\\\\\\(\\\\\\\\*RowBox[{\\\\\\\\\\\\\
+\\\"2\\\\\\\\\\\\\\\"}]\\\\\\\\) + (x - \\\\\\\\!\\\\\\\\(\\\\\\\\*RowBox[{\\\
+\\\\\\\\\\\\\"0\\\\\\\\\\\\\\\"}]\\\\\\\\)) \
+(\\\\\\\\!\\\\\\\\(\\\\\\\\*RowBox[{\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\(\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\*FractionBox[\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\"3\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\", \
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"]\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\) + (x - \
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\(\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\*RowBox[{\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\"0\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\"}]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\)) (\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\!\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*RowBox[{\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\(\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\*RowBox[{\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"-\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\", FractionBox[\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"3\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", \
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"]}]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\) + (x - \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\(\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*RowBox[{\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"1\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\"}]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\)) \
+(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\!\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+*RowBox[{\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*FractionBox[\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\"1\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\", \
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\"2\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\"]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\) + (x - \
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*RowBox[{\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\
+1\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\"}]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\)) \
+(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*RowBox[{\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\(\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\*RowBox[{\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"4\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\"}]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}]\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\))\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\))\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\))\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\"}]\\\\\\\\))\\\\\\\"\\\"}]\
+\\))\"\>",
+    StringForm["`` + (x - ``) (``)", -2, 0, 
+     StringForm["`` + (x - ``) (``)", 2, 0, 
+      StringForm["`` + (x - ``) (``)", 
+       Rational[3, 2], 0, 
+       StringForm["`` + (x - ``) (``)", 
+        Rational[-3, 2], 1, 
+        StringForm["`` + (x - ``) (``)", 
+         Rational[1, 2], 1, 
+         StringForm["``", 4]]]]]],
+    Editable->False]}],
+  SequenceForm["Function:\n ", 
+   StringForm["`` + (x - ``) (``)", -2, 0, 
+    StringForm["`` + (x - ``) (``)", 2, 0, 
+     StringForm["`` + (x - ``) (``)", 
+      Rational[3, 2], 0, 
+      StringForm["`` + (x - ``) (``)", 
+       Rational[-3, 2], 1, 
+       StringForm["`` + (x - ``) (``)", 
+        Rational[1, 2], 1, 
+        StringForm["``", 4]]]]]]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.772468379332555*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"ac73daf7-12ac-466e-9740-0d1fa263c72f"],
+
+Cell[BoxData["\<\"\"\>"], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.77246837935893*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"fa7ac5bc-317b-4d86-a3f0-6efca2808600"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Function:\\n \"\>", "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "2"}], "+", 
+    RowBox[{"2", " ", "x"}], "+", 
+    FractionBox[
+     RowBox[{"3", " ", 
+      SuperscriptBox["x", "2"]}], "2"], "+", 
+    RowBox[{"2", " ", 
+     SuperscriptBox["x", "3"]}], "-", 
+    FractionBox[
+     RowBox[{"15", " ", 
+      SuperscriptBox["x", "4"]}], "2"], "+", 
+    RowBox[{"4", " ", 
+     SuperscriptBox["x", "5"]}]}]}],
+  SequenceForm[
+  "Function:\n ", -2 + 2 $CellContext`x + Rational[3, 2] $CellContext`x^2 + 
+   2 $CellContext`x^3 + Rational[-15, 2] $CellContext`x^4 + 
+   4 $CellContext`x^5],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.7724683793685217`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"00a5849a-cfad-412e-9f94-2129efda106c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Coefs:\\n \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"4", ",", 
+     RowBox[{"-", 
+      FractionBox["15", "2"]}], ",", "2", ",", 
+     FractionBox["3", "2"], ",", "2", ",", 
+     RowBox[{"-", "2"}]}], "}"}]}],
+  SequenceForm["Coefs:\n ", {4, 
+    Rational[-15, 2], 2, 
+    Rational[3, 2], 2, -2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.7724683793796263`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"d4566487-16f0-403f-8c05-eebaada28b9d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Points:\\n \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0"}], "}"}]}],
+  SequenceForm["Points:\n ", {0, 0, 0, 0, 0, 0}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.772468379390925*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"f686a860-e3da-435e-a134-d43e9d61ff21"],
+
+Cell[BoxData["\<\"\"\>"], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.7724683794021187`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"dda821e1-f5ca-4d0e-86ff-9ea8847aba10"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"f[x]:\\n \"\>", "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "2"}], "+", 
+    RowBox[{"2", " ", "x"}], "+", 
+    FractionBox[
+     RowBox[{"3", " ", 
+      SuperscriptBox["x", "2"]}], "2"], "+", 
+    RowBox[{"2", " ", 
+     SuperscriptBox["x", "3"]}], "-", 
+    FractionBox[
+     RowBox[{"15", " ", 
+      SuperscriptBox["x", "4"]}], "2"], "+", 
+    RowBox[{"4", " ", 
+     SuperscriptBox["x", "5"]}]}]}],
+  SequenceForm[
+  "f[x]:\n ", -2 + 2 $CellContext`x + Rational[3, 2] $CellContext`x^2 + 
+   2 $CellContext`x^3 + Rational[-15, 2] $CellContext`x^4 + 
+   4 $CellContext`x^5],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.7724683794090757`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"65e3f57c-d7f7-426a-9355-587683b3386d"],
+
+Cell[BoxData[
+ InterpretationBox["\<\"\\!\\(\\*SuperscriptBox[\\(f\\), \\(\\!\\(\\*RowBox[{\
+\\\"1\\\"}]\\)\\)]\\)[x]:\\n \\!\\(\\*RowBox[{\\\"2\\\", \\\"+\\\", \
+RowBox[{\\\"3\\\", \\\" \\\", \\\"x\\\"}], \\\"+\\\", RowBox[{\\\"6\\\", \\\" \
+\\\", SuperscriptBox[\\\"x\\\", \\\"2\\\"]}], \\\"-\\\", RowBox[{\\\"30\\\", \
+\\\" \\\", SuperscriptBox[\\\"x\\\", \\\"3\\\"]}], \\\"+\\\", \
+RowBox[{\\\"20\\\", \\\" \\\", SuperscriptBox[\\\"x\\\", \
+\\\"4\\\"]}]}]\\)\"\>",
+  StringForm[
+  "\!\(\*SuperscriptBox[\(f\), \(``\)]\)[x]:\n ``", 1, 2 + 3 $CellContext`x + 
+   6 $CellContext`x^2 - 30 $CellContext`x^3 + 20 $CellContext`x^4],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.772468379415474*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"6856c277-c6f4-46de-b273-186baf104299"],
+
+Cell[BoxData[
+ InterpretationBox["\<\"\\!\\(\\*SuperscriptBox[\\(f\\), \\(\\!\\(\\*RowBox[{\
+\\\"2\\\"}]\\)\\)]\\)[x]:\\n \\!\\(\\*RowBox[{\\\"3\\\", \\\"+\\\", \
+RowBox[{\\\"12\\\", \\\" \\\", \\\"x\\\"}], \\\"-\\\", RowBox[{\\\"90\\\", \\\
+\" \\\", SuperscriptBox[\\\"x\\\", \\\"2\\\"]}], \\\"+\\\", \
+RowBox[{\\\"80\\\", \\\" \\\", SuperscriptBox[\\\"x\\\", \
+\\\"3\\\"]}]}]\\)\"\>",
+  StringForm[
+  "\!\(\*SuperscriptBox[\(f\), \(``\)]\)[x]:\n ``", 2, 3 + 12 $CellContext`x - 
+   90 $CellContext`x^2 + 80 $CellContext`x^3],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.7724683794221487`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"2365699f-761e-4ba7-b66e-6cb86062a525"],
+
+Cell[BoxData["\<\"\"\>"], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.7724683794285097`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"8d33bfc5-8430-49c3-b0b0-a2a79010b302"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"f[\"\>", "\[InvisibleSpace]", "0", 
+   "\[InvisibleSpace]", "\<\"] = \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "2"}], ",", "2", ",", "3"}], "}"}], 
+   "\[InvisibleSpace]", "\<\"  \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "2"}], ",", "2", ",", "3"}], "}"}]}],
+  SequenceForm["f[", 0, "] = ", {-2, 2, 3}, "  ", {-2, 2, 3}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.772468379434911*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"04e585a9-8306-41a4-af1f-10aa31d61dae"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"f[\"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\"] = \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "5"}], "}"}], 
+   "\[InvisibleSpace]", "\<\"  \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "5"}], "}"}]}],
+  SequenceForm["f[", 1, "] = ", {0, 1, 5}, "  ", {0, 1, 5}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.7724683794415197`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"9c7e5672-9209-4992-bbec-89a46003f2dd"],
+
+Cell[BoxData["\<\"\"\>"], "Print",
+ CellChangeTimes->{
+  3.768760707182053*^9, {3.768760786818541*^9, 3.7687607979960823`*^9}, {
+   3.768760881022875*^9, 3.7687609316272993`*^9}, 3.7687610160450068`*^9, 
+   3.76876108161383*^9, 3.768761197525125*^9, 3.768761228058403*^9, 
+   3.768761277394837*^9, {3.768761436316407*^9, 3.768761468154624*^9}, 
+   3.768762069727847*^9, 3.768762115342448*^9, {3.7687622522617893`*^9, 
+   3.768762263225603*^9}, {3.768762295963018*^9, 3.768762306929825*^9}, 
+   3.768762644999405*^9, 3.768762717412915*^9, {3.768767830060359*^9, 
+   3.768767847244163*^9}, {3.768768278716308*^9, 3.768768334026959*^9}, 
+   3.768768423291232*^9, 3.7687685559487553`*^9, {3.7687685910215693`*^9, 
+   3.768768645326243*^9}, 3.768768685521364*^9, {3.768770078981552*^9, 
+   3.768770123803623*^9}, {3.768770168641911*^9, 3.76877017723102*^9}, {
+   3.768771445440205*^9, 3.768771464702128*^9}, 3.768771782937739*^9, 
+   3.7687728410332117`*^9, 3.772468294601802*^9, {3.772468354578919*^9, 
+   3.7724683794487133`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[59]:=",ExpressionUUID->"85c192e6-a5bb-4346-92c6-35e808151588"]
+}, Open  ]],
+
+Cell[BoxData[
+ GraphicsBox[{{{}, {}, 
+    TagBox[
+     {RGBColor[0.368417, 0.506779, 0.709798], AbsoluteThickness[1.6], Opacity[
+      1.], LineBox[CompressedData["
+1:eJwd1H080wkcB/B5uOvpWqSH1/LUMnUqkbRSV9+ilzpS0UoPYidUrkvF6eq4
+7NqQh9r1WiWEIiraiEmo716zy/EisxEVI0bzuElrHmL3u/vj+/q+3q/P9/vv
+hxoY5hNsSCKRvIj5b3sEqxpFfQe28qznaPV6PRq7LTnbQXEGknh1RtSUHtdl
+pqQXU3ZAkjBycmxCj571LU/vUhhgv8pWptHq0TdI9+IGJQia848NtQ3osd0h
+zi2ZEgHrGDbVuS16zFq4NzaBwoZxafdpkkCPrJnFK65SeLAmLsCw2k+Phw7f
+E2hGciAr64HIKnca5+hZfjutBFB1RRMxoZ1CW+9hVVViCaj6dac0blN44bUL
+pHx+DmILendd1FdcXGKqMDBAuGyYTT/+YhJLu9zqGn4QQwq8jZ6vmkBx6F3z
+w4MSqD95au1XkwnULt8y78kv1fBT2Dx2lts4Go7nm5jb1kIA3+uNC3MM6Xpm
+6X5+HXhFuXzSxemwju38+tXKBqhLVltUFn5Ba+7A+KNhKYyE/d62RqLFAV2H
+otlRBjYHbRa79HzGnP6KWvI1OcxoDaE1jowi2TJPrVQ2gbVHVY3CYBSTTglD
+smhvgH9V6PyR+gm/bMtXnrzcAr9yv01MdhjBCCdJyaKqVuD3KKxT92iwgy9J
+bKS+Ayk9z8KkfBgnQ5vS7C69B/vE1JGqnkFctX3GdEhFG0wcefL6+YYB3Hmf
+eqJosQKCTfzLws/04QXLgGUf/DrAMaHQfHf9R1w9eGBOi1cnpN1xpTzb2otm
+8zQzJROdwMj0jHJOU6Ixpgls0j/AgptjdYNLu/Fn54q3szy7oPmeEzvy1gfM
+/zEw6+WXLiCzzf7ot+lE7cASk95b3XBk1Mr0a3E7CvfvNOLtUML0O12ZwXfv
+8fIuTmZJrxIKNHNpGcWtSG33aM3m9AC/jPVOFvcGN21g8yhOvbAI8/4WeDeh
+n1XDuIG8F/ythInGQTLU1iZ3nWV9BNe/9l5SnZNiirF/hA9NBQz3AhGNU49m
+CuF9Q4kKpAUPy0fCa/GbaBbD5VwfiMryr7UHVCPpkb+ga34/jMnHG5Y/k+D5
+VEHyfHE/xLOr7CJmi/HFqviZpmcGoFDqLz7ggGjqcX71n+RB2Le+94SNohzb
+7KXyi5WDwJ0VM3SJWYqFGUBT+g8BN/1bs/vuT/GYgG5qOT0ES2lGo9SYAozh
+3GO1PR4GZvDajcWx2fhEZZlG3q0GUVF/V1LgTYy/y2Eq9hC2KyIrTW5ikM+Q
+Ld9bDaSjKyOtkYcWlZWFXr5qiMkv2O5qzsOE60dfJQWqYZvsUI2T7AaepN8Z
+mX2RyCsCGbc3cXEZe8GuGbnE/9Zm3T4VB6c3Rs1teUg4YUXNkS0cfDvULcvN
+J+49k4KpN9jI9S0+5l5E5JM5Md2brqB+pU84p5LIO1vQ8WoMtjVezzCSEzl7
+VL5+bSSWxeqOy5sJL1/IiZdFIG9zgF12K2EZs2RXeDh6PlhT4qogvJ0bTS4+
+i+W/1dew+gjTtkQ6+4bgLfv1170HCT8uFcVyj+O5rnQGVU3Y3fZ53j9M/H73
+6Q7RZ8IasVFm6EE0NmjK4eoIS66E5cr3YadwcyhzgnDWaGp0hDtWhmY7OE4R
+FoUb8C7S8fb/vUWYRJIQPfbyXxNWmfQ=
+       "]]},
+     Annotation[#, "Charting`Private`Tag$3797#1"]& ], 
+    TagBox[
+     {RGBColor[0.880722, 0.611041, 0.142051], AbsoluteThickness[1.6], Opacity[
+      1.], LineBox[CompressedData["
+1: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
+       "]]},
+     Annotation[#, "Charting`Private`Tag$3797#2"]& ], 
+    TagBox[
+     {RGBColor[0.560181, 0.691569, 0.194885], AbsoluteThickness[1.6], Opacity[
+      1.], LineBox[CompressedData["
+1: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
+       "]]},
+     Annotation[#, "Charting`Private`Tag$3797#3"]& ]}, {{}, {}}, {{
+     GraphicsGroupBox[{
+       {GrayLevel[1], AbsoluteThickness[4], Opacity[
+         NCache[
+          Rational[2, 3], 0.6666666666666666]], CapForm["Butt"], JoinForm[
+        "Round"], 
+        BSplineCurveBox[{
+         Offset[{0, 0}, {1.0208333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0, 0}, {1.0208333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0., 0.}, {1.0308333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0., 0.}, {1.0308333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0., 0.}, {1.0408333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0, 0}, {1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{5., 1.1102230246251565`*^-15}, {
+           1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{10., 2.220446049250313*^-15}, {
+           1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{10., 2.220446049250313*^-15}, {
+           1.0654231563912713`, -0.14186101078283062`}]}]}, 
+       {RGBColor[0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+        AbsoluteThickness[1.25], 
+        BSplineCurveBox[{
+         Offset[{0, 0}, {1.0208333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0, 0}, {1.0208333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0., 0.}, {1.0308333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0., 0.}, {1.0308333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0., 0.}, {1.0408333333333333`, -2.0408162493268378`*^-8}], 
+          Offset[{0, 0}, {1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{5., 1.1102230246251565`*^-15}, {
+           1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{10., 2.220446049250313*^-15}, {
+           1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{10., 2.220446049250313*^-15}, {
+           1.0654231563912713`, -0.14186101078283062`}]}]}, 
+       {EdgeForm[None], FaceForm[{GrayLevel[1], Opacity[
+         NCache[
+          Rational[2, 3], 0.6666666666666666]]}], 
+        PolygonBox[{
+         Offset[{30., 8.000000000000007}, {
+           1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{30., -7.999999999999994}, {
+           1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{10.000000000000002`, -7.999999999999997}, {
+           1.0654231563912713`, -0.14186101078283062`}], 
+          Offset[{9.999999999999998, 8.000000000000004}, {
+           1.0654231563912713`, -0.14186101078283062`}]}]}, 
+       {RGBColor[0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+        AbsoluteThickness[1.25], EdgeForm[None]}, {}, InsetBox[
+        RotationBox["\<\"f[x]\"\>",
+         BoxRotation->0.], 
+        Offset[{20., 4.440892098500626*^-15}, \
+{1.0654231563912713, -0.14186101078283062}], {0, 0}]}], GraphicsGroupBox[{
+       {GrayLevel[1], AbsoluteThickness[4], Opacity[
+         NCache[
+          Rational[2, 3], 0.6666666666666666]], CapForm["Butt"], JoinForm[
+        "Round"], 
+        BSplineCurveBox[{
+         Offset[{0, 0}, {1.0208333333333333`, 0.9999998979591975}], 
+          Offset[{0, 0}, {1.0208333333333333`, 0.9999998979591975}], 
+          Offset[{0., 0.}, {1.0308333333333333`, 0.9999998979591975}], 
+          Offset[{0., 0.}, {1.0308333333333333`, 0.9999998979591975}], 
+          Offset[{0., 0.}, {1.0408333333333333`, 0.9999998979591975}], 
+          Offset[{0, 0}, {1.0654231563912713`, 1.14185867667461}], 
+          Offset[{5., 1.1102230246251565`*^-15}, {1.0654231563912713`, 
+           1.14185867667461}], 
+          Offset[{10., 2.220446049250313*^-15}, {1.0654231563912713`, 
+           1.14185867667461}], 
+          Offset[{10., 2.220446049250313*^-15}, {1.0654231563912713`, 
+           1.14185867667461}]}]}, 
+       {RGBColor[0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+        AbsoluteThickness[1.25], 
+        BSplineCurveBox[{
+         Offset[{0, 0}, {1.0208333333333333`, 0.9999998979591975}], 
+          Offset[{0, 0}, {1.0208333333333333`, 0.9999998979591975}], 
+          Offset[{0., 0.}, {1.0308333333333333`, 0.9999998979591975}], 
+          Offset[{0., 0.}, {1.0308333333333333`, 0.9999998979591975}], 
+          Offset[{0., 0.}, {1.0408333333333333`, 0.9999998979591975}], 
+          Offset[{0, 0}, {1.0654231563912713`, 1.14185867667461}], 
+          Offset[{5., 1.1102230246251565`*^-15}, {1.0654231563912713`, 
+           1.14185867667461}], 
+          Offset[{10., 2.220446049250313*^-15}, {1.0654231563912713`, 
+           1.14185867667461}], 
+          Offset[{10., 2.220446049250313*^-15}, {1.0654231563912713`, 
+           1.14185867667461}]}]}, 
+       {EdgeForm[None], FaceForm[{GrayLevel[1], Opacity[
+         NCache[
+          Rational[2, 3], 0.6666666666666666]]}], 
+        PolygonBox[{
+         Offset[{37., 9.500000000000009}, {1.0654231563912713`, 
+           1.14185867667461}], 
+          Offset[{37., -9.499999999999991}, {1.0654231563912713`, 
+           1.14185867667461}], 
+          Offset[{10.000000000000002`, -9.499999999999998}, {
+           1.0654231563912713`, 1.14185867667461}], 
+          Offset[{9.999999999999998, 9.500000000000002}, {1.0654231563912713`,
+            1.14185867667461}]}]}, 
+       {RGBColor[0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+        AbsoluteThickness[1.25], EdgeForm[None]}, {}, InsetBox[
+        RotationBox[
+         InterpretationBox["\<\"\\!\\(\\*SuperscriptBox[\\(f\\), \
+\\(\\!\\(\\*FormBox[\\\"1\\\", TraditionalForm]\\)\\)]\\)[x]\"\>",
+          StringForm["\!\(\*SuperscriptBox[\(f\), \(``\)]\)[x]", 1],
+          Editable->False],
+         BoxRotation->0.], 
+        Offset[{23.5, 5.218048215738236*^-15}, \
+{1.0654231563912713, 1.14185867667461}], {0, 0}]}], GraphicsGroupBox[{
+       {GrayLevel[1], AbsoluteThickness[4], Opacity[
+         NCache[
+          Rational[2, 3], 0.6666666666666666]], CapForm["Butt"], JoinForm[
+        "Round"], 
+        BSplineCurveBox[{
+         Offset[{0, 0}, {1.0208333333333333`, 4.999998530612318}], 
+          Offset[{0, 0}, {1.0208333333333333`, 4.999998530612318}], 
+          Offset[{0., 0.}, {1.0308333333333333`, 4.999998530612318}], 
+          Offset[{0., 0.}, {1.0308333333333333`, 4.999998530612318}], 
+          Offset[{0., 0.}, {1.0408333333333333`, 4.999998530612318}], 
+          Offset[{0, 0}, {1.0654231563912713`, 4.880260829843793}], 
+          Offset[{5., 1.1102230246251565`*^-15}, {1.0654231563912713`, 
+           4.880260829843793}], 
+          Offset[{10., 2.220446049250313*^-15}, {1.0654231563912713`, 
+           4.880260829843793}], 
+          Offset[{10., 2.220446049250313*^-15}, {1.0654231563912713`, 
+           4.880260829843793}]}]}, 
+       {RGBColor[0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+        AbsoluteThickness[1.25], 
+        BSplineCurveBox[{
+         Offset[{0, 0}, {1.0208333333333333`, 4.999998530612318}], 
+          Offset[{0, 0}, {1.0208333333333333`, 4.999998530612318}], 
+          Offset[{0., 0.}, {1.0308333333333333`, 4.999998530612318}], 
+          Offset[{0., 0.}, {1.0308333333333333`, 4.999998530612318}], 
+          Offset[{0., 0.}, {1.0408333333333333`, 4.999998530612318}], 
+          Offset[{0, 0}, {1.0654231563912713`, 4.880260829843793}], 
+          Offset[{5., 1.1102230246251565`*^-15}, {1.0654231563912713`, 
+           4.880260829843793}], 
+          Offset[{10., 2.220446049250313*^-15}, {1.0654231563912713`, 
+           4.880260829843793}], 
+          Offset[{10., 2.220446049250313*^-15}, {1.0654231563912713`, 
+           4.880260829843793}]}]}, 
+       {EdgeForm[None], FaceForm[{GrayLevel[1], Opacity[
+         NCache[
+          Rational[2, 3], 0.6666666666666666]]}], 
+        PolygonBox[{
+         Offset[{37., 9.500000000000009}, {1.0654231563912713`, 
+           4.880260829843793}], 
+          Offset[{37., -9.499999999999991}, {1.0654231563912713`, 
+           4.880260829843793}], 
+          Offset[{10.000000000000002`, -9.499999999999998}, {
+           1.0654231563912713`, 4.880260829843793}], 
+          Offset[{9.999999999999998, 9.500000000000002}, {1.0654231563912713`,
+            4.880260829843793}]}]}, 
+       {RGBColor[0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+        AbsoluteThickness[1.25], EdgeForm[None]}, {}, InsetBox[
+        RotationBox[
+         InterpretationBox["\<\"\\!\\(\\*SuperscriptBox[\\(f\\), \
+\\(\\!\\(\\*FormBox[\\\"2\\\", TraditionalForm]\\)\\)]\\)[x]\"\>",
+          StringForm["\!\(\*SuperscriptBox[\(f\), \(``\)]\)[x]", 2],
+          Editable->False],
+         BoxRotation->0.], 
+        Offset[{23.5, 5.218048215738236*^-15}, \
+{1.0654231563912713, 4.880260829843793}], {0, 0}]}]}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  DisplayFunction->Identity,
+  Frame->{{False, False}, {False, False}},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameTicks->{{Automatic, 
+     Charting`ScaledFrameTicks[{Identity, Identity}]}, {Automatic, 
+     Charting`ScaledFrameTicks[{Identity, Identity}]}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  ImagePadding->{{All, 57.05233630085766}, {All, All}},
+  Method->{
+   "DefaultBoundaryStyle" -> Automatic, "DefaultMeshStyle" -> 
+    AbsolutePointSize[6], "ScalingFunctions" -> None, 
+    "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+        (Identity[#]& )[
+         Part[#, 1]], 
+        (Identity[#]& )[
+         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+        (Identity[#]& )[
+         Part[#, 1]], 
+        (Identity[#]& )[
+         Part[#, 2]]}& )}},
+  PlotRange->{{0, 1}, {-5.302576578416076, 4.999998530612318}},
+  PlotRangeClipping->False,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.05], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.768760798308278*^9, {3.7687608812395678`*^9, 3.768760931850275*^9}, 
+   3.768761016279867*^9, 3.7687610818944197`*^9, 3.768761197797724*^9, 
+   3.768761228313211*^9, 3.7687612776553698`*^9, {3.768761436934311*^9, 
+   3.768761468416306*^9}, 3.7687620700084352`*^9, 3.7687621156028957`*^9, {
+   3.768762252535679*^9, 3.7687622634983253`*^9}, {3.768762296246091*^9, 
+   3.768762307260659*^9}, 3.7687626452826023`*^9, 3.768762717681258*^9, {
+   3.768767830347204*^9, 3.7687678475324583`*^9}, {3.768768278996409*^9, 
+   3.768768334952244*^9}, 3.76876842354564*^9, 3.768768556107119*^9, {
+   3.7687685912641497`*^9, 3.768768646016*^9}, 3.768768685669788*^9, {
+   3.768770079126544*^9, 3.768770123945838*^9}, {3.76877016877575*^9, 
+   3.768770177381154*^9}, {3.768771445834207*^9, 3.768771465121903*^9}, 
+   3.768771783430809*^9, 3.768772841564267*^9, 3.772468295353075*^9, {
+   3.772468354858427*^9, 3.772468379826791*^9}},
+ CellLabel->"Out[87]=",ExpressionUUID->"b32e5c39-326f-415c-9e43-6a2e046caa8a"]
+}, Open  ]]
+},
+WindowSize->{1278, 687},
+WindowMargins->{{80, Automatic}, {Automatic, 26}},
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 27742, 574, 1807, "Input",ExpressionUUID->"1373ef42-201b-4efa-8d6e-d96c24b497f9",
+ InitializationCell->True],
+Cell[CellGroupData[{
+Cell[28325, 598, 1608, 40, 115, "Input",ExpressionUUID->"de4c4f4f-6b09-475d-b372-4064624f6be9"],
+Cell[CellGroupData[{
+Cell[29958, 642, 205, 4, 24, "Print",ExpressionUUID->"44975d07-bb26-4b88-8ed4-46fc7c5a0e28"],
+Cell[30166, 648, 468, 12, 24, "Print",ExpressionUUID->"20694521-67b0-41d7-bfbf-e6e640f524b8"],
+Cell[30637, 662, 1819, 51, 59, "Print",ExpressionUUID->"03920cb3-aa52-4e98-bd0d-b7db4ca13fb1"],
+Cell[32459, 715, 205, 4, 24, "Print",ExpressionUUID->"dc60c026-028e-49ec-b7fb-2a395a427a0d"],
+Cell[32667, 721, 468, 12, 24, "Print",ExpressionUUID->"7e52b9f3-0316-49a2-af6d-4df267bced8f"],
+Cell[33138, 735, 1819, 51, 58, "Print",ExpressionUUID->"9719228f-5448-4d36-895b-651ad36e8abe"]
+}, Open  ]],
+Cell[34972, 789, 1850, 56, 100, "Output",ExpressionUUID->"3633a70e-b1ff-41e1-aa0c-946a3828072c"],
+Cell[36825, 847, 1852, 56, 100, "Output",ExpressionUUID->"552a1e5c-f8b2-4ee9-b1cd-4e0a9faa4a28"]
+}, Open  ]],
+Cell[38692, 906, 5649, 152, 560, "Input",ExpressionUUID->"f4b33fa0-9232-4e2f-80e1-d74ad6468a9f"],
+Cell[CellGroupData[{
+Cell[44366, 1062, 9187, 254, 988, "Input",ExpressionUUID->"c4a4799e-eecf-459c-b849-d650f74806c3"],
+Cell[CellGroupData[{
+Cell[53578, 1320, 1335, 25, 24, "Print",ExpressionUUID->"a037f0d9-2d72-4a95-877a-e3537cd3e38c"],
+Cell[54916, 1347, 1313, 24, 24, "Print",ExpressionUUID->"51f42156-61f6-4d1c-9957-44c4e0a48754"],
+Cell[56232, 1373, 1528, 32, 59, "Print",ExpressionUUID->"beb07d52-68bb-41b0-90dd-61c4fc181634"],
+Cell[57763, 1407, 1359, 24, 44, "Print",ExpressionUUID->"966879ca-c30f-4f9b-a122-8d9f2841a2bd"],
+Cell[59125, 1433, 44788, 582, 59, "Print",ExpressionUUID->"ac73daf7-12ac-466e-9740-0d1fa263c72f"],
+Cell[103916, 2017, 1129, 18, 24, "Print",ExpressionUUID->"fa7ac5bc-317b-4d86-a3f0-6efca2808600"],
+Cell[105048, 2037, 1770, 38, 62, "Print",ExpressionUUID->"00a5849a-cfad-412e-9f94-2129efda106c"],
+Cell[106821, 2077, 1490, 30, 59, "Print",ExpressionUUID->"d4566487-16f0-403f-8c05-eebaada28b9d"],
+Cell[108314, 2109, 1359, 24, 44, "Print",ExpressionUUID->"f686a860-e3da-435e-a134-d43e9d61ff21"],
+Cell[109676, 2135, 1132, 18, 24, "Print",ExpressionUUID->"dda821e1-f5ca-4d0e-86ff-9ea8847aba10"],
+Cell[110811, 2155, 1762, 38, 62, "Print",ExpressionUUID->"65e3f57c-d7f7-426a-9355-587683b3386d"],
+Cell[112576, 2195, 1755, 29, 46, "Print",ExpressionUUID->"6856c277-c6f4-46de-b273-186baf104299"],
+Cell[114334, 2226, 1655, 28, 46, "Print",ExpressionUUID->"2365699f-761e-4ba7-b66e-6cb86062a525"],
+Cell[115992, 2256, 1132, 18, 24, "Print",ExpressionUUID->"8d33bfc5-8430-49c3-b0b0-a2a79010b302"],
+Cell[117127, 2276, 1566, 30, 24, "Print",ExpressionUUID->"04e585a9-8306-41a4-af1f-10aa31d61dae"],
+Cell[118696, 2308, 1524, 28, 24, "Print",ExpressionUUID->"9c7e5672-9209-4992-bbec-89a46003f2dd"],
+Cell[120223, 2338, 1132, 18, 24, "Print",ExpressionUUID->"85c192e6-a5bb-4346-92c6-35e808151588"]
+}, Open  ]],
+Cell[121370, 2359, 30390, 534, 201, "Output",ExpressionUUID->"b32e5c39-326f-415c-9e43-6a2e046caa8a"]
+}, Open  ]]
+}
+]
+*)
+
