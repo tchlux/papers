@@ -1,0 +1,564 @@
+Compilation started at Mon Apr 23 16:14:38
+
+python3 process_recidivism.py 
+
+SUMMARY:
+
+  This data has 21646 rows, 17 columns.
+    3 columns are recognized as ordinal, 14 are categorical.
+    18398 rows have missing values.
+
+COLUMNS:
+
+   0 -- "Fiscal Year Released"                  <class 'int'> (5 unique values)
+    2010  3716 ( 17.2%) #########
+    2011  3917 ( 18.1%) #########
+    2012  4740 ( 21.9%) ###########
+    2013  4687 ( 21.7%) ###########
+    2014  4586 ( 21.2%) ###########
+
+   1 -- "Recidivism Reporting Year"             <class 'int'> (5 unique values)
+    2013  3716 ( 17.2%) #########
+    2014  3917 ( 18.1%) #########
+    2015  4740 ( 21.9%) ###########
+    2016  4687 ( 21.7%) ###########
+    2017  4586 ( 21.2%) ###########
+
+   2 -- "Race - Ethnicity"                      <class 'str'> (12 unique values)
+    None                                                   30 (  0.1%) 
+    "White - Non-Hispanic"                              14586 ( 67.4%) ##################################
+    "Black - Non-Hispanic"                               5106 ( 23.6%) ############
+    "White - Hispanic"                                   1284 (  5.9%) ###
+    "American Indian or Alaska Native - Non-Hispanic"     404 (  1.9%) #
+    "Asian or Pacific Islander - Non-Hispanic"            169 (  0.8%) 
+    "Black - Hispanic"                                     30 (  0.1%) 
+    "American Indian or Alaska Native - Hispanic"          16 (  0.1%) 
+    "White - "                                             11 (  0.1%) 
+    "N/A - "                                                5 (  0.0%) 
+    "Asian or Pacific Islander - Hispanic"                  3 (  0.0%) 
+    "Black - "                                              2 (  0.0%) 
+
+   3 -- "Sex"                                   <class 'str'> (3 unique values)
+    "M"      18925 ( 87.4%) ############################################
+    "F"       2718 ( 12.6%) ######
+    "N/A"        3 (  0.0%) 
+
+   4 -- "Age At Release"                        <class 'str'> (6 unique values)
+    None                 3 (  0.0%) 
+    "25-34"           7919 ( 36.6%) ##################
+    "35-44"           5174 ( 23.9%) ############
+    "Under 25"        3845 ( 17.8%) #########
+    "45-54"           3639 ( 16.8%) ########
+    "55 and Older"    1066 (  4.9%) ##
+
+   5 -- "Convicting Offense Classification"     <class 'str'> (15 unique values)
+    "D Felony"                                    8773 ( 40.5%) ####################
+    "C Felony"                                    5664 ( 26.2%) #############
+    "Aggravated Misdemeanor"                      4076 ( 18.8%) #########
+    "B Felony"                                    1494 (  6.9%) ###
+    "Felony - Enhancement to Original Penalty"    1200 (  5.5%) ###
+    "Felony - Enhanced"                            220 (  1.0%) #
+    "Serious Misdemeanor"                          128 (  0.6%) 
+    "Special Sentence 2005"                         69 (  0.3%) 
+    "Felony - Mandatory Minimum"                     9 (  0.0%) 
+    "Other Felony"                                   3 (  0.0%) 
+    "A Felony"                                       3 (  0.0%) 
+    "Sexual Predator Community Supervision"          2 (  0.0%) 
+    "Other Felony (Old Code)"                        2 (  0.0%) 
+    "Simple Misdemeanor"                             2 (  0.0%) 
+    "Other Misdemeanor"                              1 (  0.0%) 
+
+   6 -- "Convicting Offense Type"               <class 'str'> (5 unique values)
+    "Drug"            6603 ( 30.5%) ###############
+    "Property"        6091 ( 28.1%) ##############
+    "Violent"         4854 ( 22.4%) ###########
+    "Public Order"    3097 ( 14.3%) #######
+    "Other"           1001 (  4.6%) ##
+
+   7 -- "Convicting Offense Subtype"            <class 'str'> (26 unique values)
+    "Trafficking"                        5426 ( 25.1%) #############
+    "Assault"                            2647 ( 12.2%) ######
+    "Burglary"                           2449 ( 11.3%) ######
+    "Theft"                              2201 ( 10.2%) #####
+    "OWI"                                1571 (  7.3%) ####
+    "Sex"                                1063 (  4.9%) ##
+    "Forgery/Fraud"                      1002 (  4.6%) ##
+    "Drug Possession"                     933 (  4.3%) ##
+    "Other Criminal"                      891 (  4.1%) ##
+    "Other Violent"                       492 (  2.3%) #
+    "Traffic"                             451 (  2.1%) #
+    "Murder/Manslaughter"                 350 (  1.6%) #
+    "Weapons"                             301 (  1.4%) #
+    "Alcohol"                             298 (  1.4%) #
+    "Vandalism"                           295 (  1.4%) #
+    "Robbery"                             290 (  1.3%) #
+    "Other Drug"                          244 (  1.1%) #
+    "Other Public Order"                  241 (  1.1%) #
+    "Arson"                               136 (  0.6%) 
+    "Sex Offender Registry/Residency"     131 (  0.6%) 
+    "Flight/Escape"                        70 (  0.3%) 
+    "Special Sentence Revocation"          63 (  0.3%) 
+    "Kidnap"                               53 (  0.2%) 
+    "Prostitution/Pimping"                 34 (  0.2%) 
+    "Stolen Property"                       8 (  0.0%) 
+    "Animals"                               6 (  0.0%) 
+
+   8 -- "Release Type"                          <class 'str'> (13 unique values)
+    None                                     1762 (  8.1%) ####
+    "Parole"                                 9810 ( 45.3%) #######################
+    "Discharged – End of Sentence"           5039 ( 23.3%) ############
+    "Parole Granted"                         2883 ( 13.3%) #######
+    "Discharged - Expiration of Sentence"    1215 (  5.6%) ###
+    "Special Sentence"                        347 (  1.6%) #
+    "Paroled w/Immediate Discharge"           204 (  0.9%) 
+    "Released to Special Sentence"            172 (  0.8%) 
+    "Paroled to Detainer - INS"                81 (  0.4%) 
+    "Paroled to Detainer - Out of State"       56 (  0.3%) 
+    "Paroled to Detainer - Iowa"               41 (  0.2%) 
+    "Paroled to Detainer - U.S. Marshall"      35 (  0.2%) 
+    "Interstate Compact Parole"                 1 (  0.0%) 
+
+   9 -- "Main Supervising District"             <class 'str'> (11 unique values)
+    None                    8470 ( 39.1%) ####################
+    "5JD"                   3970 ( 18.3%) #########
+    "1JD"                   2188 ( 10.1%) #####
+    "2JD"                   1526 (  7.0%) ####
+    "7JD"                   1262 (  5.8%) ###
+    "8JD"                   1253 (  5.8%) ###
+    "3JD"                    931 (  4.3%) ##
+    "6JD"                    873 (  4.0%) ##
+    "4JD"                    514 (  2.4%) #
+    "ISC"                    350 (  1.6%) #
+    "Interstate Compact"     309 (  1.4%) #
+
+  10 -- "Recidivism - Return to Prison"         <class 'str'> (2 unique values)
+    "No"     14619 ( 67.5%) ##################################
+    "Yes"     7027 ( 32.5%) ################
+
+  11 -- "Recidivism Type"                       <class 'str'> (4 unique values)
+    None               2963 ( 13.7%) #######
+    "No Recidivism"   11656 ( 53.8%) ###########################
+    "New"              4554 ( 21.0%) ###########
+    "Tech"             2473 ( 11.4%) ######
+
+  12 -- "Days to Recidivism"                    <class 'int'> (1077 unique values)
+    None                 14619 ( 67.5%) ##################################
+    [0.00e+00, 4.38e+01)   101 (  0.5%) 
+    [4.38e+01, 8.76e+01)   252 (  1.2%) #
+    [8.76e+01, 1.31e+02)   327 (  1.5%) #
+    [1.31e+02, 1.75e+02)   420 (  1.9%) #
+    [1.75e+02, 2.19e+02)   438 (  2.0%) #
+    [2.19e+02, 2.63e+02)   447 (  2.1%) #
+    [2.63e+02, 3.07e+02)   466 (  2.2%) #
+    [3.07e+02, 3.50e+02)   436 (  2.0%) #
+    [3.50e+02, 3.94e+02)   384 (  1.8%) #
+    [3.94e+02, 4.38e+02)   377 (  1.7%) #
+    [4.38e+02, 4.82e+02)   344 (  1.6%) #
+    [4.82e+02, 5.26e+02)   314 (  1.5%) #
+    [5.26e+02, 5.69e+02)   277 (  1.3%) #
+    [5.69e+02, 6.13e+02)   277 (  1.3%) #
+    [6.13e+02, 6.57e+02)   245 (  1.1%) #
+    [6.57e+02, 7.01e+02)   248 (  1.1%) #
+    [7.01e+02, 7.45e+02)   249 (  1.2%) #
+    [7.45e+02, 7.88e+02)   198 (  0.9%) 
+    [7.88e+02, 8.32e+02)   199 (  0.9%) 
+    [8.32e+02, 8.76e+02)   191 (  0.9%) 
+    [8.76e+02, 9.20e+02)   193 (  0.9%) 
+    [9.20e+02, 9.64e+02)   176 (  0.8%) 
+    [9.64e+02, 1.01e+03)   144 (  0.7%) 
+    [1.01e+03, 1.05e+03)   168 (  0.8%) 
+    [1.05e+03, 1.10e+03]   156 (  0.7%) 
+
+  13 -- "New Conviction Offense Classification" <class 'str'> (15 unique values)
+    None                                         16582 ( 76.6%) ######################################
+    "D Felony"                                    1900 (  8.8%) ####
+    "Aggravated Misdemeanor"                      1282 (  5.9%) ###
+    "C Felony"                                     869 (  4.0%) ##
+    "Felony - Enhancement to Original Penalty"     517 (  2.4%) #
+    "Serious Misdemeanor"                          227 (  1.0%) #
+    "B Felony"                                     222 (  1.0%) #
+    "Public Order"                                  13 (  0.1%) 
+    "A Felony"                                      10 (  0.0%) 
+    "Simple Misdemeanor"                             9 (  0.0%) 
+    "Special Sentence 2005"                          6 (  0.0%) 
+    "Violent"                                        4 (  0.0%) 
+    "Other Misdemeanor"                              2 (  0.0%) 
+    "Drug"                                           2 (  0.0%) 
+    "Felony - Mandatory Minimum"                     1 (  0.0%) 
+
+  14 -- "New Conviction Offense Type"           <class 'str'> (11 unique values)
+    None                16582 ( 76.6%) ######################################
+    "Drug"               1474 (  6.8%) ###
+    "Property"           1393 (  6.4%) ###
+    "Public Order"        987 (  4.6%) ##
+    "Violent"             806 (  3.7%) ##
+    "Other"               385 (  1.8%) #
+    "Flight/Escape"        12 (  0.1%) 
+    "Assault"               3 (  0.0%) 
+    "Drug Possession"       2 (  0.0%) 
+    "Traffic"               1 (  0.0%) 
+    "Sex"                   1 (  0.0%) 
+
+  15 -- "New Conviction Offense Sub Type"       <class 'str'> (26 unique values)
+    None                     16601 ( 76.7%) ######################################
+    "Trafficking"             1005 (  4.6%) ##
+    "Assault"                  603 (  2.8%) #
+    "Theft"                    595 (  2.7%) #
+    "Burglary"                 469 (  2.2%) #
+    "Drug Possession"          431 (  2.0%) #
+    "Other Criminal"           376 (  1.7%) #
+    "OWI"                      298 (  1.4%) #
+    "Forgery/Fraud"            247 (  1.1%) #
+    "Traffic"                  182 (  0.8%) 
+    "Other Public Order"       164 (  0.8%) 
+    "Alcohol"                  128 (  0.6%) 
+    "Flight/Escape"            126 (  0.6%) 
+    "Weapons"                   82 (  0.4%) 
+    "Other Violent"             68 (  0.3%) 
+    "Vandalism"                 55 (  0.3%) 
+    "Robbery"                   52 (  0.2%) 
+    "Sex"                       44 (  0.2%) 
+    "Other Drug"                38 (  0.2%) 
+    "Murder/Manslaughter"       30 (  0.1%) 
+    "Arson"                     25 (  0.1%) 
+    "Kidnap"                    16 (  0.1%) 
+    "Prostitution/Pimping"       7 (  0.0%) 
+    "Animals"                    2 (  0.0%) 
+    "Other Property"             1 (  0.0%) 
+    "Stolen Property"            1 (  0.0%) 
+
+  16 -- "Part of Target Population"             <class 'str'> (2 unique values)
+    "Yes"    11468 ( 53.0%) ##########################
+    "No"     10178 ( 47.0%) ########################
+
+
+# Removing rows with value 'Black - Hispanic' in column 'Race - Ethnicity' because they only have 0.14% support (30 instances):
+#   [803, 809, 3381, 3791, 6667, 6932, 7245, 7853, 7943, 9274, 9275, 9276, 9277, 10104, 10105, 10106, 10510, 10738, 14035, 14159, 14263, 14540, 14616, 14931, 15291, 15439, 17833, 20217, 20333, 20661]
+#
+# Removing rows with value 'None' in column 'Race - Ethnicity' because they only have 0.14% support (30 instances):
+#   [9217, 10024, 10025, 10026, 10027, 10028, 10029, 10422, 10423, 10424, 10425, 10504, 10505, 10665, 11025, 11026, 11092, 11143, 11231, 11232, 11393, 11881, 12307, 12308, 12309, 12310, 12311, 12312, 12313, 12335]
+#
+# Removing rows with value 'American Indian or Alaska Native - Hispanic' in column 'Race - Ethnicity' because they only have 0.07% support (16 instances):
+#   [1153, 1192, 1920, 3368, 4216, 6922, 7218, 8193, 8736, 10506, 12868, 14531, 14803, 14973, 21181, 21356]
+#
+# Removing rows with value 'White - ' in column 'Race - Ethnicity' because they only have 0.05% support (11 instances):
+#   [60, 2517, 3039, 3166, 3480, 5173, 6995, 7348, 7349, 10528, 15781]
+#
+# Removing rows with value 'N/A - ' in column 'Race - Ethnicity' because they only have 0.02% support (5 instances):
+#   [6544, 10778, 11276, 11605, 19245]
+#
+# Removing rows with value 'Asian or Pacific Islander - Hispanic' in column 'Race - Ethnicity' because they only have 0.01% support (3 instances):
+#   [1198, 8649, 20373]
+#
+# Removing rows with value 'Black - ' in column 'Race - Ethnicity' because they only have 0.01% support (2 instances):
+#   [2890, 6520]
+#
+# Removing rows with value 'N/A' in column 'Sex' because they only have 0.01% support (3 instances):
+#   [10778, 11276, 11605]
+#
+# Removing rows with value 'None' in column 'Age At Release' because they only have 0.01% support (3 instances):
+#   [10778, 11276, 11605]
+#
+# Removing rows with value 'Special Sentence 2005' in column 'Convicting Offense Classification' because they only have 0.32% support (69 instances):
+#   [633, 4058, 4066, 4794, 6086, 7692, 8145, 8580, 8631, 8771, 10526, 10527, 10632, 10647, 10649, 12406, 12484, 12518, 12843, 12954, 12994, 13306, 13592, 13706, 13976, 14580, 14618, 14849, 15028, 15051, 15322, 15498, 16066, 16219, 16533, 16679, 16733, 17299, 17760, 18105, 18175, 18196, 18207, 18228, 18473, 18608, 18893, 18942, 19011, 19465, 19501, 19579, 19598, 19890, 19923, 19975, 20008, 20286, 20326, 20395, 20544, 20545, 20708, 20743, 20770, 20975, 21111, 21248, 21416]
+#
+# Removing rows with value 'Felony - Mandatory Minimum' in column 'Convicting Offense Classification' because they only have 0.04% support (9 instances):
+#   [5996, 6058, 10597, 10599, 10607, 10608, 16635, 18642, 20599]
+#
+# Removing rows with value 'Other Felony' in column 'Convicting Offense Classification' because they only have 0.01% support (3 instances):
+#   [10606, 11192, 13925]
+#
+# Removing rows with value 'A Felony' in column 'Convicting Offense Classification' because they only have 0.01% support (3 instances):
+#   [11238, 17417, 17632]
+#
+# Removing rows with value 'Sexual Predator Community Supervision' in column 'Convicting Offense Classification' because they only have 0.01% support (2 instances):
+#   [2408, 2418]
+#
+# Removing rows with value 'Other Felony (Old Code)' in column 'Convicting Offense Classification' because they only have 0.01% support (2 instances):
+#   [2847, 2850]
+#
+# Removing rows with value 'Simple Misdemeanor' in column 'Convicting Offense Classification' because they only have 0.01% support (2 instances):
+#   [3449, 16554]
+#
+# Removing rows with value 'Other Misdemeanor' in column 'Convicting Offense Classification' because they only have 0.00% support (1 instances):
+#   [18139]
+#
+# Removing rows with value 'Flight/Escape' in column 'Convicting Offense Subtype' because they only have 0.32% support (70 instances):
+#   [63, 234, 268, 481, 508, 3005, 3006, 3007, 3008, 3009, 3011, 3013, 3014, 4206, 6788, 6789, 6790, 6791, 6792, 6793, 6794, 6795, 6796, 6797, 6798, 6799, 6800, 6801, 7810, 7932, 8313, 8320, 8641, 8868, 8957, 9009, 11387, 11388, 11389, 11390, 11391, 11392, 11393, 12443, 12656, 12704, 13207, 13608, 13826, 14685, 15031, 15341, 16026, 16155, 17506, 17507, 17736, 18003, 18529, 19232, 19623, 20103, 20104, 20137, 20209, 20340, 20625, 20675, 21429, 21645]
+#
+# Removing rows with value 'Special Sentence Revocation' in column 'Convicting Offense Subtype' because they only have 0.29% support (63 instances):
+#   [102, 351, 363, 662, 2230, 2231, 2232, 7658, 7678, 7689, 7690, 7702, 7718, 7790, 7864, 7995, 8005, 8057, 8153, 8206, 8218, 8244, 8248, 8352, 8372, 8379, 8427, 8481, 8720, 8821, 8973, 9127, 10427, 10428, 10429, 10430, 10431, 10432, 10433, 10434, 10435, 10436, 10437, 10438, 10439, 10440, 10441, 10442, 10443, 10444, 10445, 10446, 10447, 10448, 10449, 10450, 10451, 10452, 10453, 10454, 10455, 10456, 10457]
+#
+# Removing rows with value 'Kidnap' in column 'Convicting Offense Subtype' because they only have 0.24% support (53 instances):
+#   [230, 2879, 2880, 2881, 2882, 2883, 2884, 2885, 2886, 2887, 4122, 4353, 6651, 6652, 6653, 6654, 6655, 6656, 6657, 6658, 6659, 6660, 6661, 8130, 11233, 11234, 11235, 11236, 11237, 11238, 11239, 13825, 14049, 14413, 15092, 15364, 15372, 15679, 15849, 15877, 16020, 16053, 16071, 16125, 16405, 16583, 17759, 17962, 18558, 19522, 19942, 20704, 20876]
+#
+# Removing rows with value 'Prostitution/Pimping' in column 'Convicting Offense Subtype' because they only have 0.16% support (34 instances):
+#   [384, 2488, 2489, 2490, 2491, 3888, 4095, 4882, 6152, 6153, 6154, 7669, 8799, 10721, 10722, 10723, 10724, 10725, 12468, 12631, 13589, 14259, 15474, 16175, 16408, 17047, 17209, 17700, 18182, 18275, 19079, 19141, 19450, 20943]
+#
+# Removing rows with value 'Stolen Property' in column 'Convicting Offense Subtype' because they only have 0.04% support (8 instances):
+#   [2228, 2229, 3915, 5946, 7883, 8435, 10426, 16942]
+#
+# Removing rows with value 'Animals' in column 'Convicting Offense Subtype' because they only have 0.03% support (6 instances):
+#   [3697, 7618, 8401, 12333, 12334, 12335]
+#
+# Removing rows with value 'Paroled to Detainer - INS' in column 'Release Type' because they only have 0.37% support (81 instances):
+#   [12815, 13421, 13556, 14002, 14012, 14033, 14111, 14149, 14236, 14245, 14278, 14283, 14377, 14415, 14419, 14424, 14471, 14557, 14672, 14706, 14716, 14759, 14769, 14775, 14782, 14801, 14802, 14803, 14879, 14883, 14909, 14937, 14946, 14980, 15012, 15077, 15099, 15116, 15155, 15191, 15272, 15303, 15308, 15470, 15501, 15509, 15534, 15580, 15629, 15683, 15688, 15720, 15740, 15754, 15784, 15786, 15847, 15855, 15857, 15878, 15891, 15985, 15988, 16007, 16044, 16050, 16129, 16177, 16191, 16235, 16295, 16309, 16382, 16413, 16488, 16527, 16530, 16724, 16806, 17020, 17050]
+#
+# Removing rows with value 'Paroled to Detainer - Out of State' in column 'Release Type' because they only have 0.26% support (56 instances):
+#   [12495, 12635, 12732, 12774, 13148, 13154, 13189, 13340, 13411, 13483, 13655, 13678, 13686, 13875, 13902, 14204, 14264, 14323, 14329, 14374, 14387, 14528, 14539, 14682, 14684, 14777, 14783, 14843, 14847, 14864, 14996, 15067, 15078, 15202, 15317, 15364, 15516, 15527, 15528, 15626, 15646, 15730, 15742, 15872, 16019, 16049, 16095, 16113, 16126, 16229, 16263, 16781, 16814, 16857, 16942, 16983]
+#
+# Removing rows with value 'Paroled to Detainer - Iowa' in column 'Release Type' because they only have 0.19% support (41 instances):
+#   [12424, 12428, 12450, 12491, 12539, 12572, 12574, 12575, 12724, 12759, 12850, 12870, 12946, 12991, 13025, 13084, 13296, 13326, 13335, 13360, 13409, 13440, 13554, 13804, 13830, 13834, 14160, 14285, 14363, 14399, 14475, 14562, 14584, 14676, 14997, 15056, 15384, 16104, 16330, 16397, 16672]
+#
+# Removing rows with value 'Paroled to Detainer - U.S. Marshall' in column 'Release Type' because they only have 0.16% support (35 instances):
+#   [14083, 14144, 14181, 14184, 14504, 14627, 14741, 14753, 14841, 15010, 15104, 15166, 15235, 15420, 15424, 15427, 15495, 15648, 15701, 15726, 15743, 15840, 15949, 15962, 16053, 16193, 16222, 16341, 16521, 16607, 16641, 16685, 16756, 16820, 16883]
+#
+# Removing rows with value 'Interstate Compact Parole' in column 'Release Type' because they only have 0.00% support (1 instances):
+#   [10425]
+#
+
+SUMMARY:
+
+  This data has 21018 rows, 17 columns.
+    3 columns are recognized as ordinal, 14 are categorical.
+    17833 rows have missing values.
+
+COLUMNS:
+
+   0 -- "Fiscal Year Released"                  <class 'int'> (5 unique values)
+    2010  3659 ( 17.4%) #########
+    2011  3861 ( 18.4%) #########
+    2012  4584 ( 21.8%) ###########
+    2013  4405 ( 21.0%) ##########
+    2014  4509 ( 21.5%) ###########
+
+   1 -- "Recidivism Reporting Year"             <class 'int'> (5 unique values)
+    2013  3659 ( 17.4%) #########
+    2014  3861 ( 18.4%) #########
+    2015  4584 ( 21.8%) ###########
+    2016  4405 ( 21.0%) ##########
+    2017  4509 ( 21.5%) ###########
+
+   2 -- "Race - Ethnicity"                      <class 'str'> (5 unique values)
+    "White - Non-Hispanic"                              14268 ( 67.9%) ##################################
+    "Black - Non-Hispanic"                               4995 ( 23.8%) ############
+    "White - Hispanic"                                   1212 (  5.8%) ###
+    "American Indian or Alaska Native - Non-Hispanic"     393 (  1.9%) #
+    "Asian or Pacific Islander - Non-Hispanic"            150 (  0.7%) 
+
+   3 -- "Sex"                                   <class 'str'> (2 unique values)
+    "M"      18381 ( 87.5%) ############################################
+    "F"       2637 ( 12.5%) ######
+
+   4 -- "Age At Release"                        <class 'str'> (5 unique values)
+    "25-34"           7693 ( 36.6%) ##################
+    "35-44"           5022 ( 23.9%) ############
+    "Under 25"        3726 ( 17.7%) #########
+    "45-54"           3548 ( 16.9%) ########
+    "55 and Older"    1029 (  4.9%) ##
+
+   5 -- "Convicting Offense Classification"     <class 'str'> (7 unique values)
+    "D Felony"                                    8564 ( 40.7%) ####################
+    "C Felony"                                    5549 ( 26.4%) #############
+    "Aggravated Misdemeanor"                      3929 ( 18.7%) #########
+    "B Felony"                                    1452 (  6.9%) ###
+    "Felony - Enhancement to Original Penalty"    1181 (  5.6%) ###
+    "Felony - Enhanced"                            218 (  1.0%) #
+    "Serious Misdemeanor"                          125 (  0.6%) 
+
+   6 -- "Convicting Offense Type"               <class 'str'> (5 unique values)
+    "Drug"            6504 ( 30.9%) ###############
+    "Property"        5999 ( 28.5%) ##############
+    "Violent"         4631 ( 22.0%) ###########
+    "Public Order"    2962 ( 14.1%) #######
+    "Other"            922 (  4.4%) ##
+
+   7 -- "Convicting Offense Subtype"            <class 'str'> (20 unique values)
+    "Trafficking"                        5339 ( 25.4%) #############
+    "Assault"                            2598 ( 12.4%) ######
+    "Burglary"                           2419 ( 11.5%) ######
+    "Theft"                              2173 ( 10.3%) #####
+    "OWI"                                1551 (  7.4%) ####
+    "Forgery/Fraud"                       983 (  4.7%) ##
+    "Sex"                                 968 (  4.6%) ##
+    "Drug Possession"                     926 (  4.4%) ##
+    "Other Criminal"                      881 (  4.2%) ##
+    "Other Violent"                       483 (  2.3%) #
+    "Traffic"                             447 (  2.1%) #
+    "Murder/Manslaughter"                 337 (  1.6%) #
+    "Alcohol"                             298 (  1.4%) #
+    "Weapons"                             298 (  1.4%) #
+    "Vandalism"                           291 (  1.4%) #
+    "Robbery"                             286 (  1.4%) #
+    "Other Drug"                          239 (  1.1%) #
+    "Other Public Order"                  239 (  1.1%) #
+    "Arson"                               133 (  0.6%) 
+    "Sex Offender Registry/Residency"     129 (  0.6%) 
+
+   8 -- "Release Type"                          <class 'str'> (8 unique values)
+    None                                     1714 (  8.2%) ####
+    "Parole"                                 9705 ( 46.2%) #######################
+    "Discharged – End of Sentence"           4910 ( 23.4%) ############
+    "Parole Granted"                         2851 ( 13.6%) #######
+    "Discharged - Expiration of Sentence"    1199 (  5.7%) ###
+    "Special Sentence"                        284 (  1.4%) #
+    "Paroled w/Immediate Discharge"           200 (  1.0%) 
+    "Released to Special Sentence"            155 (  0.7%) 
+
+   9 -- "Main Supervising District"             <class 'str'> (11 unique values)
+    None                    8148 ( 38.8%) ###################
+    "5JD"                   3883 ( 18.5%) #########
+    "1JD"                   2155 ( 10.3%) #####
+    "2JD"                   1499 (  7.1%) ####
+    "8JD"                   1228 (  5.8%) ###
+    "7JD"                   1221 (  5.8%) ###
+    "3JD"                    897 (  4.3%) ##
+    "6JD"                    851 (  4.0%) ##
+    "4JD"                    488 (  2.3%) #
+    "ISC"                    343 (  1.6%) #
+    "Interstate Compact"     305 (  1.5%) #
+
+  10 -- "Recidivism - Return to Prison"         <class 'str'> (2 unique values)
+    "No"     14170 ( 67.4%) ##################################
+    "Yes"     6848 ( 32.6%) ################
+
+  11 -- "Recidivism Type"                       <class 'str'> (4 unique values)
+    None               2924 ( 13.9%) #######
+    "No Recidivism"   11246 ( 53.5%) ###########################
+    "New"              4471 ( 21.3%) ###########
+    "Tech"             2377 ( 11.3%) ######
+
+  12 -- "Days to Recidivism"                    <class 'int'> (1076 unique values)
+    None                 14170 ( 67.4%) ##################################
+    [0.00e+00, 4.38e+01)    97 (  0.5%) 
+    [4.38e+01, 8.76e+01)   240 (  1.1%) #
+    [8.76e+01, 1.31e+02)   316 (  1.5%) #
+    [1.31e+02, 1.75e+02)   407 (  1.9%) #
+    [1.75e+02, 2.19e+02)   424 (  2.0%) #
+    [2.19e+02, 2.63e+02)   434 (  2.1%) #
+    [2.63e+02, 3.07e+02)   446 (  2.1%) #
+    [3.07e+02, 3.50e+02)   425 (  2.0%) #
+    [3.50e+02, 3.94e+02)   375 (  1.8%) #
+    [3.94e+02, 4.38e+02)   368 (  1.8%) #
+    [4.38e+02, 4.82e+02)   337 (  1.6%) #
+    [4.82e+02, 5.26e+02)   308 (  1.5%) #
+    [5.26e+02, 5.69e+02)   269 (  1.3%) #
+    [5.69e+02, 6.13e+02)   273 (  1.3%) #
+    [6.13e+02, 6.57e+02)   238 (  1.1%) #
+    [6.57e+02, 7.01e+02)   243 (  1.2%) #
+    [7.01e+02, 7.45e+02)   245 (  1.2%) #
+    [7.45e+02, 7.88e+02)   195 (  0.9%) 
+    [7.88e+02, 8.32e+02)   199 (  0.9%) 
+    [8.32e+02, 8.76e+02)   186 (  0.9%) 
+    [8.76e+02, 9.20e+02)   185 (  0.9%) 
+    [9.20e+02, 9.64e+02)   175 (  0.8%) 
+    [9.64e+02, 1.01e+03)   143 (  0.7%) 
+    [1.01e+03, 1.05e+03)   166 (  0.8%) 
+    [1.05e+03, 1.10e+03]   154 (  0.7%) 
+
+  13 -- "New Conviction Offense Classification" <class 'str'> (14 unique values)
+    None                                         16052 ( 76.4%) ######################################
+    "D Felony"                                    1853 (  8.8%) ####
+    "Aggravated Misdemeanor"                      1249 (  5.9%) ###
+    "C Felony"                                     859 (  4.1%) ##
+    "Felony - Enhancement to Original Penalty"     515 (  2.5%) #
+    "Serious Misdemeanor"                          223 (  1.1%) #
+    "B Felony"                                     221 (  1.1%) #
+    "Public Order"                                  13 (  0.1%) 
+    "A Felony"                                      10 (  0.0%) 
+    "Simple Misdemeanor"                             9 (  0.0%) 
+    "Special Sentence 2005"                          6 (  0.0%) 
+    "Violent"                                        4 (  0.0%) 
+    "Other Misdemeanor"                              2 (  0.0%) 
+    "Drug"                                           2 (  0.0%) 
+
+  14 -- "New Conviction Offense Type"           <class 'str'> (11 unique values)
+    None                16052 ( 76.4%) ######################################
+    "Drug"               1458 (  6.9%) ###
+    "Property"           1370 (  6.5%) ###
+    "Public Order"        965 (  4.6%) ##
+    "Violent"             789 (  3.8%) ##
+    "Other"               365 (  1.7%) #
+    "Flight/Escape"        12 (  0.1%) 
+    "Assault"               3 (  0.0%) 
+    "Drug Possession"       2 (  0.0%) 
+    "Traffic"               1 (  0.0%) 
+    "Sex"                   1 (  0.0%) 
+
+  15 -- "New Conviction Offense Sub Type"       <class 'str'> (26 unique values)
+    None                     16071 ( 76.5%) ######################################
+    "Trafficking"              997 (  4.7%) ##
+    "Assault"                  589 (  2.8%) #
+    "Theft"                    586 (  2.8%) #
+    "Burglary"                 467 (  2.2%) #
+    "Drug Possession"          425 (  2.0%) #
+    "Other Criminal"           356 (  1.7%) #
+    "OWI"                      295 (  1.4%) #
+    "Forgery/Fraud"            240 (  1.1%) #
+    "Traffic"                  177 (  0.8%) 
+    "Other Public Order"       159 (  0.8%) 
+    "Alcohol"                  128 (  0.6%) 
+    "Flight/Escape"            120 (  0.6%) 
+    "Weapons"                   82 (  0.4%) 
+    "Other Violent"             68 (  0.3%) 
+    "Robbery"                   52 (  0.2%) 
+    "Vandalism"                 52 (  0.2%) 
+    "Sex"                       42 (  0.2%) 
+    "Other Drug"                36 (  0.2%) 
+    "Murder/Manslaughter"       30 (  0.1%) 
+    "Arson"                     23 (  0.1%) 
+    "Kidnap"                    15 (  0.1%) 
+    "Prostitution/Pimping"       4 (  0.0%) 
+    "Animals"                    2 (  0.0%) 
+    "Other Property"             1 (  0.0%) 
+    "Stolen Property"            1 (  0.0%) 
+
+  16 -- "Part of Target Population"             <class 'str'> (2 unique values)
+    "Yes"    11048 ( 52.6%) ##########################
+    "No"      9970 ( 47.4%) ########################
+
+
+Saving the data...
+
+Compilation finished at Mon Apr 23 16:14:47
+
+Compilation started at Sun Apr 29 14:55:20
+
+python3 process_and_prepare_data.py 
+Numeric Age:   False
+Unique Crimes: False
+
+  Normalizing ['Fiscal Year Released']
+    Shift: [ 2010.]
+    Scale: [ 4.]
+
+Numeric Age:   False
+Unique Crimes: True
+
+  Normalizing ['Fiscal Year Released']
+    Shift: [ 2010.]
+    Scale: [ 4.]
+
+Numeric Age:   True
+Unique Crimes: False
+
+  Normalizing ['Fiscal Year Released', 'Age At Release']
+    Shift: [ 2010.     21.5]
+    Scale: [  4.    45.37]
+
+Numeric Age:   True
+Unique Crimes: True
+
+  Normalizing ['Fiscal Year Released', 'Age At Release']
+    Shift: [ 2010.     21.5]
+    Scale: [  4.    45.37]
+
+Compilation finished at Sun Apr 29 14:56:34
+
+
+Presentation plan:
+  - Motivation (ethical prediction, recidivism)
+  - Algorithms (neural networks, decision trees, nearest neighbor, *Delaunay*)
+  - Data (source, description, cleaning)
+  - Initial results (accuracy for all algorithms) (classification + regression)
+  - Making predictions ethical (weighting by disproportionate representation)

@@ -1,0 +1,226 @@
+
+
+  \\begin{{tabular}}{{c c}}
+    \\vspace{{3mm}} \\\\
+    \\multicolumn{{2}}{{c}}{{\\textit{{{name}}}}} \\\\
+    \\vspace{{-2mm}} \\\\
+    \\includegraphics[width=1in]{{{file}}} & 
+    \\begin{{tabular}}{{|c l|}}
+      \\hline
+      {white_nh}\\% & White - NH \\\\
+      {black_nh}\\% & Black - NH \\\\
+      {white_h}\\% & White - H \\\\
+      {ai_na}\\% & AI or NA \\\\
+      {asian}\\% & Asian or PI \\\\
+      \\hline
+    \\end{{tabular}} \\\\
+    \\multicolumn{{2}}{{c}}{{
+      \\begin{{tabular}}{{c|c|c|c|c}}
+        Min & $25^{{th}}$ & $50^{{th}}$ & $75^{{th}}$ & Max \\\\
+        {min} & {tf} & {ff} & {sf} & {max} \\\\
+      \\end{{tabular}}
+    }}
+  \\end{{tabular}}
+
+
+            true_dist = {"White - Non-Hispanic":67.4,
+                         "Black - Non-Hispanic":23.6,
+                         "White - Hispanic":5.9,
+                         "American Indian or Alaska Native - Non-Hispanic":1.9,
+                         "Asian or Pacific Islander - Non-Hispanic":8}
+
+
+                # Normalize the count to be the "percentage" shift
+                for r in sorted(count, key=lambda k: -count[k]):
+                    count[r] = (100*count[r] / total) - true_dist[r]
+                print()
+
+                # print(f"    Normalized Confusion Matrix\n     [{cm[0,0]:6.2f},{cm[0,1]:6.2f}]\n     [{cm[1,0]:6.2f},{cm[1,1]:6.2f}]")
+                # print("    Accuracy:", 100*np.sum(np.diag(cm)) / np.sum(cm))
+                # print()
+
+
+
+                # print("    Racial distribution relative difference:")
+
+
+                #     print(f"    {(100*count[r] / total) - true_dist[r]:6.2f} {r}")
+                # print()
+
+
+
+# if USE_UNIQUE_CRIMES:
+#     # =========================================================
+#     #      Split up data into train, target, and protected     
+#     # =========================================================
+
+#     # Split up the criminal information into trianing, target, and protected categories
+#     train_names = unique_crimes.names[:-len(unique_races)-1]
+#     # Get the "Recidivism column" and simultaneously remove it from "train_names"
+#     target = [unique_crimes.names[-len(unique_races)-1]]
+#     # Get the protected information, "Race"
+#     protected = unique_crimes.names[-len(unique_races):]
+#     # Break up data into training, target, and protected information.
+#     train_raw = unique_crimes[train_names]
+#     target_raw = unique_crimes[target]
+#     protected_raw = unique_crimes[protected]
+
+# else:
+#     # ======================================
+#     #      DO NOT USE UNIQUE CRIME DATA     
+#     # ======================================
+
+#     # Split up the criminal information into trianing, target, and protected categories
+#     train_names = crimes.names[:]
+#     # Get the "Recidivism column" and simultaneously remove it from "train_names"
+#     target = [train_names.pop(-1)]
+#     # Get the protected information, "Race"
+#     protected = [train_names.pop(0)]
+#     # Break up data into training, target, and protected information.
+#     train_raw = crimes[train_names]
+#     target_raw = crimes[target]
+#     protected_raw = crimes[protected]
+
+
+
+# print("="*70)
+# print("="*70)
+# print()
+# print("="*20,"TRAINING DATA","="*20)
+# print(train_raw)
+# # train_raw.summarize()
+# print("="*20,"TRAINING TARGET","="*20)
+# print(target_raw)
+# # target_raw.summarize()
+# print("="*20,"PROTECTED DATA","="*20)
+# print(protected_raw)
+# # protected_raw.summarize()
+# print()
+# print("="*70)
+# print("="*70)
+
+# print("Using predictors:", train_raw.names)
+# print("Predicting:      ", target_raw.names)
+# print("Observing:       ", protected_raw.names)
+# print()
+
+# # Process the data in numpy real matrix format
+
+# # Get the "data", the "target", and the "protected" as numpy real arrays
+# data, data_info = train_raw.to_numpy_real()
+# target, target_info = target_raw.to_numpy_real()
+# protected, protected_info = protected_raw.to_numpy_real()
+
+# # WARNING: Do *NOT* normalize the regular simplices differentially,
+# #          but *do* normalize the numerical features.
+# shift = np.min(data[:,data_info.nums], axis=0)
+# data[:,data_info.nums] -= shift
+# scale = np.max(data[:,data_info.nums], axis=0)
+# data[:,data_info.nums] /= scale
+
+# # Randomly split the data 80-20
+# indices = list(range(len(data)))
+# np.random.seed(0)
+# np.random.shuffle(indices)
+# num_train = int(.5 + .8*len(data))
+# train_indices, test_indices = indices[:num_train], indices[num_train:]
+
+# print("Shape of source data:", data[train_indices].shape)
+# print("Shape of target data:", target[test_indices].shape)
+# total_time_sec = len(test_indices)*18
+# print(f"Estimated computation time: {total_time_sec:.1f} seconds")
+# print(f"                            {total_time_sec/60:.1f} minutes")
+# print(f"                            {(total_time_sec/60)/60:.1f} hours")
+
+
+# start = time.time()
+
+# # Break up the data into (train, test) files
+# # Write separate progrgram to do predictions
+# # Get delaunay predictions in terms of sources and weights
+
+# # Fit the model, print some updates for impatient users like me :P
+# print("Initializing model...")
+# model = alg()
+# print("Fitting the data...")
+# model.fit(data[train_indices], target[train_indices].flatten())
+# print("Making predictions...")
+# guesses = np.round(model.predict(data[test_indices], debug=True))
+# print("Comparing predictions...")
+# truths = np.round(target[test_indices].flatten())
+
+# # Get an evaluation metric and print out its result (confusion matrix)
+# from sklearn.metrics import confusion_matrix as metric
+# print(metric(truths, guesses))
+
+# print()
+# print(f"{time.time() - start:.2f} elapsed seconds.")
+# print(f"{(time.time() - start)/len(test_indices):.2f} seconds per prediction")
+
+
+# =========================
+#      Initial Results     
+# =========================
+
+
+# Delaunay         on ALL (does not work)
+# [[2802    0]
+#  [1402    0]]
+#                  on UNIQUE
+
+
+# Nearest Neighbor on ALL
+# [[1945  857]
+#  [ 811  591]]
+#                  on UNIQUE
+# [[1058  305]
+#  [ 358  153]]
+
+
+# MLP   Classifier on ALL
+# [[2375  427]
+#  [ 999  403]]
+#        Regressor on UNIQUE
+# [[1163  200]
+#  [ 363  148]]
+
+
+# DT Classifier    on ALL
+# [[2304  498]
+#  [1020  382]]
+#    Regressor     on UNIQUE
+# [[1069  294]
+#  [ 350  161]]
+
+
+# 
+# We make a prediction, it uses a 50 people of different races.
+# 
+# Suppose that the distribution of races of those 50 people does not 
+#   match the true population of people in a region.
+# 
+# How do we compensate for this difference? Do we "weight" the sources
+#   from each race in a way that compensates for imbalance in source?
+# 
+
+
+            # print("Saving bad training data to file...")
+            # np.savetxt("bad_training_data.csv", train, delimiter=",")
+            # # 
+            # print("", train.shape, train_file)
+            # print("", test.shape, test_file)
+            # # 
+
+
+# print("Generating plot of predictions..")
+# from util.plotly import Plot
+# p = Plot("Prediction Results", "Guessed Values", "Truth Values")
+# label0 = target_info.real_to([0.0])[0]
+# label1 = target_info.real_to([1.0])[0]
+# p.add("0 - "+label0, guesses[truths==0], truths[truths==0])
+# p.add("1 - "+label1, guesses[truths==1], truths[truths==1])
+# p.show()
+# # 
+# print(np.sum(difference))
+
+
