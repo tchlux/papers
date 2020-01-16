@@ -1,0 +1,7 @@
+# # Strip out the invalid tests (bad number of train points).
+# to_keep = [i for i in range(len(d)) if ((d[i,"Train"]-1)%10)]
+# # Make a copy so that we can do assignment etc.
+# d = d[to_keep][:]
+# d.save("1-analytic-results.pkl")
+
+

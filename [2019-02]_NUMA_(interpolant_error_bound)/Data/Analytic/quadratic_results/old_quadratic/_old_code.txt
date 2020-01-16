@@ -1,0 +1,55 @@
+if (test_func_name == "oscillaatory"):
+    # Set up the test problem more specifically (after getting its name).
+    difficulty = 9.0
+    c = np.random.random(size=(dimension,))
+    c /= np.sum(c)
+    c *= 9.0
+    test_function = lambda x: oscillatory(x, c=c)
+
+
+# The oscillatory test problem from:
+#    'High Dimensional Polynomial Interpolation' by Barthelman et al. (2000)
+# In the default case, it is a componentwise cosine function.
+def oscillatory(x, c=1, w=0):
+    if len(x.shape) <= 1:
+        return np.cos(2*np.pi*w + np.sum(c*x))
+    elif len(x.shape) == 2:
+        return np.cos(2*np.pi*w + np.sum(c*x, axis=1))
+    else:
+        class UsageError(Exception): pass
+        raise(UsageError(f"This objective function only supports arrays and matrices, received shape {x.shape}."))
+
+
+from util.plot import Plot
+p = Plot("Oscillatory test problem")
+dimension = 1
+c = np.random.random(size=(dimension,))
+c /= np.sum(c)
+c *= 9.0
+f = lambda x: oscillatory(x, c=c)
+p.add_func("f", f, *([[0,1]]*dimension))
+p.plot(show=False)
+
+p = Plot("Oscillatory test problem")
+dimension = 2
+c = np.random.random(size=(dimension,))
+c /= np.sum(c)
+c *= 9.0
+f = lambda x: oscillatory(x, c=c)
+p.add_func("f", f, *([[0,1]]*dimension))
+p.show(append=True)
+exit()
+
+
+# A quadratic 2-norm bowl about the origin.
+def quadratic(x):
+    if len(x.shape) == 1:
+        return np.linalg.norm(x)**2
+    elif len(x.shape) == 2:
+        return np.linalg.norm(x, axis=1)**2
+    else:
+        class UsageError(Exception): pass
+        raise(UsageError("This objective function only supports arrays and matrices."))
+
+
+

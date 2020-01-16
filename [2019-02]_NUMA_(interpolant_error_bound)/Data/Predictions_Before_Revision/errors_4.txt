@@ -1,0 +1,4 @@
+/s/tchlux/Local/lib/python3.6/site-packages/scikit_learn-0.19b2-py3.6-linux-x86_64.egg/sklearn/neural_network/multilayer_perceptron.py:563: ConvergenceWarning: Stochastic Optimizer: Maximum iterations (10000) reached and the optimization hasn't converged yet.
+  % self.max_iter, ConvergenceWarning)
+/s/tchlux/Local/lib/python3.6/site-packages/scikit_learn-0.19b2-py3.6-linux-x86_64.egg/sklearn/neural_network/_base.py:194: RuntimeWarning: overflow encountered in square
+  return ((y_true - y_pred) ** 2).mean() / 2

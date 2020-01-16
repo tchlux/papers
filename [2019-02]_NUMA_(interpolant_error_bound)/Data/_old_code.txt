@@ -1,0 +1,39 @@
+            print()
+            print("truth: ",truth)
+            print("guess: ",guess)
+            print("error", errors[-1])
+
+            from util.plot import Plot
+            p = Plot()
+            p.add_func("truth", truth, truth())
+            p.add_func("guess", guess, guess())
+            p.show()
+            exit()
+
+
+
+    # # Fix the table to have bold entries for the minimal values at each percentile.
+    # col_mins = [min(row[i] for row in table[1:]) for i in range(1+len(percentiles))]
+    # for row in range(1,len(table)):
+    #     for col in range(1,len(table[row])):
+    #         is_min = (table[row][col] == col_mins[col])
+    #         table[row][col] = f"{table[row][col]:.2e}"
+    #         num, exp = table[row][col].split("e")
+    #         table[row][col] = f"${num} \\times 10^{{{int(exp)}}}$"
+    #         if is_min: table[row][col] = "\\textbf{" + table[row][col] + "}"
+    # print()
+    # t = latex_table(table, 
+
+
+        # print(f"{m_name} absolute relative error (min,max):", (min(errors), max(errors)))
+        # fit = cdf_fit(errors)
+        # p.add_func(m_name, fit, fit())
+
+
+                    f_name = "hard_problem.csv"
+                    print("Training data file", )
+                    data = np.concatenate((train_x, test_pt[None,:]), axis=0)
+                    np.savetxt(f_name, data, delimiter=',', header=f'{train_x.shape[1]},{train_x.shape[0]},1,0')
+                    exit()
+
+
