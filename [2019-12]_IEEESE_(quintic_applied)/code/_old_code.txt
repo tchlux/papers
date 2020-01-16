@@ -1,0 +1,170 @@
+
+# --------------------------------------------------------------------
+# r1 = Data.load("results-1.csv", sample=None)
+# print(r1)
+# 
+# r2 = Data.load("results-2.csv", sample=None)
+# print(r2)
+# 
+# r3 = Data.load("results-3.csv", sample=None)
+# print(r3)
+# 
+# r = r1 + r2 + r3
+# print(r)
+# r.sort()
+# r.save("results.csv.gz")
+# --------------------------------------------------------------------
+
+
+    # p.add_func("throughput", pdf, [values[0], values[-1]])
+
+
+    # values = np.percentile(values, np.linspace(0,100,20))
+    # print(values.shape)
+    # cdf = quintic_fit(values)
+    # pdf = cdf.derivative()
+
+
+from util.plot import Plot
+p = Plot("Truth being fit")
+p.add("truth", true_x, true_y)
+p.show()
+
+k = 20
+i = 50
+print("k: ",k)
+print("  i: ",i, end="\r")
+sub_population = sample(values, k)
+for f in functions:
+    name = f.__name__
+    cdf = f(sub_population)
+    errors = [float(cdf(x) - y) for (x,y) in zip(true_x, true_y)]
+    row = list(map(str, [k, i, name] + sorted(errors)))
+    p.add_func(f.__name__, cdf, [float(min(true_x)), float(max(true_x))])
+    # Save results as they are collected
+    print(",".join(row)[:100])
+p.show()
+exit()
+
+
+
+        # p = Plot("Distributions")
+        # from util.stats import cdf_fit
+        # true_fit = cdf_fit(sample)
+        # p.add_func("Truth", true_fit, true_fit())
+            # p.add_func(f.__name__ + " " + str(weight), source_func, true_fit(), dash="dot")
+
+
+
+        # p.add("Final Approximation", sample, predicted_cdf_values)
+        # p.show()
+        # p = Plot("Errors")
+        # from util.stats import cdf_fit
+        # fit = cdf_fit(list(abs(true_cdf_values - predicted_cdf_values)))
+        # p.add_func("Abs errors", fit, fit())
+        # p.show(append=True)
+
+
+        # Record the difference.
+        diffs.append( float(abs(t - y )) )
+        print("     ", max(diffs))
+        # Record all errors for this function.
+        abs_errors += diffs
+
+
+
+            for (t,x) in zip(truth, row["throughput"]):
+            # Compute the weighted sum.
+            y = 0
+
+                predicted_y = data[int(i),f.__name__](x)
+                print("    predicted: ",float(predicted_y))
+                y += w * predicted_y
+            print("  t, y: ",t, float(y))
+
+
+# print("data: ",data)
+# for i,row in enumerate(data):
+#     print("row: ",str(row[:4]))
+#     p = Plot(str(row[:4]),"","", font_family="times", font_size=16)
+#     truth = cdf_fit(row["throughput"])
+#     sample = cdf_fit(row["sample"])
+#     p.add_func("sample", sample, sample(), dash="dot")
+#     p.add_func("truth", truth, truth())
+#     for (name, alg) in algs:
+#         p.add_func(name, row[alg], truth())
+#     p.show(append=(i > 0), show=(i+1 == len(data)))
+
+
+# --------------------------------------------------------------------
+
+# data = Data.load("clean_data.csv", sample=None)
+# print(data)
+# print("reducing data..")
+# data = data[data["Test"] == "readers"]
+# print("removing 'Test' column..")
+# data.pop("Test")
+# print("saving data..")
+# data.save("readers.csv")
+# data = Data.load("readers.csv")
+# print(data)
+
+
+                if (k,i,name) in data[:,:3]: print("Skipping", (k,i,name), end="\r")
+
+
+# Initialize storage for the results.
+data = Data(names=["sample", "trial", "fit"] + [f"er {i+1}" for i in range(len(true_x))],
+            types=[int,      int,     str]   + [float] * len(true_x))
+
+
+
+        # Save intermediate results.
+        data.save(results_file)
+
+
+
+try:    data = Data.load(results_file, sample=None, verbose=False)
+except: pass
+
+
+# from util.plot import Plot
+# from util.stats import cdf_fit
+
+# p = Plot()
+# for i,row in enumerate(data):
+#     config = row[:config_cols]
+#     name = " ".join(list(map(str,config)))
+#     print("name: ",i,name)
+#     values = row[config_cols:]
+#     cdf = cdf_fit(values)
+#     p.add_func(name, cdf, cdf())
+# p.show()
+
+
+
+p = Plot("Absolute Error Percentiles", "Sample Size", "Absolute Error")
+for c,fit in enumerate(fits):
+    for col in d.names[2:]:
+        fp_data = d[d["fit"] == fit]
+        x = fp_data["sample"]
+        y = fp_data[col]
+        p.add(f"{fit} {col}", x, y, mode="markers+lines", color=p.color(c), group=fit)
+p.show() #y_axis_settings=dict(type="log"))
+
+
+        
+        exit()
+
+    print(d)
+    for i in range(len(d)):
+        fit = d[i, 'fit']
+        values = list(d[i][3:])
+        print("values: ",len(values))
+        other_values = [list(d[j][3:]) for j in range(len(d)) if j != i]
+        print("len(other_values): ",len(other_values))
+        for j in range(len(other_values)):
+            print("", j, len(other_values[j]))
+        exit()
+
+
