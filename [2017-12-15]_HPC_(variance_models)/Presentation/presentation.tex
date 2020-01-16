@@ -1,0 +1,244 @@
+% Template for overheads, landscape, fancy VT footlines.
+%
+\magnification=1800 \rightskip=0pt plus 5em
+\hsize=9.0truein \vsize=6.5truein
+\parindent=0pt \parskip=0pt plus 4truept
+\baselineskip=21truept plus 3truept minus 2truept \lineskiplimit=3truept
+\lineskip=3truept plus 3truept \tolerance=1000
+
+%fonts
+\font\helvr=phvr at 18truept
+\font\helvb=phvb at 18truept
+\font\timesi=ptmri at 18truept
+\font\helvbXX=phvb at 20truept
+\font\helvbXXIV=phvb at 24truept
+\font\newfont=pbkli
+
+%% Math blackboard fonts {\bb}
+\font\tenamsb=msbm10 \font\sevenamsb=msbm7 \font\fiveamsb=msbm5
+\newfam\bbfam
+\textfont\bbfam=\tenamsb
+\scriptfont\bbfam=\sevenamsb
+\scriptscriptfont\bbfam=\fiveamsb
+
+\def\bb{\fam\bbfam}
+
+\def\rm{\fam=0\helvr} \let\bf=\helvb \let\tt=\helvb \let\it=\timesi
+\let\sl=\timesi
+
+%definitions
+\def\cl#1{\centerline{#1}}
+\def\head#1{\centerline{\helvbXXIV#1}}
+{\obeyspaces\global\let =\ }
+\def\verbatim{\parindent=0pt\tt\obeylines\obeyspaces}
+\def\l{\hfill\&}        
+\def\shift{\hsize=8.5truein\parindent=25truept\indent}
+\def\bull{\par\hangindent=20pt\hangafter=1
+\indent\hbox to 20pt{\hfil$\bullet$ }\ignorespaces}
+
+% for spacing in tables
+\newdimen\digitwidth \setbox0=\hbox{\rm0} \digitwidth=\wd0
+
+\input epsf % For Postscript figures:{\epsfxsize=  \epsffile{}}
+\helvr
+
+%**********************************  Page 1 ******************************
+\cl{\helvbXXIV PREDICTIVE MODELING OF I/O CHARACTERISTICS}\smallskip
+\cl{\helvbXXIV IN HIGH PERFORMANCE COMPUTING SYSTEMS}
+\bigskip
+\bigskip
+\cl{\bf Thomas Lux$^1$, Layne Watson$^{123}$, Tyler Chang$^1$,}
+\cl{\bf Jon Bernard$^1$, Bo Li$^1$, Li Xu$^4$, Godmar Back$^1$,}
+\cl{\bf Ali Butt$^1$, Kirk Cameron$^1$, and Yili Hong$^4$}
+\bigskip
+\bigskip
+\cl{Departments of Computer Science$^1$, Mathematics$^2$,}
+\cl{Aerospace \& Ocean Engineering$^3$, and Statistics$^4$}
+\bigskip
+\cl{Virginia Polytechnic Institute and State University}
+\cl{Blacksburg, VA 24061-0106  USA} 
+\vfil
+\vtop to 0pt{\vskip -30truept
+\cl{\epsfxsize=1.3in \epsffile{VT_Logo.eps}}\vss}
+\footline={\hfil}
+\eject
+
+%% Redefine footline for the rest of the presentation
+
+\footline={\fiverm\folio\quad\leaders\hrule
+height3truept\hfil\quad \epsfxsize=.8in \epsffile{VT_Logo_CompSci.eps}}
+
+%**********************************  Page 2 ******************************
+\head{Problem Setting}
+\bigskip \bigskip
+When the same computer is used to execute the same program repeatedly, most measurable performance characteristics will vary. This paper will consider the execution of IOzone, a file I/O benchmark for HPC systems.
+\cl{\epsfxsize=5in \epsffile{Raw_Throughput.eps}}
+%% \cl{\hbox{\epsfxsize=30truepc\epsffile{triangleplane.eps}}}
+This variance in performance can make it difficult to identify an optimal configuration that meets minimum requirements.
+\vfil
+\eject
+
+%**********************************  Page 3 ******************************
+\head{Proposed Approach}
+\bigskip \bigskip
+Use multivariate interpolation and regression to model the performance of a computer with respect to the system and application configuration.
+%% \bull Bulletted text..
+\bigskip\bigskip
+Multivariate {\it interpolation} and {\it regression} are defined when there exists $f:{\bb R}^d \rightarrow {\bb R}$ and a set $X$ of $n$ points in ${\bb R}^d$ along with response values $f(x)$ for all $x \in X$.
+\bigskip\bigskip
+{\bf Interpolation} constructs an approximation $\hat f: {\bb R}^d \rightarrow {\bb R}$ such that $\hat f(x) = f(x)$ for all $x \in X$. The form of the true underlying function $f$ is often unknown, however it is still desirable to construct an approximation $\hat f$ with minimum approximation error at $y \notin X$.
+\bigskip\bigskip
+{\bf Regression} relaxes the conditions of interpolation by minimizing the error in $\hat f$ at $x \in X$ while maintaining some parametric form with parameters $P$. This can be written as $\min_{P} ||\hat f(X) - f(X)||$, where $f(X)$ is a vector of $f(x)$ for all $x \in X$ and $||\cdot||$ is an appropriate measure.
+\vfil
+\eject
+
+%**********************************  Page 4 ******************************
+\head{Regression Algorithms}
+\bigskip
+{\bf Multivariate Adaptive Regression Splines} (MARS)
+is an iterative approximation of the form
+$$ B_{2s-1}(x) = B_l(x) [c(x_i-v)]_+ ,$$
+$$ B_{2s}(x) = B_k(x) [c(x_i-v)]_- ,$$
+where $s$ is the iteration number, $B_l(x)$ and $B_k(x)$ are basis
+functions from the previous iteration, $c, v \in {\bb R}$, 
+$$w_+ = \cases{ w, & $w \geq 0$ \cr 0, & $w < 0$},$$
+and $w_- = (-w)_+$. After iteratively constructing a model, MARS then
+iteratively removes basis functions that do not contribute to goodness
+of fit.
+\medskip
+In effect, MARS creates a locally component-wise tensor
+product approximation of the data. The computational
+complexity of MARS is ${\cal O}(n d m^3)$ where $m$ is the
+maximum number of underlying basis functions.
+\vfil\eject
+
+%**********************************  Page 4 ******************************
+\head{Regression Algorithms}
+\bigskip
+{\bf Multilayer Perceptron Regressor} (MLP Regressor)
+$$ l(u) = \big( u^t W_l \big)_+ ,$$
+where $W_l$ is the $i$ by $j$ weight matrix for layer $l$.
+\medskip
+The multilayer perceptron (MLP) produces a piecewise linear model of the input data. The computational complexity is ${\cal O}(n d m)$, where $m$ is
+determined by the sizes of the layers of the network and the stopping
+criterion of the error minimizer.
+\bigskip
+{\bf Support Vector Regressor} (SVR)
+$$ p(x)  = \sum_{i=1}^{n}a_i K(x,x^{(i)}) + b ,$$
+where $K$ is the selected kernel function, $a \in {\bb R}^n$, $b \in {\bb R}$ are coefficients to be solved for simultaneously. The computational complexity of the SVR is ${\cal O}(n^2dm)$, with $m$ being determined by the minimization convergence criterion.
+\vfil\eject
+
+%**********************************  Page 5 ******************************
+\head{Interpolation Algorithms}
+\bigskip
+{\bf Delaunay} constructs a simplicial mesh such that for a $d$-simplex S with vertices $v^{(0)}$, $v^{(1)}$, $\ldots$, $v^{(d)}$, $x \in S$, and data values $f(v^{(i)})$, $i=0$, $\ldots$, $d$, $x$ is a unique convex combination of the vertices, and the interpolant is given by
+$$ p(x) = \sum_{i=0}^{d} w_i f(v^{(i)}), $$
+where $w_i$ are the convex weights. The computational complexity of the Delaunay triangulation (for the implementation used here) is ${\cal O}(n^{\lceil d/2 \rceil})$.
+\bigskip
+{\bf Linear Shepard} (LSHEP) blends local linear interpolants and has the form
+$$ p(x) = {\sum_{k=1}^{n}W_k(x)P_k(x) \over \sum_{k=1}^{n}W_k(x)} ,$$
+where $W_k(x)$ is a locally supported weighting function and $P_k(x)$ is a local linear approximation to the data satisfying $P_k\big(x^{(k)}\big) = f\big(x^{(x)}\big)$. The computational complexity of LSHEP is ${\cal O}(n^2d^3)$.
+\vfil \eject
+
+%**********************************  Page 6 ******************************
+\head{IOzone Data}
+\bigskip \bigskip
+This experiment attempts to model {\it throughput variance} as
+a function of application and system {\it parameters}.
+\medskip
+To do so, the {\it IOZone} benchmark is used to read files of varying sizes
+on a homogeneous system. 
+The variance in the throughput for each read is modelled as a function of
+several parameters.
+\medskip
+The parameters chosen and the values used for them are in the table below:
+\smallskip
+\offinterlineskip \tabskip=0pt
+\def\filler{height2pt&\omit&&\omit&\cr}
+\def\tablerule{\noalign{\hrule}}
+\centerline{\vbox{
+\halign{&\vrule#&\strut\hskip 4pt\hfil#\hskip 4pt\cr
+\tablerule\filler
+& Parameters \hfill&& Values \hfill&\cr
+\filler\tablerule\filler
+&\omit\hskip 4pt\hbox{file size being read (in KB)}
+&&64, 256, 1024\hfill&\cr
+&\omit\hskip 4pt\hbox{record size of file system (in KB)}
+&&32, 128, 512\hfill&\cr
+&\omit\hskip 4pt\hbox{number of threads for IOZone reader}
+&&1, 2, 4, 8, 16, 32, 64, 128, 256\hfill&\cr
+&\omit\hskip 4pt\hbox{CPU frequency (in GHz)}
+&&1.2, 1.4, 1.5, 1.6, 1.8, 1.9, 2.0, 2.1, 2.3, &\cr
+&\hfill
+&& 2.4, 2.5, 2.7, 2.8, 2.9, 3.0, 3.001 \hfil&\cr
+\filler\tablerule}}}
+\medskip
+For each combination of the above parameters, 40 runs of IOzone were done and 
+the observed throughput variance was computed using:
+$$ \sigma^2 = \bigg(\sum_{i=1}^{40}(t_i - \mu)^2 \bigg) / 39 $$
+where $t_i$ is the $i$th observed throughput and $\mu$ is the observed
+mean over all 40 runs.
+\vfil\eject
+
+%**********************************  Page 7 ******************************
+\head{Analyzing Predictability: Multi Dimensional Analysis}
+\bigskip\bigskip
+
+\item{1.} For all $k = 1$, $\ldots$, $d$ and for all nonempty subsets $F \subset \{1, 2, \ldots, d\}$, reduce the input data to points $(z, f_F(z))$ with $z \in {\bb R}^k$ and $f_F(z) = E\bigl[ \bigl\{ f\bigl(x^{(i)}\bigr) \bigm| \bigl(x^{(i)}_F = z\bigr) \bigr\} \bigr]$, where $E[\cdot]$ denotes the mean and $x^{(i)}_F$ is the subvector of $x^{(i)}$ indexed by $F$.
+\bigskip
+\item{2.} For all $r$ in $\{5, 10, \ldots, 95\}$, generate $N$ random splits $(train, test)$ of the reduced data with $r$ percentage for training and $100 - r$ percentage for testing.
+\bigskip
+\item{3.} When generating each of $N$ random $(train, test)$ splits, ensure that all points from $test$ are in the convex hull of points in $train$ (to prevent extrapolation); also ensure that the points in $train$ are well spaced.
+\bigskip\bigskip
+
+In order to ensure that training points are well spaced, a statistical method for picking points is used
+\bigskip
+\itemitem{1.} Generate a sequence of all pairs of points $\bigl(z^{(i_1)},z^{(j_1)}\bigr), \bigl(z^{(i_2)},z^{(j_2)}\bigr), \ldots$ sorted by ascending pairwise Euclidean distance between points, so that $\bigl|\bigl|z^{(i_k)}-z^{(j_k)}\bigr|\bigr|_2 \leq \bigl|\bigl|z^{(i_{k+1})}-z^{(j_{k+1})}\bigr|\bigr|_2$.
+\bigskip
+\itemitem{2.} Sequentially remove points from candidacy until only $|train|$ remain by randomly selecting one point from the pair $\bigl(z^{(i_m)}, z^{(j_m)}\bigr)$ for $m = 1,\ldots$ if both $z^{(i_m)}$ and $z^{(j_m)}$ are still candidates for removal.
+
+\vfil\eject
+
+%**********************************  Page 8 ******************************
+\head{Increasing Samples: Results for Predicting Throughput Mean}
+\bigskip\bigskip\bigskip
+\cl{\epsfxsize=5in \epsffile{Mean_TT_Ratio.eps}}
+\vfil\eject
+
+\head{Increasing Samples: Results for Predicting Throughput Variance}
+\bigskip\bigskip\bigskip
+\cl{\epsfxsize=5in \epsffile{Var_TT_Ratio.eps}}
+\vfil\eject
+
+
+%**********************************  Page 10 ******************************
+\head{Increasing Dimension: Results for Predicting Throughput Mean}
+\bigskip\bigskip\bigskip
+\cl{\epsfxsize=5in \epsffile{Mean_Dim.eps}}
+\vfil\eject
+
+\head{Increasing Dimension: Results for Predicting Throughput Variance}
+\bigskip\bigskip\bigskip
+\cl{\epsfxsize=5in \epsffile{Var_Dim.eps}}
+\vfil\eject
+
+%**********************************  Page 11 ******************************
+\head{Conclusion and Future Work}
+\bigskip\bigskip\bigskip
+Multivariate models of HPC system performance can effectively predict
+I/O throughput mean and variance. These multivariate techniques
+significantly expand the scope and portability of statistical models
+for predicting computer system performance over previous work.
+\bigskip\bigskip\bigskip
+Delaunay model can make predictions for 821 system configurations with less than 5\% error when trained on only 43 configurations.
+\bigskip\bigskip\bigskip
+Multivariate methods should be applied to predict distributions instead of summary statistics. This would allow for much deeper insight.
+\vfil\eject
+
+%**********************************  Page 12 ******************************
+\head{Acknowledgements}
+\bigskip \bigskip
+The data shown here was collected for the VarSys project at Virginia Tech.
+\vfil\eject
+
+\bye

@@ -1,0 +1,31 @@
+#1
+
+  1. The data is kept uniform by using the same application to collect data (IOzone), this was clarified in the paper.
+  2. The models require no assumptions, they are simply predicting whatever characteristic is being modeled. This was made more clear.
+  3. This is what the work is *avoiding*, system-specific characterizations are not generalizable and this is stated in the introduction.
+
+#2
+
+  Yes, the models can be used for any numeric data. The insight is into how well a system's performance can be modeled. A system that can be modeled well can be tuned well.
+
+  Expanded the description of the system. The models are generalizable. It is still unclear whether or not the results are generalizable (this is why the models are system-agnostic).
+
+  Typos corrected, spellcheck run.
+
+#3 
+
+  1. Run time was added to the text of the paper. The big O notation is supposed to provide readers loose insight without making any general statements (because performance can always be tuned for a given system / implementation and the ones used here are not necessarily optimal).
+
+  2. It is possible the ranking changes for different performance measures. That will require extensive comparison and analysis of more data. Mentioned.
+
+#4 
+
+  Prediction errors are lower than 10% for Delaunay. That is often acceptable.
+
+  The unit is signed relative error, explained in section 4.
+
+  Figure 2 is mentioned in section 4.3.
+
+  See the first response above.
+
+  The models are mathematically defined and can certainly be used for other applications. The effectiveness is yet unknown, but this framework can be used to measure the effectiveness on new applications.

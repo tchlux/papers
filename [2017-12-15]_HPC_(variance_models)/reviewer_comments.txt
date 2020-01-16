@@ -1,0 +1,176 @@
+============================================================================
+HPC 2018 Reviews for Submission #9
+============================================================================
+
+Title: PREDICTIVE MODELING OF I/O CHARACTERISTICS IN HIGH PERFORMANCE COMPUTING SYSTEMS
+Authors: Thomas Lux, Layne Watson, Tyler Chang, Jon Bernard, Bo Li, Li Xu, Godmar Back, Ali Butt, Kirk Cameron and Yili Hong
+============================================================================
+                            REVIEWER #1
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                                  Impact: 4
+                         Appropriateness: 4
+                            Presentation: 4
+                                 Overall: 8
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+The authors present methodologies to model I/O characteristics of high
+performance computing systems.
+Some of the key points that may be addressed in the manuscript:
+
+1. The memory interface shows a random behavior due to cache hit and miss that
+are typically data dependent. Can the authors show some light on how they can
+possibly address this issue ? (The authors hint this in their future work
+section, however, it wasn't entirely clear if this issue shall be addressed in
+their subsequent work)
+2. The assumptions made on the HPC systems are not entirely clear.
+e.g. I/O characteristics are proxy for performance ? generally true in case of
+SIMD and distributed systems, however,It might not hold true for an
+execution-in-place(XIP) system - The characteristics of modeling the I/O system
+at hand can be better understood with a deeper formalization.
+3. The paper provides performance modeling by typically considering the
+underlying architecture as black box. There could be some characteristics of
+HPC systems that can be taken into assumptions and provide a use case based
+analysis of such systems that may hint the analysis is not entirely agnostic of
+architecture.( This has been hinted in their paper, however, mentioning the
+issue as it wasn't entirely clear)
+E.g. Is it better to use a type of compute model vs. other ? (with different
+unit cost optimizations)
+ how would one model predict the various types of I/O characteristics of the
+other ?
+
+============================================================================
+                            REVIEWER #2
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                                  Impact: 3
+                         Appropriateness: 2
+                            Presentation: 3
+                                 Overall: 2
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+This paper compares different methods of statistical modeling of the I/O
+performance and performance variability of compute clusters. Five different
+modeling techniques are used, and IOZone benchmarks are employed for taking
+experimental data. The Delaunay method is shown to be most accurate for
+predicting performance and its variability.
+
+I am lacking expertise in statistical modeling to accurately determine the
+novelty and usefulness of the approach. However, there is the question what
+makes I/O performance so amenable to the techniques described in the paper.
+Could one model the traffic flow through a city using the same methods? What is
+the insight?
+
+In my opinion this paper would be better suited at a different venue. I do not
+see how the attendees of HPC'18 would benefit significantly from this work,
+also because the statistical models are not described in sufficient detail.
+Moreover, neither code nor data are available for download.
+
+Other things:
+
+- The benchmarks were done on a "homogeneous cluster of computers." Apart from
+the fact that no details are given (not even a web link to the hardware
+description), how can one be sure that the results are generalizable to other
+setups?
+
+- Sect. 2.1.1, typo in "Laboritory"
+
+- Sect. 5, intro paragraph: "mush" -> "much"
+
+============================================================================
+                            REVIEWER #3
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                                  Impact: 3
+                         Appropriateness: 4
+                            Presentation: 4
+                                 Overall: 6
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+The paper compares the predictive quality of five different models of I/O mean
+throughput and variance.  Its an interesting topic and would likely be of
+interest to conference attendees.  Its well organized and written, one typo
+though, "Laboritory" in 2.1.1.
+
+A couple of areas for improvement, the first of which is a small request, the
+second is much larger.
+
+1) Cost of modeling:  The authors present the algorithmic complexity of the
+different approaches, but it would be enlightening to see the actual relative
+runtimes of the approaches and their dependence on dimension and training set
+size.  The accuracy of the methods is well quantified, but less so the cost.
+In particular the conclusion says "the error in the Delaunay method will remain
+acceptable as the number of system parameters being modeled increases", but in
+5.1 its stated that large run times would result.  Better quantitative
+illumination of the accuracy vs. runtime trade-off would be valuable.
+
+2) Generality: In 5.2, the authors do mention that the approaches could be used
+for other performance metrics.        It would be ideal to know if these would result
+in a different ranking of modeling techniques, for even just one other metric.
+I as the reader was left wondering if the conclusions here (based on two I/O
+related metrics) would carry over to any other cases.
+
+============================================================================
+                            REVIEWER #4
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                                  Impact: 1
+                         Appropriateness: 2
+                            Presentation: 1
+                                 Overall: 2
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+I do not have a background in the statistical models presented, but I did not
+follow how the results could be meaningful given the error rates.  Large errors
+indicate uncertainty about how well the model matches the data being modeled,
+so I am not sure how the results could be drawn from this study.
+
+I also am not sure what specifically is meant by the numbers in the sense of
+units.        This must be made more clear what exactly the throughput is and how it
+is measured.
+
+The figures and tables need to be closer to the text describing them.  Figure 2
+may not be mentioned in the text.
+
+Regardless of my background in statistics, or lack thereof, the paper needs to
+make a clear argument that the model matches the data, and that was not done.
+
+The abstract mentions that this modeling technique can be used on different
+systems for different characteristics, yet results were only presented from one
+machine and one benchmark.  The evidence presented does not support this claim.
