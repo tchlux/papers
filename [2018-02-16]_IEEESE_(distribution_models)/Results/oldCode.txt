@@ -1,0 +1,73 @@
+The methodology presented here is applied to the domain of computer system I/O throughput in order to demonstrate the effectiveness of multivariate models in capturing complex relationships between system parameters.  work presents an application of multivariate interpolation to the domain of computer system I/O throughput in an attempt to demonstrate a more comprehensive methodology for creating statistical models.
+
+The models are used to predict the cumulative distribution function of the expected I/O throughput for a system at previously unseen configurations. The techniques in this paper can tractably model tens of interacting system parameters with tens of thousands of unique configurations. The primary contribution of this work is a modeling framework that uses three multivariate interpolation techniques to capture precise characteristics (via cumulative distribution functions) of an arbitrary performance measure on an arbitrary system. 
+
+
+
+System variability in general has become a problem of increasing interest to the cloud and HPC systems communities, however most existing work has focused on operating system (OS) induced variability \cite{beckman2008benchmarking,de2007identifying}. 
+
+Among the models presented in prior works, \cite{bailey2005performance} mentions that it is difficult for statistical models to capture variability introduced by I/O. 
+
+The prior work in modeling I/O variability has been limited to models of at most two system parameters.
+
+
+are purely mathematical and 
+
+ application level understandings
+
+Many of the aforementioned statistical modeling techniques claim to generalize, while simultaneously requiring 
+
+
+
+This claim is historically accurate, because a large portion of predictive statistical models rely on simplifying the machine to one or two parameters
+
+Validation KS statistics were estimated to be \{.14, .18, .11\} for Delaunay, Max Box, and Voronoi meshes. Actual KS statistics were \{.27, .13, .11\}
+
+
+
+print("Loading results...")
+# results = read_struct()
+# print(results.shape)
+
+with open("IEEE_Main_Results.csv", "r") as input_file:
+    with open("IEEE_Main_Results_Fixed.csv", "w") as output_file:
+        # Skip the header line
+        names = input_file.readline().strip().split(",")
+        names.insert(6,"Training Percentage")
+        print(",".join(names), file=output_file)
+        sizes = set()
+        count = 0
+        for line in input_file:
+            line = line.strip().split(",")
+            train_size = int(line[6])
+            test_size = int(line[7])
+            train_perc = round((20*train_size / (train_size + test_size)))*5
+            sizes.add(train_perc)
+            line.insert(6,str(train_perc))
+            print(",".join(line), file=output_file)
+
+
+CONFIG_DATA_FILE_PKL = "config_data.pkl"
+
+
+# for i,c in enumerate(configs):
+#     counts.append( len(data[data[config_vars] == c]) )
+
+# counts = np.array(counts)
+
+
+# ====================================================================
+# Generate the configs 
+config_vars = header[2:6] + [header[7]]
+print("Variables:",config_vars)
+if (not os.path.exists(CONFIG_DATA_FILE_PKL)):
+    configs = np.unique(data[config_vars])
+    print("Saving '%s'..."%(CONFIG_DATA_FILE_PKL))
+    with open(CONFIG_DATA_FILE_PKL,"wb") as f:
+        pickle.dump(configs, f)
+else:
+    print("Loading '%s'..."%(CONFIG_DATA_FILE_PKL))
+    with open(CONFIG_DATA_FILE_PKL,"rb") as f:
+        configs = pickle.load(f)
+print("Unique confugations:", len(configs))
+
