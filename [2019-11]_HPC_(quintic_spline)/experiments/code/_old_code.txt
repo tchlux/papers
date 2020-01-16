@@ -1,0 +1,57 @@
+        # ------------------------------------------------------------
+        # Check for contradictions in the assignments.
+        max_DDX0 = (4*(6*DX0 + 8*DX1 + 15*(X1-X0)/w)) / (3*w)
+        if (min_DDX1 > max_DDX1) and (DDX0 > max_DDX0):
+            # If the modification to DDX0 is valid, then use it.
+            if (min_DDX0 <= max_DDX0):
+                DDX0 = max_DDX0
+                y[0][2] = DDX0 * sign
+                changed += True * 10**7
+            # Otherwise there must be a contradiction in DDX0, more digging needed.
+            else:
+                # A new valid DX0 (and perhaps DX1) must be picked.
+                max_DX0 = 4*(X0 - X1) / w - (32*DX1)/15
+                max_DX1 = (60*(X0 - X1))/(32*w)
+                # Check to see if DX1 is valid (if invalid, end here).
+                if (DX1 > max_DX1):
+                    DX1 = max_DX1
+                    y[1][1] = DX1
+                    changed += True * 10**8
+                # Check to see if a new DX0 is needed.
+                elif (DX0 > max_DX0):
+                    DX0 = max_DX0
+                    y[0][1] = DX0
+                    changed = True * 10**9
+
+
+
+        # Viable conditions for DDX1 with DX1 == 0 shorten down to:
+        #   (60*(X0-X1)/w - (24*DX0 + 32*DX1)) / (5*w) <= -4*DX1 / w
+        #   (60*(X0-X1)/w - 24*DX0) / (5*w) <= 0
+        #   (60*(X0-X1)/w - 24*DX0) >= 0
+        #   60*(X0-X1)/w >= 24*DX0
+        #   60*(X0-X1)/(24*w) >= DX0
+        #   DX0 <= (60*(X0-X1)) / (24 * w)
+        #   DX0 <= (5*(X0-X1)) / (2 * w)
+        max_DX0 = 5 * (X0-X1) / (2 * w)
+        # Cap the first derivative on the left the largest feasible value.
+        if (DX0 > max_DX0):
+            DX0 = max_DX0
+            y[0][1] = DX0*sign
+            changed += True * 10**2
+        # Viable conditions for DDX1 with DX1 == 0 shorten down to:
+        #   (60*(X0-X1)/w - (24*DX0 + 32*DX1)) / (5*w) <= -4*DX1 / w
+        #   (60*(X0-X1)/w - (24*DX0 + 32*DX1)) / 5 >= -4*DX1
+        #   60*(X0-X1)/w - 24*DX0 - 32*DX1 >= -20*DX1
+        #   60*(X0-X1)/w - 24*DX0 >= -20*DX1 + 32*DX1
+        #   60*(X0-X1)/w - 24*DX0 >= 12*DX1
+        #   5*(X0-X1)/w - 2*DX0 >= DX1
+        #   DX1 <= 5*(X0-X1)/w - 2*DX0
+        max_DX1 = 5*(X0-X1)/w - 2*DX0
+        # Cap the first derivative on the right the largest feasible value.
+        if (DX1 > max_DX1):
+            DX1 = max_DX1
+            y[1][1] = DX1*sign
+            changed += True * 10**3
+
+

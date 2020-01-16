@@ -1,0 +1,68 @@
+%% This file defines a new command called `\algorithm` that has three
+%% arguments. Usage is as follows:
+%% 
+%%    \algorithm{<title and arguments>}{<description>}{<body>}
+%% 
+%% If you want to label and reference, `\label{alg-name}` should be
+%% put *inside* the `<body>` argument. By default the title and
+%% arguments will be enclosed in a `\texttt`, override this behavior
+%% with `\normalfont` inside of the `<title and arguments>` argument.
+%% 
+%% This is achieved by using the `\enumitem` package to define a
+%% custom enumeration style. Inside the environment, `\item` or 
+%% `\line` can be used to created a new numbered operation.
+%% 
+%% The commands `\indented{<text>}` and `\comment{<text>}` are 
+%% provided for indenting and adding comments to the algorithm.
+%% 
+
+
+% Set up custom enumerate environments for algorithms.
+\usepackage{enumitem} % <- custom enumerated environments.
+%% Make a command for ':=' in math mode that has appropriate spacing.
+\def\:{\mathrel{\mathord:\mathord=}}
+%% Make a command for producing *comments* in the algorithms.
+\newcommand{\comment}[1]{\par \vspace{3pt} {\normalfont \it #1} \vspace{3pt} \par}%
+%% Make a command for producing *indented* sections in algorithms.
+\newcommand{\indented}[1]{\begin{itemize} \item[] #1 \end{itemize}}%
+%% Make a command for thick hrules
+\newcommand{\thickrule}{\hrule%
+  \hrule%
+  \hrule%
+}
+%% Create a new counter for tracking algorithms.
+\newcounter{algorithmCounter}
+\newlist{algorithmList}{enumerate}{4} % {<name>}{<list style>}{<max depth}
+%% Make the 'algorithmList' list:
+%%   label   - have labels with a colon
+%%   ref     - have references with only the number
+%%   itemsep - have no extra separation between items
+%%   parsep  - have no extra separation between paragraphs
+%%   topsep  - have no extra space before the list begins
+%%   font    - have a normal font for the counter
+%%   before  - have a monospaced mode for item text by default 
+%%             (use `\tt\fontseries{b}\selectfont` for bold)
+\setlist[algorithmList]{label=\arabic*:,ref=\arabic*,itemsep=0pt,parsep=0pt,topsep=0pt,font=\normalfont,before=\tt}
+%% Make a new block for containing an algorithm. Arguments are:
+%% 
+%%    \algorithm{title and arguments}{description}{body}
+%% 
+%% Any `\label{alg-name}` should be put *inside* the `body` argument.
+%% 
+\newcommand{\algorithm}[4]{
+  \let\line\item
+  %% Make some space before the algorithm
+  \vspace{10pt}%
+  \thickrule%
+  \refstepcounter{algorithmCounter}%
+  \textbf{Algorithm \thealgorithmCounter:} \texttt{#1} \\%
+  #2 \par%
+  \vspace{6pt}
+  \hrule%
+  \begin{algorithmList}%
+    #3%
+  \end{algorithmList}%
+  \vspace{7pt}%
+  \hrule%
+  \vspace{10pt}%
+}

@@ -1,0 +1,803 @@
+%**************************************************************************
+%* SpringSim 2020 Author Kit
+%*
+%* Word Processing System: TeXnicCenter and MiKTeX
+%*
+%**************************************************************************
+
+\documentclass{scspaperproc}
+
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage{mathptmx}
+
+%
+%****************************************************************************
+% AUTHOR: You may want to use some of these packages. (Optional)
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsbsy}
+\usepackage{amsthm}
+%****************************************************************************
+
+
+%
+%****************************************************************************
+% AUTHOR: If you do not wish to use hyperlinks, then just comment
+% out the hyperref usepackage commands below.
+
+%% This version of the command is used if you use pdflatex. In this case you
+%% cannot use ps or eps files for graphics, but pdf, jpeg, png etc are fine.
+
+\usepackage[pdftex,colorlinks=true,urlcolor=blue,citecolor=black,anchorcolor=black,linkcolor=black,bookmarks=false]{hyperref}
+
+%% The next versions of the hyperref command are used if you adopt the
+%% outdated latex-dvips-ps2pdf route in generating your pdf file. In
+%% this case you can use ps or eps files for graphics, but not pdf, jpeg, png etc.
+%% However, the final pdf file should embed all fonts required which means that you have to use file
+%% formats which can embed fonts. Please note that the final PDF file will not be generated on your computer!
+%% If you are using WinEdt or PCTeX, then use the following. If you are using
+%% Y&Y TeX then replace "dvips" with "dvipsone"
+
+%% \usepackage[dvips,colorlinks=true,urlcolor=blue,citecolor=black,%
+%% anchorcolor=black,linkcolor=black]{hyperref}
+
+%% The use of the long citation format (e.g. "Brown and Edwards (1993)" rather than "[5]") and at the same
+%% time using the hyperref package can lead to hard to trace bugs in case the citation is broken accross the
+%% line (usually this will mark the entire paragraph as a hyperlink (clickable) which is easily noticeable and fixed
+%% if using colorlinks, but not if the color is black -- as it is now). Worse yet, if a citation spans page boundary,
+%% LaTeX compilation can fail, with an obscure error message. Since this depends a lot on the flow of the text
+%% and wording, these bugs come and go and can be extremely hard for a beginner to trace. The error
+%% message can look like this:
+%%
+%%    ! pdfTeX error (ext4): \pdfendlink ended up in different nesting level than \pdfstartlink.
+%%    \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+%%    \fi \fi 
+%%    l.174 
+%%    ! ==> Fatal error occurred, no output PDF file produced!
+%%
+%% and can be universally fixed by putting an \mbox{} around the citation in question (in this case, at line 174)
+%% and maybe adapting the wording a little bit to improve the paragraph typesetting, which is perhaps not
+%% immediately obvious.
+%****************************************************************************
+
+%
+%****************************************************************************
+%*
+%* AUTHOR: YOUR CALL!  Document-specific macros can come here.
+%*
+%****************************************************************************
+
+% add custom hyphenation rules here
+\usepackage{hyphenat}
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% If you use theorems
+\newtheoremstyle{scsthe}% hnamei
+{8pt}% hSpace abovei
+{8pt}% hSpace belowi
+{\it}% hBody fonti
+{}% hIndent amounti1
+{\bf}% hTheorem head fontbf
+{.}% hPunctuation after theorem headi
+{.5em}% hSpace after theorem headi2
+{}% hTheorem head spec (can be left empty, meaning `normal')i
+
+\theoremstyle{scsthe}
+\newtheorem{theorem}{Theorem}
+\renewcommand{\thetheorem}{\arabic{theorem}}
+\newtheorem{corollary}[theorem]{Corollary}
+\renewcommand{\thecorollary}{\arabic{corollary}}
+\newtheorem{definition}{Definition}
+\renewcommand{\thedefinition}{\arabic{definition}}
+
+% avoid overrunning the right margin; you are welcome to remove this, provided that you take care not to overrun the right margin anywhere in your paper
+\sloppy
+
+%#########################################################
+%*
+%*  The Document.
+%*
+\begin{document}
+
+%***************************************************************************
+% AUTHOR: AUTHOR NAMES GO HERE
+% FORMAT AUTHORS NAMES Like: Author1, Author2 and Author3 (last names)
+%
+%		You need to change the author listing below!
+%               Please list ALL authors using last name only, separate by a comma except
+%               for the last author, separate with "and"
+%
+
+
+
+\SCSpagesetup{LastName1, LastName2, LastName3 ... and LastNameLastAuthor}
+
+% AUTHOR: Uncomment ONE of these correct conference names.
+\def\SCSconferenceacro{SpringSim'20}
+%\def\SCSconferenceacro{SummerSim}
+%\def\SCSconferenceacro{AutumnSim}
+%\def\SCSconferenceacro{PowerPlantSim}
+
+% AUTHOR: Set the correct year of the conference.
+\def\SCSpublicationyear{2020}
+
+% AUTHOR: Set the correct month and dates; the dates are separated by a single minus sign
+% with no spaces and no leading zeros, the month is a full name (e.g. April) with the first letter
+% capitalized. For example, "April 8-13".
+\def\SCSconferencedates{May 19-May 21}
+
+% AUTHOR: Set the correct venue in the form "City, State, Country", for example "Los Angeles, CA, USA".
+\def\SCSconferencevenue{Fairfax, VA, USA}
+
+% AUTHOR: Enter the title, all letters in upper case
+\title{Instructions for Authors of Papers Using \LaTeX}
+
+% AUTHOR: Enter the authors of the article, see end of the example document for further examples
+\author{
+\\%To level with the author block on the right.
+Theresa M. K. Roeder \\ [12pt]
+Department of Decision Sciences \\
+San Francisco State University \\
+1600 Holloway Avenue \\
+San Francisco, CA, USA \\
+scs19roeder@gmail.com\\
+% Multiple authors are entered as follows.
+% If they share the same affiliation, they must be allocated within the same block
+% Every author name must be separated by \\ but the last one within the block, that will be separated by \\ [12pt]
+% You may also need to adjust the titlevbox size in the preamble - search for titlevboxsize
+\and
+Peter I. Frazier \\
+Henry Wotton \\ [12pt]
+School of Operations Research \\ and Information Engineering \\
+Cornell University \\
+206 Rhodes Hall, Ithaca, NY, USA \\
+\{scs19frazier,scs19wotton\}@gmail.com\\
+\and
+Roberto Szechtman \\ 
+Jonathan Harker \\ [12pt]
+Department of Operations Research \\
+Naval Postgraduate School \\
+1 University Circle \\
+Monterey, CA, USA \\
+\{scs19szechtman,scs19harker\}@gmail.com\\
+\and
+\\%To level with the author block on the right.
+Enlu Zhou \\ [12pt]
+H. Milton School of Industrial \& Systems Engineering \\
+Georgia Institute of Technology \\
+755 Ferst Drive NW \\
+Atlanta, GA, USA \\
+scs19zhou@gmail.com
+}
+
+
+
+\maketitle
+
+\section*{Abstract}
+
+This set of instructions for producing a proceedings paper for The Society for Modeling \& Simulation International (SCS) with \LaTeX\ also serves as a sample file that you can edit to produce your submission, and a checklist to ensure that your submission meets the SCS requirements. Please follow the guidelines herein when preparing your paper. Failure to do so may result in a paper being rejected, returned for appropriate revision, or edited without your knowledge.
+
+\textbf{Keywords:} instructions, author’s kit, conference publication. (3-5 keywords separated by a comma.)
+%% AUTHOR:
+% This is a list of no more than five keywords that will identify your paper in indices and databases (required).
+% Do not use the words “computer”, “simulation”, “model”, or “modeling”, since these are all assumed.
+
+\section{Introduction}
+\label{sec:intro}
+
+This paper provides instructions for the preparation of papers for the Society for Modeling \& Simulation International (SCS) using \LaTeX. There is a companion paper that provides instructions for the preparation of papers with Microsoft Word. The easiest way to write a paper using \LaTeX\ that complies with the requirements is to edit the source file, \texttt{scs19paper.tex} for this document. Please do not use an older version, as some specification may have changed. An author kit is available via conference website. The author kit includes this \LaTeX\ document and its Microsoft Word companion. This document was typeset using \texttt{pdflatex}.
+
+
+\section{General Guidelines}
+
+\subsection{Language}
+
+The paper should be prepared using U.S. English in the interest of consistency across the proceedings. Please carefully check the spelling of words before you submit your paper. There are spell checkers for \LaTeX\ as well.
+Some examples of software which supports spell checking are TexnicCenter, TexMaker, and TexClipse.
+
+\subsection{Objectivity}
+The content of the paper should be objective and without any appearance of commercialism.  In general, comparisons of commercial software should be avoided unless they are central to the topic.  If a comparison of commercial software is included, it should be based on objective analysis that includes criteria, description of ranking methodology on each criteria, and the rankings themselves to arrive at the conclusion.
+If an approach other than a detailed objective analysis is used to select the simulation software used for the study being reported, such as, availability of the software, or the familiarity of the analyst with the software, it should be clearly identified. To ensure suitability for an international audience, please pay attention to the following:
+
+\begin{itemize}
+\item{Write in a straightforward style.}
+\item{Try to avoid long or complex sentence structures.}
+\item{Briefly define or explain all technical terms that may be unfamiliar to readers.}
+\item{Explain all acronyms the first time they are used in your text – e.g., “Digital Signal Processing (DSP)”.}
+\item{Explain local references (e.g., not everyone knows all city names in a particular country).}
+\item{Explain “insider” comments. Ensure that your whole audience understands any reference whose meaning you do not describe (e.g., do not assume that everyone has used a Macintosh or a particular application).}
+\item{Explain colloquial language and puns. Understanding phrases like “red herring” may require a local knowledge of English. Humor and irony are difficult to translate.}
+\item{Use unambiguous forms for culturally localized concepts, such as times, dates, currencies and numbers (e.g., “1-5- 97” or “5/1/97” may mean 5 January or 1 May and “12/10/11” can be even more confusing, and “seven o’clock” may mean 7:00 am or 7:00 pm).  For currencies, indicate English equivalences – e.g., “Participants were paid 10,000 lire, or roughly \$5.”}
+\item{Be careful with the use of gender-specific pronouns (he, she) and other gendered words (chairman, manpower, man-months). Use inclusive language that is gender-neutral (e.g., she or he, they, s/he, chair, staff, staff-hours, person-years).}
+\item{If possible, use the full (extended) alphabetic character set for names of persons, institutions, and places (e.g., {Gr\o nb\ae k}, Lafreni\'ere, S\'anchez, Universit\"at, {Wei\ss enbach}, Z\"ullighoven, {\AA rhus}, etc.).}
+\end{itemize}
+
+\subsection{Paper Submission}
+
+Please, refer to the author's guidelines document in the author's kit.
+
+\subsection{Length Constraints}
+
+\subsubsection{The Abstract and Keywords}
+The abstract should be at most 150 words. Since abstracts of all papers accepted for publication in the proceedings will also appear in the final program, the length limit of 150 words will be strictly enforced for each abstract. The abstract should consist of a single paragraph, and it should not contain references or mathematical symbols. 
+
+The list of keywords should have no more than five keywords that will identify your paper in indices and databases (required). Do not use the words “computer”, “simulation”, “model”, or “modeling”, since these are all assumed.
+
+\subsubsection{Length of the Paper}
+The page size in the proceedings must be 8.5 inches by 11 inches (21.6 cm by 27.9 cm). The overall length of the paper should be at least 5 proceedings pages. \textbf{Papers should be at most 12 pages}.
+
+\subsubsection{Font Specification and Spacing}
+The paper should be set in the Times New Roman font using a 11-point font size and it should be single spaced. Do not use other fonts; the use of other fonts means the proceedings editors will need to send the paper back to you to change the font.
+
+These settings are automatically applied by the class file used for this document, thus you are asked not to change these settings in your paper. If you want to use bold Greek symbols you should use the \texttt{bm} package.
+
+\subsubsection{Margins}
+\label{sec:margins}
+
+The width of the text area is 6.5 inches (16.0 cm). The left and right margins should be 1 inch (2.54 cm) on each page. The top margin shall be 0.89 inches (2,24 cm) including the header, the bottom of the pages shall be 0.67 inches (1.7 cm). These settings are automatically applied by the class file used for this document, thus you are asked not to change these settings in your paper.
+
+\subsubsection{Justification}
+Headings of sections, subsections, and subsubsections should be left-justified. One-line captions for figures or tables should be centered. A multiline caption for a figure or table should be fully justified. All other text should be fully justified across the page (that is, the text should line up on the right-hand and left-hand sides of the page). These settings are automatically applied by the class file used for this document.
+
+\subsection{Headings of Sections, Subsections, and Subsubsections}
+Section, subsection, and subsubsection headings should appear flush left, set in the bold font style, and numbered as shown in this document. The headings for the Abstract, Acknowledgments, References and Author Biographies sections are not numbered. These settings are automatically applied by the class file used for this document.
+
+To suppress the section numbers, use the \verb+\section*{}+ command.
+
+Section headings should be set in \textbf{\uppercase{full capitals like this phrase}}, while subsection and subsubsection headings should be \textbf{Capitalized
+in Headline Style like This Phrase}. These settings are automatically applied by the class file used for this document.
+
+\subsubsection{Paragraphs}
+The paragraphs should not be indented. Normal style will add a space between paragraphs, do not insert additional space between paragraphs.
+
+\subsubsection{Footnotes}
+\textbf{Do not use footnotes}; instead incorporate such material into the text directly or parenthetically.
+
+\subsubsection{Page Numbers}
+\textbf{Do not include page numbers.} Page numbers are generated by the proceedings editors once all accepted papers are ordered for the final proceedings.
+
+
+\section{Formatting the First Page}
+
+\subsection{Running Heads}
+The running head (provided in the template) in the lower left-hand corner of the first page (\textit{which should read the conference name, location and the name of the Society}) is left-justified and set in the 9-point italic font style. %You do not have to change the content of the first page copyright notice; the first page header and footer are automatically provided by the class file.
+You will need to \textbf{uncomment the appropriate version of the track or symposium name} at the beginning of \texttt{scs19paper.tex}, depending on where you are going to submit your paper.
+
+Running heads on the second and subsequent pages should contain the last names of the authors, centered and set in the 10-point italic font style. For example, running heads for papers with varying numbers of authors would appear like \emph{Yilmaz} (single author), or \emph{Yilmaz and Chan} (two authors), or \emph{Yilmaz, Chan, and Moon} (three authors), or \emph{Yilmaz, Chan, Moon, and Roeder} (four authors). These are created by using the following macro:
+
+\noindent \begin{verbatim}
+\SCSpagesetup{LastName1, LastName2, and LastNameLastAuthor}
+\end{verbatim}
+
+located just after the \verb+\begin{document}+ of this \texttt{.tex} file.
+
+Please use this macro to set up the running heads, as it sets further parameters important for the correct layout of the document. List all authors; do not use \textit{et al.} The author names are listed in the same order as they appear on the title page. This will be the same order when providing the author biographies at the end of the paper.
+
+
+\subsection{Title and Authors}
+
+Center the title of the paper on the page and set it in bold 12pt \textbf{\uppercase{full capitals}}. The top edge of the title should begin at least 1.25 inches from the top of the page. The correct placement is automatically done by the class file as well. Just use the \verb+\title+ and \verb+\maketitle+ commands as it is done in the source of this document. Multiline titles should have about the same amount of text on each line. There should be 1 blank line between the title and the authors’ names (will be inserted by the class file if the \verb+\author+, \verb+\title+, and \verb+\maketitle+ commands are used).
+
+Each author’s name should be centered on a new line, with the author’s first name first and no job title or honorific. Insert 1 blank line between the author’s name and address. The organization or institution that the author is affiliated to should be typed first. Next type the complete street address, without abbreviations, followed by the city, standard two-letter state or province abbreviation, and country. The address should be centered. For papers with multiple authors, the authors should be listed in order of decreasing contribution, with authors from the same institution listed separately if possible. Different formats for multiple authors are shown as examples in Figures~\ref{fig2same} through \ref{fig2equals1different} at the end of this document. There should be 1 blank line between the author names and the text of the paper. You should use the \verb+\author+ command to enter author names, separated using the command \verb+\and+. See the \texttt{.tex} source file for this document. Authors with multiple affiliations shall pick the main affiliation for the title page and mention other affiliations in their biography.
+
+
+\section{Formatting Subsequent Pages}
+Please refer to \autoref{sec:margins} for the correct margins.
+
+\subsection{Mathematical Expressions in Text and in Displays}
+Display only the most important equations, and number only the displayed equations that are explicitly referenced in the text. To conserve space, simple mathematical expressions such as \mbox{$\bar Y = n^{-1} \sum_{i=1}^n Y_i$} may be incorporated into the text. Mathematical expressions that are more complicated or that must be referenced later should be displayed, as in
+
+\begin{equation}
+s^2 = \frac 1 {n-1} \sum_{i=1}^n (Y_i - \bar Y)^2\;. \nonumber
+\end{equation}
+
+If a display is referenced in the text, then enclose the equation number in parentheses and place it flush with the right-hand margin of the column. For example, the quadratic equation has the general form
+
+\begin{equation} \label{eq:quadratic}
+ax^2 + bx + c = 0, \mbox{ where } a \ne 0\;.
+\end{equation}
+
+In the text, each reference to an equation number should also be enclosed in parentheses. For example, the solution to \eqref{eq:quadratic} is given in \eqref{eq:quadratic sol} in \autoref{app:quadratic}.
+
+If the equation is at the end of a sentence, then you should end the equation with a period. If the sentence in question continues beyond the equation, then you should end the equation with the appropriate punctuation~-~that is, a comma, semicolon, or no punctuation mark.
+
+
+\subsection{Displayed Lists}
+A displayed list is a list that is set off from the text, as opposed to a run-in list that is incorporated into the text. The bulleted list given below provides more information about the format of a displayed list. 
+\begin{itemize}
+	\item Use standard bullets instead of checks, arrows, etc.\ for bulleted lists.
+	\item For numbered lists, the labels should not be Arabic numerals enclosed in parentheses because such labels cannot be distinguished from equation numbers.
+\end{itemize}
+
+The paragraph after the list is not indented.
+\begin{enumerate}
+	\item Use standard numbering instead of special characters for numbered lists.
+	\item For numbered lists, the labels should not be Arabic numbers enclosed in parentheses because such labels cannot be distinguished from equation numbers.
+	\item You may need to restart the numbering on numbered lists.
+\end{enumerate}
+
+
+\subsection{Definitions and Theorems}
+Definitions, theorems, propositions, etc. should be formatted like a normal paragraph with a boldface heading as shown in the examples below. Number these items separately and sequentially. You may choose to separately number theorems, propositions, corollaries, etc., as opposed to the example below where corollaries and theorems are numbered together. Search the source of this document to see how these environments were defined. The key command is \verb+\newtheorem+. Use a period after the definition, theorem, corollary or proposition number.
+
+\begin{definition}
+In colloquial New Zealand English, the term \emph{dopey mongrel} is used to refer to someone who has exhibited less than stellar intelligence.
+\end{definition}
+
+\begin{theorem}
+If a proceedings editor from New Zealand accidentally deletes his draft of the author kit shortly after completing it, he would be considered to be a dopey mongrel.
+\end{theorem}
+
+\begin{corollary}
+One of the proceedings editors is a dopey mongrel.
+\end{corollary}
+
+The paragraph after the list is not indented.
+
+
+\subsection{Figures and Tables}
+\label{sec:graphics}
+Figures and tables should be centered within the text and should not extend beyond the right and left margins of the paper. Figures and tables can make use of color since the SCS produces electronic proceedings. However, try to select colors that can be differentiated when printing in black and white in consideration of vast majority of people using such printers. Figures and tables are numbered sequentially, but separately, using Arabic numerals. All tables and figures should be explicitly referenced in the text and they should not be placed before they are referenced.
+
+Each table should appear in the document after the paragraph in which the table is first referenced. However, if the table is getting split across pages, it is okay to include it after a few paragraphs from its first reference. One-line table captions are centered, while multiline captions are left justified. The table captions appear \emph{above} the table. 
+
+Captions can be written using normal sentences with full punctuation. All captions should end with a period. It is fine to have multiple-sentence captions that help to explain the table. See Tables~\ref{tab:first} and \ref{tab:second} for examples, note that the captions are above the table.
+
+
+\begin{table}[htb]
+\caption{Table captions appear above the table, and if they are longer than one line they are left justified. Captions are written using normal sentences with full punctuation. It is fine to have multiple-sentence captions that help to explain the table.}\label{tab:first}
+\centering
+\begin{tabular}{rll}
+\hline
+Creature & IQ & Diet\\ \hline
+dog & 70 & anything\\
+cat & 75 & almost nothing\\
+human & 60 & ice cream \\
+dolphin & 120 & fish fillet\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htb]
+\centering
+\caption{Counting in Maori.}\label{tab:second}
+\begin{tabular}{r|l}
+English & Maori \\ \hline
+one & tahi \\
+two & rua \\
+three & toru \\
+four & wha \\
+\end{tabular}
+\end{table}
+
+Each figure should appear in the document after the paragraph in which the figure is first referenced. Figure captions appear below the figure. Single-line captions are centered, while multiline captions are left justified. Captions end with a period. See Figures~\ref{fig:tahi} and \ref{fig:rua} for examples.
+
+\begin{figure}[htb]
+{
+\centering
+%\includegraphics[width=0.9\columnwidth]{MathExpandExpression.jpg}
+\includegraphics[width=0.50\textwidth]{MathExpandExpression}
+\caption{An unusual answer to a question.}\label{fig:tahi}
+}
+\end{figure}
+
+\begin{figure}[htb]
+{
+\centering
+%\includegraphics[width=0.9\columnwidth]{puzzle.png}
+\includegraphics[width=0.50\textwidth]{puzzle}
+\caption{The area of the square is 64 squares, while that of the rectangle is 65 squares, yet they are made of the same pieces! How
+is this possible?}\label{fig:rua}
+}
+\end{figure}
+
+References to tables and figures are given as \autoref{fig:tahi} or \autoref{tab:first}. For example, ``We see in \autoref{tab:second} that \ldots'' and ``We see in \autoref{fig:rua} \ldots'' are both correct. Be sure to use the \verb+\label+ command within the figure or table environment and refer to the associated figure or table using \verb+\autoref{your label here}+.
+
+Please do not use hard coded figure/table numbers. This is error prone, and the references will not be hyperlinks.
+
+Please ensure that your graphics files use standard fonts (Times New Roman, Symbol, etc.) or that those are embedded in the final figure files.
+If they are not embedded, and if the font is not available on the editor's computer, then the font will not be included in the final PDF.
+This may lead to a problem with displaying the final PDF file on computers without an appropriate font.
+At best you select a format which allows to embed the fonts in all non bitmap figure files.
+
+Including graphics files in your document can be complicated. In general you have 2 options. Either (a) you use \texttt{.jpg}, \texttt{.png} or \texttt{.pdf} files (\texttt{.eps} files can be also used, provided that the \texttt{epstopdf} package is added in the preamble) or (b) all of your files must be either \texttt{.ps} or \texttt{.eps}.
+Note that there are tools to convert these formats into one another. The main difference between the formats is how they store the images and how well suited they are for specific graphics. You can choose between bitmap and vector graphics.
+
+Bitmap graphics are well suited for photographs (\texttt{.jpg} is very common here) or for screenshots (\texttt{.png} is a lossless encoding in contrast to \texttt{.jpg}, and is thus better suited for all those cases where you have sharp edges in your graphics).
+
+Vector graphics are the encoding to be chosen for all kinds of drawings (diagrams, charts, \ldots). In contrast to bitmap formats, they can be scaled to any size without any loss of sharpness. This makes it possible to read such graphics even if two pages are printed on one sheet of paper, or if the documents are read electronically.
+
+So what to choose for your \LaTeX\ document? As a rule of thumb you should always prefer \texttt{.pdf} or \texttt{.eps}.
+In general these two formats can contain both, bitmap and vector graphics. But there is no need (and no use) to convert your bitmaps to either of these.
+
+If you follow Option (a), then you must use the \texttt{PDFLaTeX} command to generate your PDF file, as was done with this file. PDFLaTeX is nowadays the standard - so option (a) should be the natural choice. The final file format is PDF.
+
+If you follow Option (b), then you must use the outdated \texttt{latex - dvips - ps2pdf} route for generating a PDF file. You may run into a problem if using both the \texttt{hyperref} package and the \texttt{graphicx} package; there seems to be a clash there.
+In that case, you might either not use the \texttt{hyperref} package and continue to use \texttt{graphicx}, or continue to use the \texttt{hyperref} package and use the \texttt{epsfig} package in place of the \texttt{graphicx} package.
+
+If you persevere with \texttt{hyperref} then be sure to use the appropriate version of the \verb+\usepackage+ command; see the preamble in the source of this file for details. See also \autoref{sec:hyper} below. It is important to note that if you remove the \texttt{hyperref} package, then you have to deal with the correct formatting of hyperlinks on your own.
+
+Whatever option you choose: if you include figures via \texttt{includegraphics}, then please do so without the file ending (e.g., skip \texttt{.pdf}, \texttt{.eps}, \ldots).
+
+
+\subsection{Hyperlinks}
+\label{sec:hyper}
+
+A \emph{hyperlink} specifies a Web address (URL) or an e-mail address. The use of hyperlinks allows authors to give readers access to external electronic information, such as a dynamic simulation or animation. 
+But please note: hyperlinks (to web pages) might not work forever (web pages might be removed), and thus using hyperlinks intensively may make a paper (or parts thereof) less useful in future. If enough information is provided in the main body of the paper to enable searching for the cited content in any case and if the inclusion of the web address does not hurt the appearance of the paper, then the web address can be included in the main body of the paper itself.
+
+\textbf{While the use of hyperlinked text is encouraged in the main body of the paper, it is recommended that corresponding web addresses and other identifying information should be provided in list of references.} For example, instead of spelling out the web address of the conference website, one would refer to conference website and the corresponding entry in the reference section will spell out the associated web address and other relevant information such as author(s) and/or organization that published the content. This would allow readers to search for the content using the author(s), organization, etc. in case the actual web-address is changed. This also allows for a cleaner appearance of the main body of the paper.
+
+Each hyperlink should be set in the same font as the text. Hyperlinks are \emph{not} underlined. A live hyperlink (or hot link) - that is, a hyperlink that will activate your Web browser and take it to an external Web site or that will activate your e-mail software for sending a message to a specific e-mail address - should be colored blue. You can see examples of such hyperlinks in this paper. The use of live hyperlinks is at the discretion of the author(s).
+
+Non-live hyperlinks that is, the hyperlinks that are included for the reader’s information but do not actually invoke the reader’s Web browser or e-mail software should be colored black (use package \texttt{url} and \verb+\url{http://...}+). To use live hyperlinks in a proceedings paper, use the \texttt{hyperref} package. If you are using \texttt{PDFLaTeX} to generate your PDF file then, as was done for this file, you should use the following as the last \verb+\usepackage+ command that is already in the preamble.
+
+\begin{verbatim}
+\usepackage[pdftex,colorlinks=true,urlcolor=blue,citecolor=black,
+anchorcolor=black,linkcolor=black]{hyperref}
+\end{verbatim}
+
+On the other hand, if you are using the traditional \texttt{latex - dvips - ps2pdf} route, then users of MiKTeX or PCTeX for Windows should add the command
+
+\begin{verbatim}
+\usepackage[dvips,colorlinks=true,urlcolor=blue,citecolor=black,
+anchorcolor=black,linkcolor=black]{hyperref}
+\end{verbatim}
+
+as the last \verb+\usepackage+ command in the preamble, while users of Y\&Y TeX should add the command
+
+\begin{verbatim}
+\usepackage[dvipsone,colorlinks=true,urlcolor=blue,citecolor=black,
+anchorcolor=black,linkcolor=black]{hyperref}
+\end{verbatim}
+
+as the last \verb+\usepackage+ command in the preamble.
+
+In general the \verb+\usepackage+ command above that works for MiKTeX running on a Windows system should also work for most implementations of \LaTeX\ running on a Unix or Apple system.
+Thus the hypertext link \href{http://www.scs.org}{conference website}~\cite{SCS} to the conference website can be established by the command
+
+\begin{verbatim}
+\href{http://www.scs.org}{conference website}~\cite{SCS}
+\end{verbatim}
+
+It is recommended to add all hypertext references to the \texttt{.bib} file and to refer to them from the text as it is done in the example above.
+
+If the authors use hyperlinked text in the main body of the paper, they must ensure that each hyperlink includes a citation following the hyperlinked text, a corresponding entry is provided in the list of references, and the associated web address displayed for the hyperlink is complete and correct so that a reader who has only a hard copy of the paper can still access the cited material by typing the relevant part of the displayed text of the hyperlink into the address bar of a Web browser. If the authors opt for including the web address in the main body of the text itself, they must ensure that the hyperlink is complete and correct for the same reason. Again, it is recommended that corresponding web addresses and email addresses should be provided in the references.
+
+If you use the package \texttt{hyperref} as suggested here, and if you use citation commands to handle references, then your citations will
+become click-able hyperlinks (as in this document). The same happens to all the references to equations, figures a tables. This can aid the reader in navigating the document.
+
+
+%\subsection{Citing a Reference}
+%To cite a reference in the text, use the author-date method. Thus,~\citeN{chi89} could also be cited parenthetically~\cite{chi89}. For a work by four or more authors, use an abbreviated form. For example, a work by Banks, Carson, Nelson~and Nicol would be cited in one of the following ways:~\shortciteN{bcnn:simulation} or~\shortcite{bcnn:simulation}.
+%
+%Parenthetical citations are enclosed in parentheses $(~)$, not square brackets $[~]$. The items in a series of such citations are usually separated by commas. If an item in the series of parenthetical citations contains punctuation because (for example) it refers to a work with three or more coauthors, then all items must be separated by semicolons.
+%
+%The following is a list of \textbf{correct} forms of citations:
+%\begin{itemize}
+%\item Brown and Edwards (1993),
+%\item (Brown and Edwards 1993),
+%\item (Smith 1987, Brown and Edwards 1993), and
+%\item (Smith 1987; Arnold, Brown, and Edwards 1992; Brown et al. 1997).
+%\end{itemize}
+%
+%The following is a list of \textbf{incorrect} forms of citations:
+%\begin{itemize}
+%\item Brown and Edwards [1993],
+%\item (Brown and Edwards, 1993),
+%\item (Smith 1987; Brown and Edwards, 1993), and
+%\item (Smith 1987, Arnold Brown and Edwards 1992, Brown et al. 1995)
+%\end{itemize}
+%
+%For further details, please refer to \emph{The Chicago Manual of Style}~\cite{chicago03}. In \autoref{sec:bibtex} you can see how correct citations can easily be achieved by using \BibTeX.
+%
+%\subsection{List of References}
+%Place the list of references after the appendices. The section heading is \textbf{REFERENCES}, and is not numbered. List only references that are cited in the text. Arrange the references in alphabetical order (chronologically for a particular author or group of authors); do not number the references.
+%Give complete references without abbreviations. To identify multiple references by the same authors and year, append a lower case letter to the year of publication, for example, 1984a and 1984b. Use hanging indentation to distinguish individual entries. Do not insert additional space between references.
+%
+%You can enter the references using (a) \emph{\BibTeX\ as discussed in \autoref{sec:bibtex}}, (b) using the environment \texttt{thebibliography} via the \verb+\bibitem+ and \verb+\cite+ commands, or (c) the \texttt{hangref} environment as shown below.
+%Please note that neither (b) nor (c) are recommended. These alternatives may mean extra work for you and the editor during the editing process. Option (c) means in addition that the references will not be hyperlinks - as the proceedings are electronic proceedings this is not recommended at all.
+%
+%\emph{Whatever you do: the list of entries/items need to be included in your submission! And it needs to be included in such a way that the document can be compiled by the editor.}
+%
+%The bibliographic style for a journal article is: \\
+%\textless{}Surname of first author\textgreater{}, \textless{}First author initials\textgreater{},
+%\textless{}Initials and surnames of other authors\textgreater{}. \textless{}year\textgreater{}.
+%\textless{}Capitalized article title in quotes\textgreater{}. \textless{}\emph{Journal Name in
+%Headline Italics}\textgreater\ \textless{}Volume number\textgreater{}, \textless{}page numbers\textgreater{}.
+%
+%The format for other types of reference can be inferred from the examples in the references, which include:
+%\begin{itemize}
+%\item a technical report~\cite{chi89},
+%\item a proceedings article~\cite{cheng:input94},
+%\item a journal article~\cite{gupta:mnormal},
+%\item a book by 2 authors~\cite{hammersley:montecarlo},
+%\item a chapter in a book~\cite{sch79},
+%\item an unpublished thesis or dissertation~\cite{ste99},
+%\item a book with no identified authors~\cite{chicago03}, and
+%\item a document available on the web~\cite{SCS}.
+%\end{itemize}
+%
+%Be sure that references include all of the necessary information such as full name of the publication, year, name of the proceedings, journal or book title, page numbers, etc.
+%
+%Again, for further details and examples, please refer to \emph{The Chicago Manual of Style}~\cite{chicago03}. Please note that the examples given in the reference section of this document are based on the 16th edition of the Chicago Manual of Style. Clarity and consistency should be your primary concern.
+
+
+\section{Using \BibTeX}
+\label{sec:bibtex}
+To cite a reference in the text, the author-date method is used. Thus,~\citeN{chi89} could also be cited parenthetically~\cite{chi89}. For a work by four or more authors, use an abbreviated form. For example, a work by Banks, Carson, Nelson~and Nicol would be cited in one of the following ways:~\shortciteN{bcnn:simulation} or~\shortcite{bcnn:simulation}.
+
+Using \BibTeX\ for referencing is the recommended way. Please, do \textbf{not} typeset references and citations manually. Indeed, the references in this document were generated using \BibTeX, so the source for this document serves as an example of how to use \BibTeX\ to meet the formatting requirements.
+
+One benefit of using \BibTeX\ is that bibliography formatting and referencing can be greatly simplified: the correct citation and reference list style is automatically created. We assume that you already know how to use \BibTeX.
+
+Software to manage \BibTeX\ files, for example JabRef (Java based), can support you on managing and creating valid \texttt{bib} files.
+\emph{Please open your bib file with a software like JabRef BEFORE you submit your final version. Experience shows that almost all manually edited bib files contain duplicated bib keys (which means a random selection of references), broken entries which usually lead to missing bibliographic information, invalid keys, and last but not least invalid tokens in bib files. Bib files DO NOT support comments. \BibTeX\ should not report any error for your final submitted document.}
+
+The \BibTeX\ input file \texttt{scsproc.bst} and the \LaTeX\ macros found in \texttt{scsprocbib.tex} are provided, so no other files (apart from your bibliography) are required. The macros in these files have been tested with \LaTeX. The simplest way to write a paper that uses \BibTeX\ is to take the source file for this document, and modify it to generate your article.
+
+\subsection{Set Up the \BibTeX\ Input Files}
+
+\BibTeX\ requires a bibliography style file (extension \texttt{.bst}) and a bibliography database file (extension \texttt{.bib}).  This is achieved using
+
+\begin{verbatim}
+\bibliographystyle{scsproc}
+\bibliography{demobib}
+\end{verbatim}
+
+just before the AUTHOR BIOGRAPHY section.  The file \texttt{demobib}\ in the \verb+\bibliography+ command should be replaced with the base names of your \BibTeX\ \texttt{.bib} files that you use for your bibliography.  \BibTeX\ is then run as usual to create a bibliography file (\texttt{.bbl}).
+
+
+\subsection{Use the Citation Macros}
+There are a number of macros available to cite references in the \LaTeX\ source document.  The \verb+\cite+ macro can be used to give a list of references in parentheses.  For example,
+
+\begin{verbatim}
+\cite{law:simulationc,cheng:queuehetero}
+\end{verbatim} % no space after the comma!
+
+results in the citation~\cite{law:simulationc,cheng:queuehetero}. A reference that functions as a noun is created with the \verb+\citeN+ macro. For example,
+
+\begin{verbatim}
+\citeN{law:simulationc} say \ldots
+\end{verbatim}
+
+results in:~\citeN{law:simulationc} say \ldots\,.
+
+Citations within parentheses do not need the extra parentheses provided by the above citation commands. To suppress the inclusion of extra parentheses, use the \verb+\citeNP+ macro. To obtain (\citeNP{cheng:queuehetero}, \citeNP{law:simulationc}), for example, use:
+
+\begin{verbatim}
+(\citeNP{cheng:queuehetero}, \citeNP{law:simulationc}).
+\end{verbatim}
+
+When there are four or more authors, the name of the first author should be given along with the text ``et al.''  This can be achieved with the \verb+\shortcite+ macro. To obtain~\shortcite{bcnn:simulation}, for example, use: 
+
+\begin{verbatim}
+\shortcite{bcnn:simulation}
+\end{verbatim}
+
+The macros \verb+\shortciteN+ and \verb+\shortciteNP+ are also available to obtain `et al.' when a citation with many authors is used as a noun.
+
+When citing a reference inside a figure or table caption, please use \verb+\protect\cite+ sequence to avoid build errors.
+
+
+\subsection{Generate the Bibliography File}
+
+Run \texttt{PDFLaTeX} (or \LaTeX), then \BibTeX, and then \texttt{PDFLaTeX} two more times. Running \texttt{PDFLaTeX} the first time creates the \texttt{.aux} file. Running \BibTeX\ creates the \texttt{.bbl} file.  Running \texttt{PDFLaTeX} again (twice) fixes the bibliography and citation references.
+
+
+\subsection{Include the Bibliography File in Your Submission}
+\label{sec:submitbib}
+
+Be sure to include your \texttt{.bib} file(s) or your \texttt{.bbl} file as part of your submission. If you only include the \texttt{.bbl} file, then please verify that you include the most up-to-date version reflecting changes during the editing process by rerunning \BibTeX\ one last time before submission.
+
+Please be aware that submitting the \texttt{.bbl} file instead of the \texttt{.bib} file means extra work for the editing team and for you, as any changes to the reference list need to be done by you in this case.
+Please open and save the file before every submission with a software like JabRef to see whether the file is correct and to check for duplicated entries and/or bib keys in the file.
+
+
+\section{Author Checklist}
+We strive for a consistent appearance in all papers published in the proceedings. If you used the template and styles within this author’s kit, then almost all of the requirements in this checklist will be automatically satisfied, and there is very little to check.
+
+Please \textbf{print a hardcopy of your paper}, and go over your printed paper to make sure it adheres to the following requirements. \textit{Thank you!}
+
+\begin{enumerate}
+	\item Abstract
+  \begin{enumerate}
+	  \item 150 or fewer words.
+	  \item Provide 3-5 keywords (mandatory). This set of keywords will identify your paper in indices and databases.
+	\end{enumerate}
+	\item Paper Length
+  \begin{enumerate}
+	  \item At least 5, but no more than 12 pages.
+	  \item Page size is letter size (8.5’’ x 11’’, or 216 mm x 279 mm).
+	\end{enumerate}
+	\item All text is in 11-Point Times New Roman except title, header and footer (default in this template).
+	\item Paper title is in 12-Point Times New Roman \textbf{BOLDFACE ALL CAPS} (default in this template).
+	\item The paper has been spellchecked using U.S. English. 
+	\item Spacing and Margins
+  \begin{enumerate}
+	  \item Single spaced.
+	  \item Left and right margins are each 1 inch (default in this template).
+	  \item Top and bottom margins are according to the template.
+	  \item Title starts 1.25 inches from the top of the page (default in this template).
+	\end{enumerate}
+	\item Section Headings
+  \begin{enumerate}
+	  \item Left justified and set in \textbf{BOLDFACE ALL CAPS} (default in this template).
+	  \item Numbered, except for the abstract, acknowledgments, references and author biographies.
+	  \item Subsection headings are set in \textbf{Boldface Headline Style} (default in this template).
+	\end{enumerate}
+	\item No footnotes or page numbers.
+	\item The copyright notice on the first page contains the name of the symposium or a track where you want to submit your paper, and the running head on subsequent pages is the surnames of all authors.
+	\item Multiple authors are formatted correctly.
+	\item Equations are centered and any equation numbers are in parentheses and right-justified (default).
+	\item Figures and Tables
+  \begin{enumerate}
+	  \item All text in figures and tables is readable.
+	  \item Table captions appear above the table.
+	  \item Figure captions appear below the figure.
+	\end{enumerate}
+	\item Citations and References
+  \begin{enumerate}
+	  \item Citations are by author and year, and are enclosed in parentheses, not brackets (default \BibTeX). 
+	  \item References are in the hangref style, and are listed alphabetically by the last names(s) of the author(s) (also default \BibTeX\ setting in this template). 
+	\end{enumerate}
+	\item Author biographies are one paragraph per author.
+	\item Hyperlinks
+  \begin{enumerate}
+	  \item Be sure that hyperlinks will probably work in the future as well.
+	  \item Live hyperlinks are blue. Nonlive hyperlinks are black (default in this template).
+	\end{enumerate}
+	\item All fonts must be embedded in the resulting \texttt{.pdf}. If you use \texttt{pdflatex}, this should already be true--unless you included figures in the \texttt{.eps} or \texttt{.pdf} format which may introduce additional font dependencies. You can use the \texttt{pdffonts} command to see if all the fonts are embedded (the column ``emb'' should say yes for all rows). You can use GhostScript to force embed the fonts, like so: {\texttt{gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dEmbedAllFonts=true -sOutputFile=out.pdf -f in.pdf}} (in Windows, use \texttt{gswin32} or \texttt{gswin32c} to invoke GhostScript).
+\end{enumerate}
+
+After verifying that your paper meets these requirements, please go to the final submission page at conference website and submit your paper. Be sure to complete the transfer of copyright form and upload the \texttt{.pdf} receipt. \textit{Thank you for contributing to the SCS conferences!}
+
+
+\section*{Acknowledgments}
+Place the acknowledgments section, if needed, after the main text, but before any appendices and the references. The section heading is not numbered. These instructions are adapted from WSC instructions with permission from WSC BoD~\cite{WSC} that have been iteratively updated and improved by proceedings editors and several other individuals, who are too numerous to name separately since the first set of instructions were written by Barry Nelson for the 1991 WSC.
+
+\appendix
+
+\section{Appendices} \label{app:quadratic}
+Place any appendices after the acknowledgments. Note that the default style labels them A, B, C, and so forth (please, do not change this). 
+The solution to \eqref{eq:quadratic} has the form:
+
+\begin{equation} \label{eq:quadratic sol}
+x = \frac{-b \pm \sqrt{b^2-4ac}}{2a} \mbox{ if } a \ne 0\;.
+\end{equation}
+
+
+\section{Getting Help}
+If you need help in preparing your paper, contact the proceedings editors. You can reach the entire team by writing to our unified point of contact at \href{mailto://scs@scs.org}{scs@scs.org}. 
+
+
+\section{Most Observed Mistakes}
+
+The following list comprises \textbf{the most common sources of error} that had to be corrected by previous editors. Please make sure to go through the following list and check that your paper is formatted correctly:
+\begin{enumerate}
+	\item	The paper is less than 5 or more than 12 pages long.
+	\item	Paper title and section titles are in \textbf{BOLD ALL CAPS}, subsections are \textbf{Bold and Capitalize the First Letter of Important Words}. Please use the templates.
+	\item	Paper is in A4 format, not letter format. Please use the required margins.
+	\item	The copyright notice is incorrect.
+	\item	The running heads are incorrect. Do not forget that the LastNameLastAuthor is preceded by ``, and ''.
+	\item	The citation format is incorrect. Use \BibTeX\ for citations and do not change the format used by the template.
+	\item	The biographies are missing. Do not forget the ``author biographies'' section.
+	\item	Figures or tables are not referenced in the text or have the incorrect caption format.
+	\item	The author section after the title is not formatted correctly, the number of organizations does not define the number of blocks, or the number of blocks does not define the layout.
+	\item In the heading on the title page, country names are in all capitals.
+	\item	Paragraphs are not indented.
+	\item Some fonts in the resulting \texttt{.pdf} are not embedded.
+\end{enumerate}
+
+
+% Please don't change the bibliographystyle style
+\bibliographystyle{scsproc}
+% AUTHOR: Include your bib file here
+\bibliography{demobib}
+
+\section*{Author Biographies}
+
+\textbf{\uppercase{THERESA M. K. ROEDER}} is an Associate Professor of Decision Sciences at San Francisco State University. She holds a PhD in Industrial Engineering and Operations Research from UC Berkeley. Her research interests lie in O.R. education and simulation modeling, especially in healthcare and higher education. Her email address is \email{scs19roeder@gmail.com}.
+
+\textbf{\uppercase{PETER I. FRAZIER}} is an Associate Professor in the School of Operations Research and Information Engineering at Cornell University. He holds a Ph.D. in Operations Research and Financial Engineering from Princeton University. His research interests include optimal learning, e-commerce, and the physical sciences.  His email address is \email{scs19frazier@gmail.com}.
+
+\textbf{\uppercase{HENRY WOTTON}} is a Full Professor in the School of Operations Research and Information Engineering at Cornell University. He holds a Ph.D. in Industrial Engineering from UC Berkeley, His research interests include modeling and simulation. His email address is \email{scs19henrywotton@gmail.com}.
+
+\textbf{\uppercase{ROBERTO SZECHTMAN}} received his Ph.D. from Stanford University, and currently is Associate Professor in the Operations Research Department at the Naval Postgraduate School. His research interests include applied probability and military operations research. His email address is \email{scs19szechtman@gmail.com}.
+
+\textbf{\uppercase{JONATHAN HARKER}} received his Ph.D. from UCLA, and currently is Assistant Professor in the Operations Research Department at the Naval Postgraduate School. His research interests include distributed simulations and military research. His email address is \email{scs19jonathanharker@gmail.com}.
+
+\textbf{\uppercase{ENLU ZHOU}} is an Assistant Professor in the H. Milton Stewart School of Industrial \& Systems Engineering at Georgia Institute of Technology. She holds a Ph.D. in Electrical Engineering from the University of Maryland, College Park. Her research interests include stochastic control and simulation optimization, with applications in financial engineering and revenue management. Her email address is \email{scs19zhou@gmail.com}.
+
+\newpage
+
+\begin{figure*}[htb]
+{
+\centering
+First Name Last Name 1 \\
+First Name Last Name 2 \\
+\vspace{12pt}
+Affiliation \\
+Address, City, Country \\
+E-mail address
+\caption{Example title page heading with 2 authors from the same institution.\label{fig2same}}
+}
+\end{figure*}
+
+\begin{figure*}[htb]
+{
+\centering
+\begin{tabular}{ccc}
+\phantom{Entries to adjust spacing - ignore} & \phantom{intermediate space} & \phantom{Entries to adjust spacing - ignore} \\
+First Name Last Name 1 & & First Name Last Name 2 \\
+\\
+Affiliation 1 & & Affiliation 2 \\
+Address, City, Country 1 & & Address, City, Country 2 \\
+E-mail address 2 & & E-mail address 2 
+\end{tabular}
+\caption{Example title page heading with 2 authors from different institutions.\label{fig2different}}
+}
+\end{figure*}
+
+\begin{figure*}[htb]
+{
+\centering
+\begin{tabular}{ccc}
+\phantom{This adjusts spacing - ignore} & \phantom{This adjusts spacing - ignore} & \phantom{This adjusts spacing - ignore} \\
+First Name Last Name 1 & & First Name Last Name 2 \\
+\\
+Affiliation 1 & & Affiliation 2 \\
+Address, City, Country 1 & & Address, City, Country 2 \\
+E-mail address 1 & & E-mail address 2 \\
+\\ \\
+& First Name Last Name 3 \\
+\\
+& Affiliation 3\\
+& Address, City, Country 3\\
+& E-mail address 3 
+\end{tabular}
+\caption{Alternate example title page heading with 3 authors from different institutions. \label{fig3different}}
+}
+\end{figure*}
+
+\begin{figure*}[htb]
+{
+\centering
+\begin{tabular}{ccc}
+\phantom{Adjust spacing using these entries} & \phantom{intermediate space} & \phantom{Adjust spacing using these entries} \\
+First Name Last Name 1 & & First Name Last Name 2 \\
+\\
+Affiliation 1 & & Affiliation 2 \\
+Address, City, Country 1 & & Address, City, Country 2 \\
+E-mail address 1 & & E-mail address 2 \\
+\\ \\
+First Name Last Name 3 & & First Name Last Name 4 \\
+\\
+Affiliation 3 & & Affiliation 4 \\
+Address, City, Country 3 & & Address, City, Country 4 \\
+E-mail address 3 & & E-mail address 4 
+\end{tabular}
+\caption{Example title page heading with 4 authors from different institutions.\label{fig4different}}
+}
+\end{figure*}
+
+\begin{figure*}[htb]
+{
+\centering
+\begin{tabular}{ccc}
+\phantom{Entries to adjust spacing - ignore} & \phantom{intermediate space} & \phantom{Entries to adjust spacing - ignore} \\
+First Name Last Name 1 & & First Name Last Name 3 \\
+First Name Last Name 2 & & \\
+\\
+Affiliation & & Affiliation 3 \\
+Address, City, Country & & Address, City, Country 3 \\
+E-mail address & & E-mail address 3 
+\end{tabular}
+\caption{Example title page heading with 3 authors from 2 different institutions. \label{fig2equals1different}}
+}
+\end{figure*}
+
+\end{document}

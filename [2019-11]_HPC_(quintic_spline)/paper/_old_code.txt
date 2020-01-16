@@ -1,0 +1,82 @@
+    %%   \comment{In the case that the two corrections to neighboring intervals contradict, the pfirst derivative values of the active interval are decreased to enlarge the overlap of regions I and II (from \cite{ulrich1994positivity}) of the two intervals.}
+
+
+    %% \item for $i=1,\ldots,n-1$
+    %% \item $\quad$if $\big($not is\_monotone$(i,i+1)\big)$  make\_monotone$(i,i+1)$
+    %%   \comment{In the shorthand notation above, $i$ and $i+1$ refer to the associated tuples of the form $(x_i,$ $f(x_i),$ $f'(x_i),$ $f''(x_i)).$ This notation will be used through the remainder of this algorithm.}
+    %% \item $\quad$ for $j=i-1,\ldots,0$
+    %% \item $\quad\quad$ if $\big($not is\_monotone$(j,j+1)\big)$  make\_monotone$(j,j+1)$
+    %% \item $\quad\quad$ else break
+    %%   \comment{The above `for' loop will be referred to as the cascade fix. If the adjustment of second derivative values causes the previous interval to become nonmonotone, then the left-hand second derivative value must be updated. This may (abnormally) require adjustments across all previously visited intervals.}
+    %% \item $\quad$ while $\big($not is\_monotone$(i,i+1)\big)$
+    %% \item $\quad\quad f'(x_i) = f'(x_i) / k$
+    %% \item $\quad\quad f'(x_{i+1}) = f'(x_{i+1}) / k$
+    %% \item $\quad\quad$ make\_monotone$(i,i+1)$
+    %%   \comment{In the case that the two corrections to neighboring intervals contradict, the first derivative values of the active interval are decreased to enlarge the overlap of regions I and II (from \cite{ulrich1994positivity}) of the two intervals.}
+    %% \item $\quad\quad$ for $j=i-1,\ldots,0$
+    %% \item $\quad\quad\quad$ if $\big($not is\_monotone$(j,j+1)\big)$  make\_monotone$(j,j+1)$
+    %% \item $\quad\quad\quad$ else break
+    %%   \comment{Finally an additional `cascade fix' is performed to ensure that all previous intervals are still monotone after shrinking the derivative values of the current interval.}
+
+
+%% \vspace{10pt}
+
+%% %% ----------------------------------------------------------------------
+
+%% \subsection{Verifying Monotonicity of a Quintic Polynomial}
+%% \label{is_monotone}
+
+% Let $f$ be a quintic polynomial over a closed interval $[x_0, x_1]$ $\subset \mathbb{R}$. Now $f$ is uniquely defined by the evaluation tuples $\big(x_0,$ $f(x_0),$ $f'(x_0),$ $f''(x_0)\big)$ and $\big(x_1,$ $f(x_1),$ $f'(x_1),$ $f''(x_1)\big).$ Assume without loss of generality that $f(x_0) < f(x_1),$ where the case of monotonic decreasing $f$ would consider the negated the function values. The following algorithm will determine whether or not $f$ is monotone increasing on the interval $[x_0, x_1].$
+
+
+\vspace{10pt}%
+\hrule%
+\vspace{3pt}%
+\noindent\textbf{\textit{Algorithm 1b:}} \texttt{is\_monotone\_simplified}%
+\vspace{3pt}%
+\hrule%
+\begin{algorithm}
+\item $\alpha = 30 - \frac{(x_1 - x_0)\big( 14 f'(x_0) + 16 f'(x_1) - \big(f''(x_1) - f''(x_0) \big) (x_1 - x_0)\big)}{2\big(f(x_1) - f(x_0)\big)}$
+\item $\beta = 30 - \frac{(x_1 - x_0)\big( 2 f'(x_0) + 24 f'(x_1) - \big(f''(x_0) + 3 f''(x_1) \big) (x_1 - x_0)\big)}{2\big(f(x_1) - f(x_0)\big)}$
+\item $\gamma = \frac{(x_1 - x_0)\big( 7 f'(x_0) + f''(x_0) (x_1 - x_0) \big)}{f(x_1) - f(x_0)}$
+\item $\delta = \frac{f'(x_0) (x_1 - x_0)}{f(x_1) - f(x_0)}$
+  \comment{The variables above are algebraic expansions of the coefficients for the cubic derivative function in \cite{schmidt1988positivity}.}
+\item \texttt{if $\big($min$(\alpha, \delta) < 0\big)$ return FALSE}
+\item \texttt{else if $\big(\beta < \alpha - 2 \sqrt{\alpha \delta}\big)$ return FALSE}
+\item \texttt{else if $\big(\gamma < \delta - 2 \sqrt{\alpha \delta}\big)$ return FALSE}
+\item \texttt{else return TRUE}
+
+\end{algorithm}
+\hrule
+\vspace{10pt}
+%% ----------------------------------------------------------------------
+
+
+\vspace{10pt}%
+\hrule%
+\vspace{3pt}%
+\noindent\textbf{\textit{Algorithm 1b:}} \texttt{is\_monotone\_simplified}%
+\vspace{3pt}%
+\hrule%
+\begin{itemize}
+  \itemsep0pt
+  \parskip0pt
+
+\item[0:] $\alpha = 30 - \frac{(x_1 - x_0)\big( 14 f'(x_0) + 16 f'(x_1) - \big(f''(x_1) - f''(x_0) \big) (x_1 - x_0)\big)}{2\big(f(x_1) - f(x_0)\big)}$
+\item[1:] $\beta = 30 - \frac{(x_1 - x_0)\big( 2 f'(x_0) + 24 f'(x_1) - \big(f''(x_0) + 3 f''(x_1) \big) (x_1 - x_0)\big)}{2\big(f(x_1) - f(x_0)\big)}$
+\item[2:] $\gamma = \frac{(x_1 - x_0)\big( 7 f'(x_0) + f''(x_0) (x_1 - x_0) \big)}{f(x_1) - f(x_0)}$
+\item[3:] $\delta = \frac{f'(x_0) (x_1 - x_0)}{f(x_1) - f(x_0)}$
+
+  \begin{itemize}
+    \item[] \textit{The variables above are algebraic expansions of the coefficients for the cubic derivative function in \cite{schmidt1988positivity}.}
+  \end{itemize}
+
+\item[4:] \texttt{if $\big($min$(\alpha, \delta) < 0\big)$ return FALSE}
+\item[5:] \texttt{else if $\big(\beta < \alpha - 2 \sqrt{\alpha \delta}\big)$ return FALSE}
+\item[6:] \texttt{else if $\big(\gamma < \delta - 2 \sqrt{\alpha \delta}\big)$ return FALSE}
+\item[7:] \texttt{else return TRUE}
+
+\end{itemize}
+\hrule
+\vspace{10pt}
+
