@@ -1,0 +1,40 @@
+----------------------------------------------------------------------
+creditcard
+/s/tchlux/Git/VarSys/Paper_[2019-02]_Numerical_Algorithms/Data/Raw/creditcard.csv
+./Predictions/results_creditcard.dill
+Data shape: (5562, 30) predicting 'Amount'
+       1 :  30                  2 :  30                  3 :  30                  4 :  30                  5 :  30                  6 :  30                  7 :  30                  8 :  30                  9 :  30                 10 :  30                 11 :  30                 12 :  30                 13 :  30                 14 :  30                 15 :  30                 16 :  30                 17 :  30                 18 :  30                 19 :  30                 20 :  30                 21 :  30                 22 :  30                 23 :  30                 24 :  30                 25 :  30                 26 :  30                 27 :  30                 28 :  30                 29 :  30                 30 :  30           Median Delaunay fit time: 3.11890363693
+
+
+----------------------------------------------------------------------
+forestfires
+/s/tchlux/Git/VarSys/Paper_[2019-02]_Numerical_Algorithms/Data/Raw/forestfires.csv
+./Predictions/results_forestfires.dill
+Data shape: (504, 14) predicting 'area'
+       1 :  30                  2 :  30                  3 :  30                  4 :  30                  5 :  30                  6 :  30                  7 :  30                  8 :  30                  9 :  30                 10 :  30                 11 :  30                 12 :  30                 13 :  30                 14 :  30                 15 :  30                 16 :  30                 17 :  30                 18 :  30                 19 :  30                 20 :  30                 21 :  30                 22 :  30                 23 :  30                 24 :  30                 25 :  30                 26 :  30                 27 :  30                 28 :  30                 29 :  30                 30 :  30           Median Delaunay fit time: 0.0150505304337
+
+
+----------------------------------------------------------------------
+iozone_150
+/s/tchlux/Git/VarSys/Paper_[2019-02]_Numerical_Algorithms/Data/Raw/iozone_150.csv
+./Predictions/results_iozone_150.dill
+Data shape: (3016, 6) predicting 'Throughput'
+       1 :  30                  2 :  30                  3 :  30                  4 :  30                  5 :  30                  6 :  30                  7 :  30                  8 :  30                  9 :  30                 10 :  30                 11 :  30                 12 :  30                 13 :  30                 14 :  30                 15 :  30                 16 :  30                 17 :  30                 18 :  30                 19 :  30                 20 :  30                 21 :  30                 22 :  30                 23 :  30                 24 :  30                 25 :  30                 26 :  30                 27 :  30                 28 :  30                 29 :  30                 30 :  30           Median Delaunay fit time: 0.34315931797
+
+
+----------------------------------------------------------------------
+parkinsons_updrs
+/s/tchlux/Git/VarSys/Paper_[2019-02]_Numerical_Algorithms/Data/Raw/parkinsons_updrs.csv
+./Predictions/results_parkinsons_updrs.dill
+Data shape: (5875, 21) predicting 'total_UPDRS'
+       1 :  30                  2 :  30                  3 :  30                  4 :  30                  5 :  30                  6 :  30                  7 :  30                  8 :  30                  9 :  30                 10 :  30                 11 :  30                 12 :  30                 13 :  30                 14 :  30                 15 :  30                 16 :  30                 17 :  30                 18 :  30                 19 :  30                 20 :  30                 21 :  30                 22 :  30                 23 :  30                 24 :  30                 25 :  30                 26 :  30                 27 :  30                 28 :  30                 29 :  30                 30 :  30           Median Delaunay fit time: 2.46990501881
+
+
+----------------------------------------------------------------------
+weatherAUS
+/s/tchlux/Git/VarSys/Paper_[2019-02]_Numerical_Algorithms/Data/Raw/weatherAUS.csv
+./Predictions/results_weatherAUS.dill
+Data shape: (2609, 25) predicting 'Rainfall Tomorrow'
+       1 :  30                  2 :  30                  3 :  30                  4 :  30                  5 :  30                  6 :  30                  7 :  30                  8 :  30                  9 :  30                 10 :  30                 11 :  30                 12 :  30                 13 :  30                 14 :  30                 15 :  30                 16 :  30                 17 :  30                 18 :  30                 19 :  30                 20 :  30                 21 :  30                 22 :  30                 23 :  30                 24 :  30                 25 :  30                 26 :  30                 27 :  30                 28 :  30                 29 :  30                 30 :  30           Median Delaunay fit time: 0.664243936539
+
+
