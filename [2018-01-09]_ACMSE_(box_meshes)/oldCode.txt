@@ -1,0 +1,67 @@
+A box $b^y$ is the upper \textit{boundary} of box $b^x$ along dimension $r$ if and only if $u^x_r = (y_r - x_r)$. A box $b^y$ is the lower \textit{boundary} of box $b^x$ along dimension $r$ if and only if $l^x_r = (x_r - y_r)$.
+
+
+
+\begin{theorem}
+  A Voronoi mesh composed of $n$ unique control points in $d$ dimensions, $C \subset \mathbb{R}^d$, is space filling.
+\end{theorem}
+\begin{proof}
+  Consider interpolating at point $z$. Let $c^{(1)}$ be the $c \in C$ that minimizes $||z-c||_2$. Now, $z$ must be in the support of the basis function $v^{c^{(1)}}$. Therefore the Voronoi mesh is space filling.
+\end{proof}
+
+\begin{definition}
+A \textit{mutual} boundary between boxes $b^x$ and $b^y$ is when there exists an $r$ such that $u^x_r = l^y_r$ or $l^x_r = u^y_r$.
+\end{definition}
+
+\begin{theorem} An iterative box mesh composed of $n$ unique control points in $d$ dimensions, $C \subset \mathbb{R}^d$, is space filling. \end{theorem}
+\begin{proof}
+The first box added to an $IBM$ is space filling by construction. Assume that an $IBM$ composed of $n$ boxes is space filling and a new box anchored at $x \in \mathbb{R}^d$ is added. Consider a point $y \in \mathbb{R}^d$. Every box $b^{x^{(i)}}$ that had $y$ on its interior before the addition of $b^x$ and was reshaped along dimension $r \in [1,d]$ has a mutual boundary with $b^x$ by construction. Now either $\bigl| x_r - x^{(i)}_r \bigr| \geq \bigl| y_r - x^{(i)}_r \bigr|$ and $y$ is still on the interior of $b^{x^{(i)}}$, or $\bigl| x_r - x^{(i)}_r \bigr| < \bigl| y_r - x^{(i)}_r \bigr|$ and $y$ is on the interior of $b^x$. Therefore, the $IBM$ composed of $n+1$ boxes is still space filling.
+\end{proof}
+
+
+
+
+\begin{definition}
+A box $b^y$ is the upper \textit{boundary} of box $b^x$ along dimension $r$ if and only if $u^x_r = (y_r - x_r)$. A box $b^y$ is the lower \textit{boundary} of box $b^x$ along dimension $r$ if and only if $l^x_r = (x_r - y_r)$.
+\end{definition}
+
+\begin{theorem}
+A max box mesh composed of $n$ unique control points in $d$ dimensions, $C \subset \mathbb{R}^d$ whose bounding box is $(L,U)$, $L,U \in \mathbb{R}^d$ is a covering for $(L,U)$ when there are no cycles in box boundaries.
+\label{theorem_mutual_space_filling}
+\end{theorem}
+
+\begin{proof}
+Pick an arbitrary point $L < x < U$, $x \in \mathbb{R}^d$. Now let $c^{(1)}$ be the $c \in C$ that minimizes $\|c - x\|_\infty$, making the nearest box (by max norm) $b^{c^{(1)}}$. Either $x$ is on the interior of $b^{c^{(1)}}$ or on the boundary of $b^{c^{(1)}}$ and this is done, or $b^{c^{(1)}}$ has a boundary along dimension $r$ with box $b^{c^{(2)}}$ such that $|c^{(2)}_r - x_r| < |c^{(1)}_r - x_r|$. If the sequence of boundaries $c^{(2)}$, $\ldots$ has no cycles there must be a last box in the sequence that contains $x$. Therefore, when there are no cycles in box boundaries, the $MBM$ is a covering of $(L,U)$.
+\end{proof}
+
+
+The max box mesh as proposed is still capable of producing coefficients of 0 for $x \in \mathbb{R}^d$ placed along the boundary of boxes, however this problem is solved by increasing the upper and lower widths of all boxes by the unit roundoff during computation. For this reason, t
+
+\begin{definition}
+A box $b^y$ is the upper \textit{boundary} of box $b^x$ along dimension $r$ if and only if $u^x_r = (y_r - x_r)$. A box $b^y$ is the lower \textit{boundary} of box $b^x$ along dimension $r$ if and only if $l^x_r = (x_r - y_r)$.
+\end{definition}
+
+\begin{definition}
+A \textit{proper} upper boundary for box $b^x$ at point $y$ occurs when $u^x_r = ||x - y||_\infty$ and $r$ is the first dimension such that $u^x_r = ||x - y||_\infty$, assuming dimensions are deterministically ordered. The same definition applies to lower boundaries.
+\end{definition}
+
+
+
+
+%% \hrulefill
+
+%% Assume that all the data points $x^k$ are contained in the interior of a
+%% $d$-dimensional box $[L,U]$, meaning $L<x^k<U$ for all $k$, and that the
+%% convex hull of the data is $d$-dimensional (i.e., all the points do not
+%% lie in a hyperplane).  The dimensions of a box $b=(x^c,l^c,u^c)$ anchored
+%% (or more accurately, anchored) at data point $x^c$ are defined as follows:
+%% for each of the dimensions $r$, let $x^j \ne x^c$ be the data point (if
+%% it exists) that minimizes 
+%% $$\mn{x^j-x^c} = x^j_r - x^c_r = u^c_r > 0$$
+%% and $x^k \ne x^c$ be the data point (if it exists) that minimizes
+%% $$\mn{x^k-x^c} = x^c_r - x^k_r = l^c_r > 0.$$
+%% $x^j$ or $x^k$ may not exist, in which case define $u^c_r = U_r - x^c_r$
+%% or $l^c_r = x^c_r - L_r$, respectively.
+
+%% \hrulefill
+

@@ -1,0 +1,64 @@
+          ! PRINT '("     Point on boundary:   ",i1,f6.2)', step, ratio
+
+
+             ! PRINT '("     Found best boundary: ",i1,f6.2)', step, ratio
+
+
+          ! PRINT '("     Found new ratio:     ",i1,f6.2)', step, ratio
+
+
+       ! PRINT '("       STEP: ",i1,*(f6.2))', step, center_projected, &
+       !      & bound_projected, point_projected, sign
+       ! PRINT '("         cp: ",*(f6.2))', control_dots(control_ind, &
+       !      step), control_dots(control_ind, control_ind)
+       ! PRINT '("         bp: ",*(f6.2))', control_dots(step, step), &
+       !      control_dots(step, control_ind)
+       ! PRINT '("         pp: ",*(f6.2))', point_dots(point_ind, step), &
+       !      point_dots(point_ind, control_ind)
+
+
+             ! PRINT '("    ",*(f5.2))', mesh_values(point_ind, control_ind)
+
+
+             ! PRINT '("    ",f5.2,$)', mesh_values(point_ind, control_ind)
+
+
+             ! PRINT *, '      0.0 Ignored'
+
+
+          ! PRINT '("   Point - (",2(f5.2)," )")', points(:,point_ind)
+          ! PRINT '("   Cell  - (",2(f5.2)," )")', control_points(:,control_ind)
+
+
+       ! PRINT *, 'ERROR:', error
+
+
+       ! PRINT '(" Mesh Coefficients: ",*(f6.2))', mesh_coefficients(:num_control_points)
+
+
+       ! PRINT *, 'Mesh Values:'
+       ! DO step = 1, SIZE(points,2)
+       !    PRINT '("  (",2(f5.2),$)', points(:,step)
+       !    PRINT '(" )  ",*(f5.2))', mesh_values(step,:num_control_points)
+       ! END DO
+
+
+       ! PRINT *, ''
+       ! PRINT *, 'Points:'
+       ! DO step = 1, SIZE(points,2)
+       !    PRINT '(" ",*(f5.2))', points(:,step)
+       ! END DO
+       ! PRINT *, 'Control Points:'
+       ! DO step = 1, num_control_points
+       !    PRINT '(" ",*(f5.2))', control_points(:,step)
+       ! END DO
+       ! PRINT *, 'Control Dots:'
+       ! DO step = 1, num_control_points
+       !    PRINT '(" ",*(f5.2))', control_dots(step,:num_control_points)
+       ! END DO
+       ! PRINT *, 'Point Dots:'
+       ! DO step = 1, SIZE(points,2)
+       !    PRINT '(" ",*(f5.2))', point_dots(step,:num_control_points)
+       ! END DO
+
+
