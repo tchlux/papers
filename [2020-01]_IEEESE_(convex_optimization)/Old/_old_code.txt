@@ -1,0 +1,107 @@
+    import fmodpy
+    lbfgs = fmodpy.fimport("lbfgs.f90", verbose=True,
+                           autocompile_extra_files=True
+    )
+    dimension = len(start)
+    points = []
+    def grad_wrapper(x):
+        points.append( grad(x) )
+        return points[-1]
+    ierr = 0
+    # Call an lbfgs optimization routine.
+    lbfgs.lbgfgs(dimension, grad_wrapper, start, ierr,
+                 lim=m, ibudget=budget)
+    # Return the set of visited points.
+    return points
+
+
+    # from scipy.optimize import fmin_l_bfgs_b
+    # points = [start]
+    # def wrapped_grad(x):
+    #     points.append(x)
+    #     return grad(x)
+    # # Set the "tolerance" on the function and gradient to 0, so that
+    # # it will continue executing until 'budget' steps have been taken.
+    # x, f, d = fmin_l_bfgs_b(func, start, fprime=wrapped_grad, approx_grad=False,
+    #                         m=max(10, int(sqrt(len(start)))), maxls=1,
+    #                         maxiter=budget, maxfun=budget, factr=0, pgtol=0)
+    # print()
+    # print("x: ",x)    
+    # print("f: ",f)
+    # print("d: ",d)
+    # print()
+    # return points
+
+
+    points = []
+    # Initialize the memory size if not provided.
+    if (m is None): m = max(10, int(sqrt(len(start))))
+    # Run the L-BFGS algorithm using constant \alpha_k = 1.
+    x = start
+    sk = []   
+    yk = []   
+    rhok = []  
+    # Take as many steps as the budget allows.
+    for i in range(budget):
+        print()
+        print("i: ",i)
+        print("x: ",x)
+        # Record this point.
+        points.append( x.copy() )
+        # If this is the very first step, we'll do something different.
+        if (i == 0):
+            # The first step is just a step of size 1 with the gradient.
+            step = -grad(x)
+            sk = [step]                  # x steps
+            yk = [step]                  # gradient steps
+            rhok = [1 / dot(step,step)]  # 1 / (y.s)
+            print("step: ",step)
+            x += step
+            continue
+        # Otherwise, more fun operations are done.
+        # 
+        # Initialize storage for the right V (to not recompute).
+        step = zeros(len(start))
+        right_V = -grad(x)
+        print("grad(x): ",grad(x))
+        # Add the new gradient value to the list of recorded values.
+        if (len(yk) > 0): yk.insert(0, right_V - yk[0] )
+        # Loop and compute the update.
+        for k in range(len(sk)):
+            # Initialize (first time through the loop).
+            if (k == 0):
+                step = rhok[0] * yk[0] * dot(sk[0], right_V)
+            # Update the 'right_V' value and compute step part.
+            right_V = 1 - rhok[k] * yk[k] * dot(sk[k], right_V)
+            step_part = sk[k] * dot(sk[k], right_V)
+            # Compute the left V.
+            for i in range(k, -1, -1):
+                step += step_part
+                step_part = 1 - rhok[i] * yk[i] * dot(sk[i], step_part)
+            # Perform an additional rhok multiplication.
+            if (k > 1): step_part *= rhok[k-1]
+            # Add this part to the step.
+            step += step_part
+        # Run one more step after the loop.
+        else:
+            # Somewhat confusingly, compute the left V (in the right V variable).
+            for i in range(len(sk)-1,-1,-1):
+                right_V = 1 - rhok[i] * yk[i] * dot(sk[i], right_V)
+            step += right_V
+        # Now the step has been computed!
+        sk.insert(0, step)
+        rhok.insert(0, 1 / dot(yk[0], sk[0]))
+        # Trim the memory if need be.
+        if (len(sk) > m):
+            sk.pop(-1)
+            yk.pop(-1)
+            rhok.pop(-1)
+        # Move the x coordinate for the nnext iteration.
+        x += step
+        print("step: ",step)
+    # Record the final point.
+    points.append( x.copy() )
+    # Return the sequence of points visited.
+    return points
+
+
