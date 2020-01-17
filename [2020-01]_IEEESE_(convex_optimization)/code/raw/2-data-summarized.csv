@@ -1,0 +1,6 @@
+plot,series,path
+algorithm,algorithm,Summarized/algorithm-mean.csv
+function,algorithm,Summarized/algorithm-mean-by-function.csv
+skew,algorithm,Summarized/algorithm-mean-by-skew.csv
+rotation,algorithm,Summarized/algorithm-mean-by-rotation.csv
+noise,algorithm,Summarized/algorithm-mean-by-noise.csv
