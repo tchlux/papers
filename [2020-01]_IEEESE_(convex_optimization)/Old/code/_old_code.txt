@@ -1,0 +1,20 @@
+# Function for compressing a file (and removing the uncompressed version).
+def compress_file(path, delete=True):
+    import os, gzip, shutil
+    with open(path, 'rb') as f_in:
+        with gzip.open(path+'.gz', 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+    # Remove the original file.
+    if delete: os.remove(path)
+
+# Function for compressing a file (and removing the uncompressed version).
+def decompress_file(path, delete=True):
+    import os, gzip, shutil
+    with gzip.open(path, 'rb') as f_in:
+        with open(path[:-3], 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+    # Remove the original file.
+    if delete: os.remove(path)
+
+
+

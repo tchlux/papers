@@ -1,0 +1,264 @@
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in power
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in double_scalars
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: overflow encountered in power
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in add
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in power
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: invalid value encountered in add
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in add
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:212: RuntimeWarning: invalid value encountered in add
+  def _add(self, x, y):        return x + y
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:112: RuntimeWarning: overflow encountered in true_divide
+  obj_func.grad = lambda x: func.grad(x*skew_vec) / skew_vec
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in multiply
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in subtract
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:35: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(y, lambda g: x * g))
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: overflow encountered in multiply
+  previous, current = (current, 2*x*current - previous)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: invalid value encountered in subtract
+  previous, current = (current, 2*x*current - previous)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:34: RuntimeWarning: overflow encountered in multiply
+  defvjp(anp.multiply,    lambda ans, x, y : unbroadcast_f(x, lambda g: y * g),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:213: RuntimeWarning: overflow encountered in add
+  def _mut_add(self, x, y):    x += y; return x
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in power
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in double_scalars
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: overflow encountered in power
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in add
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in power
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: invalid value encountered in add
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:212: RuntimeWarning: invalid value encountered in add
+  def _add(self, x, y):        return x + y
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in add
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in multiply
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in subtract
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:35: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(y, lambda g: x * g))
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: overflow encountered in multiply
+  previous, current = (current, 2*x*current - previous)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: invalid value encountered in subtract
+  previous, current = (current, 2*x*current - previous)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:34: RuntimeWarning: overflow encountered in multiply
+  defvjp(anp.multiply,    lambda ans, x, y : unbroadcast_f(x, lambda g: y * g),
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in add
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in power
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in double_scalars
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:231: RuntimeWarning: overflow encountered in power
+  return sum((x)**(2*k))
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in power
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/home/s/tchlux/.linuxbrew/Cellar/python/3.7.4_2/lib/python3.7/site-packages/numpy/core/fromnumeric.py:90: RuntimeWarning: overflow encountered in reduce
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: overflow encountered in power
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in add
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:212: RuntimeWarning: invalid value encountered in add
+  def _add(self, x, y):        return x + y
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: invalid value encountered in add
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in power
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in double_scalars
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:231: RuntimeWarning: overflow encountered in power
+  return sum((x)**(2*k))
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in power
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/.linuxbrew/Cellar/python/3.7.4_2/lib/python3.7/site-packages/numpy/core/fromnumeric.py:90: RuntimeWarning: overflow encountered in reduce
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in add
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: overflow encountered in power
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in add
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:212: RuntimeWarning: invalid value encountered in add
+  def _add(self, x, y):        return x + y
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: invalid value encountered in add
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in multiply
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in subtract
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:34: RuntimeWarning: overflow encountered in multiply
+  defvjp(anp.multiply,    lambda ans, x, y : unbroadcast_f(x, lambda g: y * g),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:35: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(y, lambda g: x * g))
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: overflow encountered in multiply
+  previous, current = (current, 2*x*current - previous)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: invalid value encountered in subtract
+  previous, current = (current, 2*x*current - previous)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in power
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in double_scalars
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:231: RuntimeWarning: overflow encountered in power
+  return sum((x)**(2*k))
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in power
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/.linuxbrew/Cellar/python/3.7.4_2/lib/python3.7/site-packages/numpy/core/fromnumeric.py:90: RuntimeWarning: overflow encountered in reduce
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in add
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: overflow encountered in power
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in add
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: invalid value encountered in add
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:212: RuntimeWarning: invalid value encountered in add
+  def _add(self, x, y):        return x + y
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in multiply
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in subtract
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:35: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(y, lambda g: x * g))
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: overflow encountered in multiply
+  previous, current = (current, 2*x*current - previous)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: invalid value encountered in subtract
+  previous, current = (current, 2*x*current - previous)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:34: RuntimeWarning: overflow encountered in multiply
+  defvjp(anp.multiply,    lambda ans, x, y : unbroadcast_f(x, lambda g: y * g),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:213: RuntimeWarning: overflow encountered in add
+  def _mut_add(self, x, y):    x += y; return x
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in power
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: overflow encountered in power
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in add
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in power
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: invalid value encountered in add
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in double_scalars
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:212: RuntimeWarning: invalid value encountered in add
+  def _add(self, x, y):        return x + y
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in multiply
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in subtract
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:34: RuntimeWarning: overflow encountered in multiply
+  defvjp(anp.multiply,    lambda ans, x, y : unbroadcast_f(x, lambda g: y * g),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:35: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(y, lambda g: x * g))
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: overflow encountered in multiply
+  previous, current = (current, 2*x*current - previous)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: invalid value encountered in subtract
+  previous, current = (current, 2*x*current - previous)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:213: RuntimeWarning: overflow encountered in add
+  def _mut_add(self, x, y):    x += y; return x
+/home/s/tchlux/.linuxbrew/Cellar/python/3.7.4_2/lib/python3.7/site-packages/numpy/core/fromnumeric.py:90: RuntimeWarning: overflow encountered in reduce
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in power
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: overflow encountered in power
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in add
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in power
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:212: RuntimeWarning: invalid value encountered in add
+  def _add(self, x, y):        return x + y
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: invalid value encountered in add
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in double_scalars
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in multiply
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in subtract
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:35: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(y, lambda g: x * g))
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: overflow encountered in multiply
+  previous, current = (current, 2*x*current - previous)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: invalid value encountered in subtract
+  previous, current = (current, 2*x*current - previous)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:34: RuntimeWarning: overflow encountered in multiply
+  defvjp(anp.multiply,    lambda ans, x, y : unbroadcast_f(x, lambda g: y * g),
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in add
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:213: RuntimeWarning: overflow encountered in add
+  def _mut_add(self, x, y):    x += y; return x
+/home/s/tchlux/.linuxbrew/Cellar/python/3.7.4_2/lib/python3.7/site-packages/numpy/core/fromnumeric.py:90: RuntimeWarning: overflow encountered in reduce
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in power
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in add
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in power
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:212: RuntimeWarning: invalid value encountered in add
+  def _add(self, x, y):        return x + y
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: overflow encountered in power
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:236: RuntimeWarning: invalid value encountered in add
+  return sum((s**4)*(x**2)/2 - (s**2)*(x**4)/2 + (x**6)/6)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in double_scalars
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:59: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.)),
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:112: RuntimeWarning: overflow encountered in true_divide
+  obj_func.grad = lambda x: func.grad(x*skew_vec) / skew_vec
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/minimize.py:29: RuntimeWarning: invalid value encountered in add
+  return l_bfgs(func, grad, start, budget, m, alpha, eps)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: overflow encountered in multiply
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in subtract
+  return f_raw(*args, **kwargs)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:34: RuntimeWarning: overflow encountered in multiply
+  defvjp(anp.multiply,    lambda ans, x, y : unbroadcast_f(x, lambda g: y * g),
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/numpy/numpy_vjps.py:35: RuntimeWarning: overflow encountered in multiply
+  lambda ans, x, y : unbroadcast_f(y, lambda g: x * g))
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: overflow encountered in multiply
+  previous, current = (current, 2*x*current - previous)
+/home/s/tchlux/Dropbox/Sync/Downloads/opt-code/objective.py:245: RuntimeWarning: invalid value encountered in subtract
+  previous, current = (current, 2*x*current - previous)
+/s/tchlux/.local/lib/python3.7/site-packages/autograd/core.py:213: RuntimeWarning: overflow encountered in add
+  def _mut_add(self, x, y):    x += y; return x
+/home/s/tchlux/.linuxbrew/Cellar/python/3.7.4_2/lib/python3.7/site-packages/numpy/core/fromnumeric.py:90: RuntimeWarning: overflow encountered in reduce
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
