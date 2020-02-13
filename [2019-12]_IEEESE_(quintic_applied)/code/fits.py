@@ -46,9 +46,9 @@ def linear_fit(data):
     return fit
 
 # Return a cubic fit function.
-def cubic_fit(data):
+def cubic_fit(data=None, x=None, y=None):
     from monotone import monotone_cubic_spline
-    x, y = cdf_points(data)
+    if (x is None) or (y is None): x, y = cdf_points(data)
     cdf = monotone_cubic_spline(x, y)
     def fit(z):
         val = max(0,min(1,cdf(z)))
@@ -59,9 +59,9 @@ def cubic_fit(data):
     return fit
 
 # Return a quintic fit function.
-def quintic_fit(data):
+def quintic_fit(data=None, x=None, y=None):
     from monotone import monotone_quintic_spline
-    x, y = cdf_points(data)
+    if (x is None) or (y is None): x, y = cdf_points(data)
     cdf = monotone_quintic_spline(x, y)
     def fit(z):
         val = max(0,min(1,cdf(z)))

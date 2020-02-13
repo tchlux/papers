@@ -143,6 +143,10 @@ legend = dict(
     borderwidth=.5
 )
 
+# p.show(layout=dict(margin=dict(l=40, b=40)),
+#        width=700, height=500, legend=legend)
+
+
 p.show(file_name="delaunay-predictions.html",
        layout=dict(margin=dict(l=40, b=40)),
        width=400, height=290, legend=legend)

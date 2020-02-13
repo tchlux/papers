@@ -35,14 +35,14 @@
 
 \title{\LARGE \bf Effective Nonparametric Distribution Modeling \\ for Distribution Approximation Applications }
 
-%% \author{Thomas C. H. Lux$^{1}$, Layne T. Watson$^{2,5}$, Tyler H. Chang$^{1}$, Li Xu$^{3}$, Yueyao Wang$^{3}$,\\ Jon Bernard$^{1}$, Yili Hong$^{4}$, Kirk W. Cameron$^{2}$% <-this % stops a space
-%% \thanks{*This work was supported by the National Science Foundation Grant CNS-1565314.}%
-%% \thanks{$^{1}$Doctoral candidate, Department of Computer Science, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA {\tt\small (tchlux at vt.edu)}}%
-%% \thanks{$^{2}$Department of Computer Science, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA}%
-%% \thanks{$^{3}$Doctoral candidate, Department of Statistics, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA}%
-%% \thanks{$^{4}$Department of Statistics, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA}%
-%% \thanks{$^{5}$Departments of Mathematics and Aerospace Engineering, Virginia Polytechnic Institute and State University, Virginia 24060, USA}%
-%% }
+\author{Thomas C. H. Lux$^{1}$, Layne T. Watson$^{2,5}$, Tyler H. Chang$^{1}$, Li Xu$^{3}$, Yueyao Wang$^{3}$,\\ Jon Bernard$^{1}$, Yili Hong$^{4}$, Kirk W. Cameron$^{2}$% <-this % stops a space
+\thanks{*This work was supported by the National Science Foundation Grants CNS-1565314 and CNS-1838271.}%
+\thanks{$^{1}$Doctoral candidate, Department of Computer Science, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA {\tt\small (tchlux at vt.edu)}}%
+\thanks{$^{2}$Department of Computer Science, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA}%
+\thanks{$^{3}$Doctoral candidate, Department of Statistics, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA}%
+\thanks{$^{4}$Department of Statistics, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA}%
+\thanks{$^{5}$Departments of Mathematics and Aerospace Engineering, Virginia Polytechnic Institute and State University, Virginia 24060, USA}%
+}
 
 \begin{document}
 
@@ -53,7 +53,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-Many fields of science rely on the collection of samples and estimation of true population distributions from those samples. There are several effective nonparametric methods for approximating a true distribution from empirical data, however it is unclear which methods produce the best approximations in practice. This work presents a case study on the effectiveness of various distribution approximations. Results show that piecewise linear approximations produce the smallest maximum absolute error, while the classic empirical distribution function (EDF) produces the smallest median absolute error as well as the smallest absolute error at lower percentiles when approximating a distribution from a sample. When building distribution prediction models, the piecewise quintic and cubic approximations produce the lowest absolute error at most error percentiles. These initial results encourage more research on the best methods of fitting empirical data with smooth functions to generate accurate distribution approximations.
+Many fields of science rely on the collection of samples and estimation of true population distributions from those samples. There are several effective nonparametric methods for approximating a true distribution from empirical data, however it is unclear which methods produce the best approximations in practice. This work presents a case study on the effectiveness of various distribution approximations. Results show that piecewise linear approximations produce the smallest maximum absolute error, while the classic empirical distribution function (EDF) produces the smallest median absolute error as well as the smallest first quartile and minimum absolute error when approximating a distribution from a sample. When building distribution prediction models, the piecewise quintic and cubic approximations produce the lowest absolute error at most error percentiles. This case study encourages more research on the best methods of fitting empirical data with smooth functions to generate accurate distribution approximations.
 
 \end{abstract}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,9 +73,9 @@ An approximation of a CDF can have varying levels of smoothness and, for empiric
   \label{fig:sample-prediction}
 \end{figure}
 
-In this statistical work, the construction of a monotone interpolating spline that is continuous in its derivatives could be meaningfully useful \cite{ramsay1988monotone}. A function with $C^1$, and especially $C^2$ continuity could approximate a cumulative distribution function to a high level of accuracy with relatively few intervals. A twice continuously differentiable approximation to a cumulative distribution function (CDF) would also produce a corresponding probability density function (PDF) that is continuously differentiable, which is a desirable property many standard parametric distributions maintain.
+In this statistical work, the construction of a monotone interpolating spline that is continuous in its derivatives could be meaningfully useful \cite{ramsay1988monotone}. A function with $C^1$, and especially $C^2$ continuity could approximate a cumulative distribution function to a high level of accuracy with relatively few intervals. A twice continuously differentiable approximation to a cumulative distribution function (CDF) would also produce a corresponding probability density function (PDF) that is continuously differentiable, which is a desirable property many standard parametric distributions maintain. In effect, an improved distribution estimate can increase the accuracy of distribution predicting models \cite{xu2020modeling}.
 
-There is publicly available software for monotone piecewise polynomial interpolation, including quadratic \cite{he1998monotone}, cubic \cite{fritsch1980monotone}, and (with limited application) quartic \cite{wang2004rational,piah2011improved,yao2018unconditionally} cases. Theory has been provided for the quintic case \cite{ulrich1994positivity,hess1994positive}. Recently an algorithm for the construction of monotone quintic splines has been produced as well (citation pending).%% \cite{lux2020algorithm}
+There is publicly available software for monotone piecewise polynomial interpolation, including quadratic \cite{he1998monotone}, cubic \cite{fritsch1980monotone}, and (with limited application) quartic \cite{wang2004rational,piah2011improved,yao2018unconditionally} cases. Theory has been provided for the quintic case \cite{ulrich1994positivity,hess1994positive}. Recently an algorithm for the construction of monotone quintic splines has been produced as well \cite{lux2020algorithm}.
 This work considers the EDF, a linear interpolant, a monotone cubic spline interpolant, and a monotone quintic spline interpolant as candidate approximations.
 
 In the next section, the methodology of this work is outlined and experimental setup is detailed. In Section \ref{sec:results}, three experiments related to the approximation of cumulative distribution functions are presented and analyzed. Finally Section \ref{sec:conclusion} concludes.
@@ -98,6 +98,12 @@ In order to identify the best performing approximation techniques for distributi
 
 The CDF modeling case study is constructed from a four-dimensional dataset produced by executing the IOzone benchmark \cite{iozone} on a homogeneous cluster of computers. Each node contains two Intel Xeon E5-2637 CPUs offering a total of 16 CPU cores with 16GB of DRAM. While the CPU frequency varies depending on the test configuration, the I/O from IOzone is performed by an ext4 filesystem sitting above an Intel SSDSC2BA20 SSD drive. At the time of data collection, Linux kernel Version 4.13.0 was used. The system performance data was collected over two months by executing IOzone  $10000$ times for each of a select set of $17$ system configurations, for a total of $170$ thousand executions of IOzone. A single IOzone execution reports the max I/O throughput in bytes per second seen for the selected test type. For this case study, only the results of a ``readers'' test are considered, where bytes are sequentially read from the SSD. The summary of the data for the experiments for this paper can be seen in Table \ref{tab:data_description}. Distributions of raw throughput values being modeled can be seen in Figure \ref{fig:throughput_histogram}.
 
+\begin{figure}
+  \vspace{-.3cm}
+  \includegraphics[width=.5\textwidth]{throughput-histogram.pdf}
+  \caption{A histogram of all throughput values across the 17 unique system configurations and 170 thousand executions of a ``readers'' test in IOzone.}
+  \label{fig:throughput_histogram}
+\end{figure}
 
 The performance of approximation techniques that predict probability functions can be analyzed through a variety of summary statistics. The first two experiments study the distribution of absolute differences between approximated CDFs and the true CDFs. This distribution over many trials gives an idea of the \textit{expected} error. The last experiment in this work analyzes the max absolute difference between approximated and true CDFs, also known as the Kolmogorov-Smirnov (KS) statistic \cite{lilliefors1967kolmogorov} for its compatibility with the KS test.
 
@@ -111,13 +117,6 @@ and the Delaunay interpolant $F_y$ at $y$ is given by
 $$ F_y = \sum_{i=0}^{d} w_i F_{x^{(i)}}. $$
 In the case of these experiments, the file size, record size, thread count, and CPU frequency are first normalized to the unit hypercube. After normalization, Delaunay predictions are made via a leave-one-out method resulting in throughput data from five known configurations being used to predict one unknown throughput distribution. The Delaunay method is used to select the five source distributions as well as provide the convex weights associated with each of the source distributions that will most likely produce the predicted distribution.
 
-
-\begin{figure}
-  \vspace{-.3cm}
-  \includegraphics[width=.5\textwidth]{throughput-histogram.pdf}
-  \caption{A histogram of all throughput values across the 17 unique system configurations and 170 thousand executions of a ``readers'' test in IOzone.}
-  \label{fig:throughput_histogram}
-\end{figure}
 
 \begin{table}
   \centering
@@ -142,12 +141,12 @@ In the case of these experiments, the file size, record size, thread count, and 
 
 \begin{figure}
   \begin{tikzpicture}
-    \node (img)  {\includegraphics[width=0.4\textwidth,]{plot-delaunay-example-prediction.pdf}};
+    \node (img)  {\includegraphics[width=0.4\textwidth,]{example_distribution_prediction.pdf}};
     \node[below=of img, node distance=1cm, yshift=1cm] {I/O Throughput};
     \node[left=of img, node distance=0cm, rotate=90, anchor=center,yshift=-0.7cm] {CDF Value};
   \end{tikzpicture}
   \vspace{-0.3cm}
-  \caption{In this example, the general methodology for predicting a CDF and evaluating error can be seen. The Delaunay method chose three source distributions (dotted lines) and assigned weights \{.3, .4, .3\} (top to bottom at arrow). The weighted sum of the three known CDFs produces the predicted CDF (dashed line). The KS Statistic (arrow) computed between the true CDF (solid line) and predicted CDF (dashed line) is 0.2 for this example. The KS test null hypothesis is rejected by $p$-value 0.01, however it is not rejected by $p$-value 0.001.
+  \caption{In this example, the general methodology for predicting a CDF and evaluating error can be seen. The Delaunay method chose three source distributions (dotted lines) and assigned weights \{.1, .3, .6\} (top to bottom at middle). The weighted sum of the three known CDFs produces the predicted CDF (dashed line). The KS Statistic (vertical line) computed between the true CDF (solid line) and predicted CDF (dashed line) is 0.2 for this example. The KS test null hypothesis is rejected by $p$-value 0.01, however it is not rejected by $p$-value 0.001.
   \vspace{-.1cm}}
   \label{fig:prediction-example}
 \end{figure}
@@ -185,7 +184,7 @@ The third experiment considers a distribution prediction application. In this ca
   \vspace{-.3cm}
   \includegraphics[width=.5\textwidth]{delaunay-predictions.pdf}
   %% \includegraphics[width=.5\textwidth]{abs-errors-100-samples.pdf}
-  \caption{The result of using Delaunay to predict distributions. Notice that the best performing, lowest error (to the left), approximation is the EDF. Interestingly, the piecewise linear fit does not produce results as accurate as the EDF. This likely has to do with the inherent smoothing that happens when multiple different EDFs are combined to make one prediction.
+  \caption{The result of using Delaunay to predict distributions. Notice that the best performing, lowest error (to the left), approximations at almost all absolute error percentiles are the cubic and quintic interpolants, closely followed by the linear interpolant. Interestingly, these results are contrary to pure distribution approximations from a sample. This likely has to do with the inherent smoothing that happens when multiple different approximations are combined to make one prediction.
   \vspace{-.5cm}}
   \label{fig:delaunay-errors}
 \end{figure}
