@@ -9,13 +9,13 @@ from util.approximate import DelaunayP1, Voronoi, BoxMesh, ShepMod, \
 seed = 0
 algorithms  = [
     DelaunayP1,
-    Voronoi,
-    BoxMesh,
-    ShepMod,
-    LSHEP,
+    # Voronoi,
+    # BoxMesh,
+    # ShepMod,
+    # LSHEP,
     NeuralNetwork,
-    MARS,
-    SVR_RBF
+    # MARS,
+    # SVR_RBF
 ]
 train_sizes = [2 * 4**(i) for i in range(1,6+1)]
 snr_values  = [0, .1]
