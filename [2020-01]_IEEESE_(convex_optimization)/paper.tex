@@ -1,30 +1,11 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%2345678901234567890123456789012345678901234567890123456789012345678901234567890
-%        1         2         3         4         5         6         7         8
-
-\documentclass[conference]{ieeeconf}  % Comment this line out
+\documentclass[letterpaper, 10 pt, conference]{IEEEtran}  % Comment this line out
                                                           % if you need a4paper
-%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
-\IEEEoverridecommandlockouts                              % This command is only needed 
-%% % copyright info
-%% \IEEEpubid{\makebox[\columnwidth]{978-1-5386-6133-8/18/\$31.00
-%%         ~\copyright~2018 IEEE \hfill}\hspace{\columnsep}
-%%         \makebox[\columnwidth]{ }}
-
-% if you want to use the \thanks command
-\overrideIEEEmargins
-% See the \addtolength command later in the file to balance the column lengths on the last page of the document
 
 % The following packages can be found on http:\\www.ctan.org
 \usepackage{tikz}     % For adding axes to plots
 \usepackage{graphicx} % For including PDFs
 \usetikzlibrary{positioning}
 \usepackage{balance} % For balancing the last column.
-
-%% \usepackage{graphics} % for pdf, bitmapped graphics files
-%\usepackage{epsfig} % for postscript graphics files
-%\usepackage{mathptmx} % assumes new font selection scheme installed
-%\usepackage{times} % assumes new font selection scheme installed
 \usepackage{amsmath} % assumes amsmath package installed
 \usepackage{amssymb}  % assumes amsmath package installed
 
@@ -32,20 +13,36 @@
 \newcommand{\multilinecell}[2][c]{%
   \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
 
+%% ------------------------------------------
+%% Block to make a ``titleheader''
+\makeatletter
+\newcommand*\titleheader[1]{\gdef\@titleheader{#1}}
+\AtBeginDocument{%
+  \let\st@red@title\@title%
+  \def\@title{%
+    \bgroup\normalfont\large\raggedleft\@titleheader\par\egroup
+    \vskip1.5em\st@red@title}
+}
+\makeatother
+%% ------------------------------------------
 
 \title{\LARGE \bf Analytic Test Functions for Generalizable
   \\ Evaluation of Convex Optimization Techniques}
 
-%% \author{Thomas C. H. Lux$^{1}$, Tyler H. Chang$^{1}$% <-this % stops a space
-%% \thanks{$^{1}$Doctoral candidate, Department of Computer Science, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA {\tt\small (tchlux at vt.edu, thchang at vt.edu)}}%
-%% }
-\author{Anonymous Authors}
+\titleheader{IEEE SoutheastCon 2020}
+
+\author{Thomas C. H. Lux$^{1}$, Tyler H. Chang$^{1}$% <-this % stops a space
+\thanks{$^{1}$Doctoral candidate, Department of Computer Science, Virginia Polytechnic Institute and State University, Blacksburg, Virginia 24060, USA {\tt\small (tchlux at vt.edu, thchang at vt.edu)}}%
+}
 
 \begin{document}
 
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+\IEEEoverridecommandlockouts                              % This command is only needed 
+%% % copyright info
+\IEEEpubid{\makebox[\columnwidth]{978-1-7281-6861-6/20/\$31.00~\copyright{}2020 IEEE \hfill} \hspace{\columnsep}\makebox[\columnwidth]{ }}
+
 \maketitle
-\thispagestyle{empty}
-\pagestyle{empty}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}

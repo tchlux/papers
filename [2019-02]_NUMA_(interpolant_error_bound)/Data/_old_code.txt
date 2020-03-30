@@ -1,3 +1,23 @@
+p = Plot()
+p.add("Points", *(array(points).T), color=(250,200,200))
+from numpy.linalg import norm
+def weight_for_first(x):
+    wts, idx = m(x)
+    print("x: ",x, wts, idx)
+    exit()
+    if (0 in idx):
+        print(wts[idx.index(0)])
+        return wts[idx.index(0)] 
+    else:
+        return 0
+    # print("wts: ",wts)
+    # print("idx: ",idx)
+    # exit()
+
+p.add_func("Weight for x<sup>(k)</sup>", weight_for_first, [-.5,2], [-.5, 2])
+p.show()
+exit()
+
             print()
             print("truth: ",truth)
             print("guess: ",guess)

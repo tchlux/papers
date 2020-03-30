@@ -1,0 +1,31 @@
+\section{Introduction}
+
+Quantum annealing (QA) provides a practical framework to realize adiabatic quantum computing (AQC), where AQC is a general purpose quantum computing framework that is known to be equivalent to the quantum gate model \cite{aharonov2008adiabatic}.
+In the quantum gate model, quantum state vectors evolve through time via the application of quantum logic gates (unitary operators) \cite{steane1998quantum}.
+On the other hand, AQC conceptually produces the solution to a problem through a single ``annealing'' operation.
+This is achieved by transitioning from an initial Hamiltonian to an arbitrary Hamiltonian that encodes the problem, using the adiabatic theorem.
+The standard implementation of QA only solves a subset of AQC problems because the allowed operators only span a subspace of all unitary operators.
+Specifically, QA is limited to annealing over the span of the stoquastic Pauli-Z matrices, whose eigenstates are strictly real valued \cite{kadowaki1998quantum}.
+
+While the general methodology for embedding classical programs in QA is understood, QA systems can still be tedious to program. D-Wave Systems has improved accessibility through its Ocean software suite that contains high-level programming modules for network science and constraint satisfaction problems.
+Pakin also provides tools for embedding high-level constraint logic programs, using a standard cell library \cite{pakin2018performing}.
+However, these approaches are inefficient for linear algebra and mathematical programming applications, making hand-crafted solutions preferred in many cases.
+Linear algebra problems are ubiquitous in computational and data science, with some notable applications being least squares fitting, solving large sparse or dense systems, and even neural network training.
+Such applications would certainly garner interest in high-profile fields such as machine learning, where the term ``quantum machine learning'' was coined by \cite{biamonte2017quantum}, and a quantum variational autoencoder is described in \cite{khoshaman2018quantum}.
+
+In this work, a novel methodology is proposed for least-squares minimization of polynomial systems of equations via QA.
+This broad class of problems is often referred to as sum of squares (SOS) polynomial minimization, and is a general case of both the least squares problem and the polynomial real-valued root-finding problem.
+Solutions are obtained by mapping the squared error function for any multivariate polynomial onto a Hamiltonian embedding.
+To make the proposed solution accessible, a high-level programming framework is provided, which automatically handles low-level details such as fixed-point binary encoding, quadratization, and both physical and logical (minor) embedding of the Ising-Hamiltonian model.
+This framework is standalone, but interfaces with D-Wave's SAPI API.
+One practical benefit of the squared error methodology is that the minimum forward error solution will correspond to the ground state for the Hamiltonian, and lower forward error solutions will have lower energies.
+This causes the annealer to tend towards low energy solutions even when it fails to find the true global minimum.
+Another benefit of both the methodology and the framework is that the fixed-point precision of each variable can be independently specified, and so this work immediately extends to nonlinear integer programming problems (such as integer factorization) and mixed-precision problems.
+
+The remainder of this paper will proceed as follows.
+Section 2 will present relevant background in QA, programming and algorithmic concerns, and related works.
+Section 3 will introduce the proposed methodology for mapping multivariate polynomial systems of equations/SOS problems to the Ising-Hamiltonian model.
+Section 4 contains a brief analysis of the proposed algorithm in terms of several performance concerns introduced in Section 2.
+Section 5 contains technical details of the implementation, with a focus on the practicalities of the D-Wave machine.
+Section 6 shows empirical results for $n$-bit integer factorization, least squares minimization of a system of polynomial equations, and solutions to linear systems of equations on the state-of-the-art D-Wave 2000Q quantum annealer.
+Finally, Section 7 contains a conclusion and brief discussion.

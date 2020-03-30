@@ -1,0 +1,52 @@
+\section{Algorithm Analysis}
+
+This section provides an overview and analysis of the important factors to consider when encoding polynomial systems of equations onto a quantum annealing architecture (resembling modern D-Wave hardware).
+
+\subsection{Energy Gap}
+
+The range of energies grows and shrinks exponentially with the bits of precision $n$, yielding a $\mathcal{O}(2^{-n})$ decay in the physical energy gap $\Delta'$ after the necessary rescaling operations.
+When mixed-precision variables interact, $\Delta'$ is determined by the effective precision $\hat n$, which is the difference between the largest and smallest nonzero absolute value representable among all the variables in the system.
+The number of additions $\alpha$ and number of multiplications $\mu$ have, respectively, linear and exponential effects on the maximum energy of the logical Hamiltonian.
+Therefore, $\Delta'$ shrinks inverse linearly with respect to $\alpha$ and exponentially with respect to $\mu$.
+Similarly as with addition, the number of equations $m$ in a system decreases $\Delta'$ at most inverse linearly since the equations do not directly interact, but may share some terms in common.
+Combined, this yields a rate of decay for the physical energy gap (after rescaling) of
+$$\Delta' \approx \mathcal{O}\bigg(\frac{1}{\alpha m 2^{\hat n \mu}}\bigg).$$
+In general, it can be seen that $\Delta'$ will be primarily determined by the exponential decay $2^{-{\hat n}\mu}$.
+
+\subsection{Number of Qubits}
+
+Other than the number of qubits required to represent the binary numbers, some ancillary qubits may be introduced into the logical Hamiltonion during both quadratization and physical embedding.
+Quadratization is performed analytically by the high-level tool described in Section 5, and so the ancillary qubit requirements due to quadratization can be easily analyzed.
+When addition or subtraction is performed, no additional quadratization is required.
+However, multiplication between two variables with $n_0$ and $n_1$ bits of precision requires $n_0 \times n_1$ ancillary qubits (one for each quadratization).
+Given a maximum of $\mu$ multiplications per individual polynomial (single equation) and $n$ bits of precision, the number of ancillary qubits introduced through quadratization will be $\mathcal{O}(m n^\mu)$.
+Notice that increasing the number of equations $m$ can at most linearly increase the number of ancillary quadratization terms required (when no variable products are shared between equations).
+Also notice that the number of variables $d$ does not affect the number of ancillary qubits due to quadratization, for a fixed $\mu$.
+
+When embedding the physical Hamiltonian for a polynomial system, two factors will dominate the number of necessary qubits.
+First, the annealer must generate a fully connected subgraph of size $n^{(\mu + 1)/2}$.
+Second, given some variable $\hat{\mathbf{x}}$ is multiplied by $k$ other distinct variables throughout a system, $\hat {\mathbf{x}}$ will have at least $k$ connections to each of its bits.
+The modern Chimera graph structure is not conducive to fully-connected graphs nor small sets of qubits with high graph centrality, hence experimental results show a growth rate greater than $k n^\mu$ for large problems.
+
+\subsection{Sensitivity to Perturbation}
+
+Given the perturbed Hamiltonian model (\ref{eq:perturbed}), it is reasonable
+to wonder how the perturbations $\delta_i$ and $\delta_{i,j}$ will affect
+the quality of the solution.
+In particular, one might wonder whether the effects could be great enough
+so that the ground state of the perturbed problem is no longer the ground
+state of the original problem.
+
+Consider first an arbitrary physical Ising-Hamiltonian $\Tilde{\mathcal{H}}$ involving $N'$ physical qubits, as defined in (\ref{eq:physical}) and its corresponding perturbed Hamiltonian $\hat{\mathcal{H}}$ as in (\ref{eq:perturbed}).
+Suppose that $|\delta_i|, |\delta_{i,j}| < \delta$, where $\delta>0$ is a constant that represents the largest magnitude perturbation possible on the current hardware.
+Combining equations (\ref{eq:physical}) and (\ref{eq:perturbed}), applying the upper bounds $\delta$, and combining like terms yields
+$$
+\|\Tilde{\mathcal{H}} - \hat{\mathcal{H}}\|_\infty
+= \sup_{\sigma} |\mathcal{H}(\sigma) - \hat{\mathcal{H}}(\sigma)|
+\leq \sup_\sigma \left|\sum_{i'=1}^{N'} \delta \sigma_{i'} +
+\sum_{i'=1}^{N'}\sum_{(i',j')\in G}\delta\sigma_{i'}\sigma_{j'} \right|.
+$$
+
+In the worst case, assuming nonzero connections between all physical qubits, the right hand side is upper bounded by $(N' + N' L')\delta$, where $L'$ is the number of connections per node in the physical graph $G$.
+For the Chimera graph, each node has at most $6$ undirected edges.
+So for the D-Wave Chimera architecture, the condition that guarantees a correct ground state for the physical Hamiltonian $\hat{\mathcal{H}}$ is $7N' \delta < 2\Delta'$.

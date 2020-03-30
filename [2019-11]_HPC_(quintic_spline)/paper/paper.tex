@@ -67,6 +67,19 @@
 %*
 %****************************************************************************
 
+%% ------ Package for adding bars into margin next to comments. ------
+%% Command for changing the color of text within a block.
+\usepackage{xcolor}   % Color package for coloring text.
+\usepackage[normalem]{ulem} % For strikethrough text and the \sout{} command.
+\usepackage[xcolor,rightbars]{changebar}
+\renewcommand{\changebarsep}{5mm}   % Push the bar farther into the margin.
+\renewcommand{\changebarwidth}{1mm} % Increase the width of the bar.
+\cbcolor{red} % Set the color of the change bars to red.
+%% \newcommand\changed[2][]{#2} % <- hidden
+\newcommand\changed[2][]{{\cbstart{\color{red}#2}\cbend}} % <- no old text
+% \newcommand\changed[2][]{{\cbstart{\color{red}#2}{\color{gray}\sout{#1}}\cbend}}
+%% -------------------------------------------------------------------
+
 %% Use a package to allow for multi-row cells in a table.
 \usepackage{multirow}
 
@@ -190,13 +203,28 @@ Virginia Polytechnic Institute \& State University\\
 
 \section*{Abstract}
 
-An algorithm for computing monotone order six piecewise polynomial
-interpolants is proposed. Algebraic constraints for enforcing
-monotonicity are provided that align with quintic monotonicity
-theory. The algorithm is implemented, tested, and applied to several
-sample problems to demonstrate the improved accuracy of monotone
-quintic spline interpolants compared to that for existing monotone
-cubic spline interpolants.
+A novel algorithm for computing monotone order six piecewise
+polynomial interpolants is proposed. Algebraic constraints for
+enforcing monotonicity are provided that align with quintic
+monotonicity theory. The algorithm is implemented, tested, and applied
+to several sample problems to demonstrate the improved accuracy of
+monotone quintic spline interpolants compared to the previous
+state-of-the-art monotone cubic spline interpolants.
+
+%% An algorithm for computing monotone order six piecewise polynomial
+%% interpolants is proposed. Algebraic constraints for enforcing
+%% monotonicity are provided that align with quintic monotonicity
+%% theory. \changed{The prior state of the art algorithm for constructing
+%%   monotone spline interpolants is piecewise cubic, matching function
+%%   values as well as first derivatives. The algorithm proposed here
+%%   matches function value, first, and second derivatives achieving
+%%   higher accuracy for $C^2$ functions while producing an approximation
+%%   with continuous first derivative.} The \changed{proposed} algorithm
+%% \changed{for constructing a monotone quintic interpolating spline} is
+%% implemented, tested, and applied to several sample problems to
+%% demonstrate the improved accuracy of monotone quintic spline
+%% interpolants compared to that \changed{of} existing monotone cubic
+%% spline interpolants.
 
 \textbf{Keywords:} monotone, quintic spline, Hermite interpolation, sixth order polynomial.
 
@@ -214,7 +242,7 @@ cubic spline interpolants.
 %% The ability to interpolate or regress a function with continuous value and derivatives has proven fundamentally useful. In many applications, there are known shapes or characteristics that are expected of approximations. For example, a cumulative distribution function in statistics cannot decrease, the entropy of a closed thermodynamic system can never increase, an electric motor should not suddenly change direction when slowing down or speeding up. In each of these cases it is important that any constructed spline approximation is monotone.
 
 
-Many domains of science rely on smooth approximations to real-valued functions over a closed interval. Piecewise polynomial functions (splines) provide the smooth approximations for animation in graphics \cite{herman2015techniques,quint2003scalable}, aesthetic structural support in architecture \cite{brennan2019measure}, efficient aerodynamic surfaces in automotive and aerospace engineering \cite{brennan2019measure}, prolonged effective operation of electric motors \shortcite{berglund2009planning}, and accurate nonparametric approximations in statistics \cite{knott2012interpolating}. While polynomial interpolants or regressors apply broadly, splines are often a good choice because they can approximate globally complex functions while minimizing the local complexity of an approximation.
+Many domains of science rely on smooth approximations to real-valued functions over a closed interval. Piecewise polynomial functions (splines) provide the smooth approximations for animation in graphics \cite{herman2015techniques,quint2003scalable}, aesthetic structural support in architecture \cite{brennan2019measure}, efficient aerodynamic surfaces in automotive and aerospace engineering \cite{brennan2019measure}, prolonged effective operation of electric motors \shortcite{berglund2009planning}, and accurate nonparametric approximations in statistics \cite{knott2012interpolating}. While polynomial interpolants and regressors apply broadly, splines are often a good choice because they can approximate globally complex functions while minimizing the local complexity of an approximation.
 
 It is often the case that the true underlying function or phenomenon being modeled has known properties e.g., convexity, positivity, various levels of continuity, or monotonicity. Given a reasonable amount of data, it quickly becomes difficult to achieve desirable properties in a single polynomial function. In general, the maintenance of function properties through interpolation/regression is referred to as \textit{shape preserving} \cite{fritsch1980monotone,gregory1985shape}. The specific shapes this work will achieve in approximations are monotonicity and $C^2$ continuity. These properties are chiefly important to the approximation of cumulative distribution functions and subsequently the effective generation of random numbers from a specified distribution.
 
@@ -229,7 +257,7 @@ The currently available software for monotone piecewise polynomial interpolation
   }\label{fig:spline_demonstration}
 \end{figure}
 
-The importance of piecewise quintic interpolation over lower order approximations can be simply demonstrated. In general, the order of a polynomial determines the number of function values it can interpolate, and the growth rate of error away from the interpolated function values. As demonstrated in Figure \ref{fig:spline_demonstration}, it can be seen that matching a value at either end of the interval requires an order two (linear) approximation and each additional derivative at the ends of the interval raises the necessary polynomial order by two. The body of this work is composed of a novel algorithm for enforcing monotonicity on quintic polynomial pieces, then extending that solution to work on quintic splines.
+The importance of piecewise quintic interpolation over lower order approximations can be simply demonstrated. In general, the order of a polynomial determines the number of function values it can interpolate, and the growth rate of error away from the interpolated function values. As demonstrated in Figure \ref{fig:spline_demonstration}, it can be seen that matching a value at either end of the interval requires an order two (linear) approximation and each additional derivative at the ends of the interval raises the necessary polynomial order by two. Hence, only even order (odd degree) interpolating splines are broadly applicable. The body of this work is composed of a novel algorithm for enforcing monotonicity on quintic polynomial pieces, then extending that solution to work on quintic splines.
 
 %% Software exists that does monotone piecewise quintic regression \cite{}, but the available routines do not computationally take advantage of the quintic monotonicity theory. ???
 
@@ -240,7 +268,6 @@ The major contribution of this work is an algorithm for constructing monotone qu
 \label{sec:monotone-cubic}
 
 The current state-of-the-art monotone interpolating spline with a mathematical software implementation is piecewise cubic, continuously differentiable, and was first proposed in \cite{fritsch1980monotone} then expanded upon in \cite{carlson1985monotone}. Let $\pi: x_0 = k_1 < k_2 < \cdots < k_n = x_1$ be a partition of the interval $[x_0,x_1]$. Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be $C^2$, and $\bigl\{f(k_i)\bigr\}_{i=1}^n$ and $\bigl\{\Delta_i\bigr\}_{i=1}^n$ be given sets of function and derivative values at the partition points for a monotone function $f$. Either $f(k_i) \leq f(k_{i+1})$, $i=1$, $\ldots$, $n-1$, and $\Delta_i\ge0$, $i=1$, $\ldots$, $n$, or $f(k_i) \geq f(k_{i+1})$, $i=1$, $\ldots$, $n-1$, and $\Delta_i\le0$, $i=1$, $\ldots$, $n$. Let $\hat f$ be a piecewise cubic polynomial defined in each subinterval $I_i = [k_i, k_{i+1}]$ by
-
 \begin{align*}
 h_i &= k_{i+1} - k_{i}, \quad
 u(t) = 3t^2 - 2t^3, \quad
@@ -250,12 +277,11 @@ f(k_{i+1}) u\big((x - k_i) / h_i\big) \\
 &{} - h_i\Delta_i p\big((k_{i+1}-x)/h_i\big) + h_i\Delta_{i+1}
 p\big((x-k_i)/h_i\big).
 \end{align*}
-
-Notice that a trivially monotone spline results when $\Delta_i = 0$, for $i = 1$, $\ldots$, $n$. However, such a spline has too many \textit{wiggles} for most applications. \citeN{carlson1985monotone} show that simple conditions on the derivative values can guarantee monotonicity, and that these conditions can be enforced in a way that ensures modifications on one interval will not break the monotonicity of cubic polynomials over any neighboring intervals. Consider the terms $\alpha = \big(\Delta_i (k_{i+1}-k_i)\big) / \big(f(k_{i+1}) - f(k_i)\big)$ and $\beta = \big(\Delta_{i+1}(k_{i+1}-k_i)\big) / \big(f(k_{i+1}) - f(k_i)\big)$. If $f(k_i) = f(k_{i+1})$, take $\Delta_i = \Delta_{i+1} =0$ and $\alpha =\beta =1$. Monotonicity of a cubic polynomial over a subinterval can be maintained by ensuring that $\alpha$ and $\beta$ reside in any of the regions depicted in Figure \ref{fig:projection}.
+Notice that a trivially monotone spline results when $\Delta_i = 0$, for $i = 1$, $\ldots$, $n$. However, such a spline has too many \textit{wiggles} for most applications. \citeN{carlson1985monotone} show that simple conditions on the derivative values can guarantee monotonicity, and that these conditions can be enforced in a way that ensures modifications on one interval will not break the monotonicity of cubic polynomials over any neighboring intervals. If $f(k_i) = f(k_{i+1})$, take $\Delta_i = \Delta_{i+1} =0$ and $\alpha =\beta =1$, otherwise let $\alpha = \big(\Delta_i (k_{i+1}-k_i)\big) / \big(f(k_{i+1}) - f(k_i)\big)$ and $\beta = \big(\Delta_{i+1}(k_{i+1}-k_i)\big) / \big(f(k_{i+1}) - f(k_i)\big)$. Monotonicity of a cubic polynomial over a subinterval can be maintained by ensuring that $\alpha$ and $\beta$ reside in any of the regions depicted in Figure \ref{fig:projection}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.45\textwidth]{cubic_projection_demonstration}
+  \includegraphics[width=0.40\textwidth]{cubic_projection_demonstration}
   \caption{These are the feasible regions of monotonicity for cubic splines and the projections that make a cubic polynomial piece monotone. The regions themselves are numbered 1--4 corresponding to their original description in Fritsch and Carlson (1980). One point is projected onto each region as a demonstration.}\label{fig:projection}
 \end{figure}
 
@@ -266,7 +292,7 @@ While the cubic monotonicity case affords such a concise solution, the region of
 \section{Monotone Quintic Interpolation}
 \label{sec:monotone-quintic}
 
-The following section is composed of three algorithms that together are used to construct a monotone quintic spline interpolant. Without loss of generality, the algorithms will only consider the monotone increasing (nondecreasing) case. The monotone decreasing (nonincreasing) case is handled similarly. Algorithm \ref{alg:check-monotone} checks monotonicity,
+The following section is composed of three algorithms that together are used to construct a monotone quintic spline interpolant. Without loss of generality, the algorithms will only consider the monotone increasing (nondecreasing) case. The monotone decreasing case is handled similarly. Algorithm \ref{alg:check-monotone} checks monotonicity,
 Algorithm \ref{alg:make-monotone} enforces monotonicity on an order six
 polynomial piece of the quintic spline, and Algorithm
 \ref{alg:monotone-spline} uses the previous two algorithms to enforce
@@ -275,7 +301,7 @@ monotonicity for the entire quintic spline.
 
 In pseudocode, a function \texttt{binary\_search($g,$ $a,$ $b$)} is used, where $a,b\in S\subset \mathbb{R}^p$ for convex $S$, $g: S \rightarrow \{$\texttt{FALSE}, \texttt{TRUE}$\}$ is a right continuous Boolean function, $g(b) = \hbox{\texttt{TRUE}}$, and for $\mu \in [0,1]$, $g\big((1-\mu)a + \mu b\big) =\hbox{\texttt{TRUE}} \Longrightarrow g\big((1-\nu)a + \nu b\big) =\hbox{\texttt{TRUE}}$ for $\mu \le \nu\le1$. The search returns $\big((1-c)a + c b\big)$ for the smallest $c \in [0,1]$ such that $g\big((1-c)a + c b\big) = \hbox{\texttt{TRUE}}$.
 
-These algorithms make use of first and second derivatives of the approximated function. In the case that the first and second derivative information is not provided along with function values, the derivatives are estimated with finite differences of the function values. The final quintic spline is represented as a piecewise polynomial using the Newton form for each polynomial piece, and ultimately converted to a $B$-spline representation for evaluation.
+These algorithms make use of first and second derivatives of the approximated function where $D$ denotes the differentiation operator. In the case that the first and second derivative information is not provided along with function values, the derivatives are estimated with finite differences of the function values. The final quintic spline is represented as a piecewise polynomial using the Newton form for each polynomial piece, and ultimately converted to a $B$-spline representation for evaluation.
 
 \algorithm
     {is\_monotone$\big(x_0, x_1, f \big)$}
@@ -365,7 +391,7 @@ The reason for structuring the $\alpha$, $\beta$, and $\gamma$ computations in t
 %% ----------------------------------------------------------------------
 
 
-Notice that both Algorithms \ref{alg:check-monotone} and \ref{alg:make-monotone} have $\mathcal{O}(1)$ runtime  assuming a fixed level of relative precision. A constant number of operations are needed for verifying monotonicity (Algorithm \ref{alg:check-monotone}), while a constant set of operations and a single binary search are performed for enforcing monotonicity (Algorithm \ref{alg:make-monotone}). The search requires a fixed number of steps to achieve any predetermined relative precision. Also note that an efficient implementation of Algorithm \ref{alg:make-monotone} only needs to recalculate Steps \ref{alg1-abg} and \ref{alg1-last} of Algorithm \ref{alg:check-monotone} during the binary search. Next, an algorithm for constructing a monotone quintic spline interpolant is presented.
+Notice that both Algorithms \ref{alg:check-monotone} and \ref{alg:make-monotone} have $\mathcal{O}(1)$ runtime assuming a fixed level of precision is chosen beforehand. A constant number of operations are needed for verifying monotonicity (Algorithm \ref{alg:check-monotone}), while a constant set of operations and a single binary search are performed for enforcing monotonicity (Algorithm \ref{alg:make-monotone}). The search requires a fixed number of steps to achieve any predetermined relative precision, since its accuracy is predetermined and not a function of the problem at hand. Also note that an efficient implementation of Algorithm \ref{alg:make-monotone} only needs to recalculate Steps \ref{alg1-abg} and \ref{alg1-last} of Algorithm \ref{alg:check-monotone} during the binary search. Next, an algorithm for constructing a monotone quintic spline interpolant is presented.
 
 %% ----------------------------------------------------------------------
 
@@ -379,19 +405,20 @@ Notice that both Algorithms \ref{alg:check-monotone} and \ref{alg:make-monotone}
       \comment{The three variables defined in Step \ref{step:create} are used to ensure the eventual achievement of monotonicity. The \texttt{queue} is a standard first in first out (FIFO) queue with \texttt{enqueue} and \texttt{dequeue} operations. The array \texttt{changed} contains Booleans describing whether or not a breakpoint belongs to an interval that has been modified to enforce monotonicity. The \texttt{step\_size} array contains the real-valued derivative decrement step sizes to use in the search for a valid monotone spline.}
     \item for $i := 1$, $\ldots$, $n-1$
       \indented{enqueue $\bigl((k_i, k_{i+1})\bigr)$}
+      end for
       \comment{Initially, all intervals must be checked for monotonicity. The following loop will continue until all intervals are verified as monotone without need for modification.}
     \item while $($size$($queue$) > 0)$
-    \item \indented{$(x_j$, $x_{j+1}) := $ dequeue}
-    \item \indented{if $\big($not is\_monotone$(x_j$, $x_{j+1}$, $f)\big)$}
-    \item \indented{\indented{if $\big($changed$(j)\big) \qquad \ Df(x_j) := Df(x_j) -{}$step\_size$(j)$}}
-      \indented{\indented{if $\big($changed$(j+1)\big) \quad Df(x_{j+1}) := Df(x_{j+1}) -{}$step\_size$(j+1)$}}
+    \item \indented{$(k_j$, $k_{j+1}) := $ dequeue}
+    \item \indented{if $\big($not is\_monotone$(k_j$, $k_{j+1}$, $f)\big)$}
+    \item \indented{\indented{if $\big($changed$(j)\big) \qquad \ Df(k_j) := Df(k_j) -{}$step\_size$(j)$}}
+      \indented{\indented{if $\big($changed$(j+1)\big) \quad Df(k_{j+1}) := Df(k_{j+1}) -{}$step\_size$(j+1)$}}
       \indented{\indented{\comment{If a breakpoint belongs to an interval that has been previously modified, then the enforced monotonicity conditions on the second derivatives of adjacent intervals must contradict one another. In turn, the involved first derivatives are decreased towards zero by a predetermined step size.}}}
-    \item \indented{\indented{make\_monotone$(x_j,\ x_{j+1},\ f)$}}
+    \item \indented{\indented{make\_monotone$(k_j,\ k_{j+1},\ f)$}}
     \item \indented{\indented{changed$(j) :=$ TRUE}}
       \indented{\indented{changed$(j+1) :=$ TRUE}} \label{step:changed}
-    \item \indented{\indented{if $\big(j > 1$ and $(x_{j-1}, x_j) \not\in$ queue$\big)$ enqueue $\bigl((x_{j-1}, x_j)\bigr)$}}
-      \indented{\indented{enqueue $\bigl((x_j, x_{j+1})\bigr)$}}
-      \indented{\indented{if $\big(j+1 < n$ and $(x_{j+1}, x_{j+2}) \not\in$ queue$\big)$ enqueue $\bigl((x_{j+1}, x_{j+2})\bigr)$}} \label{step:requeue}
+    \item \indented{\indented{if $\big(j > 1$ and $(k_{j-1}, k_j) \not\in$ queue$\big)$ enqueue $\bigl((k_{j-1}, k_j)\bigr)$}}
+      \indented{\indented{enqueue $\bigl((k_j, k_{j+1})\bigr)$}}
+      \indented{\indented{if $\big(j+1 < n$ and $(k_{j+1}, k_{j+2}) \not\in$ queue$\big)$ enqueue $\bigl((k_{j+1}, k_{j+2})\bigr)$}} \label{step:requeue}
       \indented{\indented{\comment{Step \ref{step:changed} records the endpoints of the current interval as having been changed, while \ref{step:requeue} adds adjacent intervals to \texttt{queue} that may have inadvertently been made nonmonotone by the changes to the present interval.}}}      
       \indented{end if}
       end while
@@ -400,7 +427,7 @@ Notice that both Algorithms \ref{alg:check-monotone} and \ref{alg:make-monotone}
 
 It is mentioned in \citeN{ulrich1994positivity} that for sufficiently small $Df(k_i)$ and $Df(k_{i+1})$ the admissible solution interval of second derivative values becomes arbitrarily large. It can also be seen that decreasing the assigned derivative values towards zero will eventually cause Steps \ref{alg1-alpha} through \ref{alg1-gamma} of Algorithm \ref{alg:check-monotone} to all fail, resulting in Step \ref{alg1-simplified-true} returning \texttt{TRUE}.
 
-Given the potential for successive monotonicity fixes across all intervals, the worst case runtime of Algorithm \ref{alg:monotone-spline} is $\mathcal{O}(s n)$ for $n$ breakpoints and shrink factor $s$. In practice this worst case has been observed to be unlikely.
+If successive monotonicity fixes are required for all intervals, the worst case runtime of Algorithm \ref{alg:monotone-spline} is $\mathcal{O}(s n)$ for $n$ breakpoints and shrink factor $s$. In practice this worst case has been observed to be unlikely.
 
 \section{Experimental Results}
 \label{sec:results}
@@ -411,7 +438,7 @@ Given the increased order of approximation, it is naturally expected that some a
 
 For this experiment, the function $\sin(x) + x$ is considered over the interval $[0,(5/2)\pi]$ as seen in Figure \ref{fig:cubic_quintic_sin}. Given an increasing number of points, the maximum error of cubic and quintic approximations is shown in Figure \ref{fig:experiment_1}. The quintic approximation consistently has a maximum error that is roughly half that of the cubic approximation, given the same number of points. There is an increase in the error gap between the two approximations as more points are added. The quintic spline requires only $700$ points to approximate the function to the same accuracy achieved by the cubic with $1000$ points.
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=.7\textwidth]{cubic-quintic-sin}
   \caption{Depicted above are the monotone cubic and quintic spline interpolants of the function $\sin(x) + x$ over the points $[0, (5/2) \pi]$.  Notice that the maximum error of the cubic interpolant is larger, because it only captures first derivative information at the points. The quintic interpolant captures both first and second derivative information at the points.}
@@ -471,27 +498,25 @@ This experiment studies the number of times the algorithms \texttt{is\_monotone}
     100 & 142 & 306 & 776 & 21 & 107 & 380 & 629 & 2140 & 7414\\
     \hline
   \end{tabular}
-  \caption{Here we see a table of the minimum, median, and maximum number of checks, fixes, and binary search steps required in the execution of \texttt{make\_spline} for increasing size sequences, $n$, over $100$ randomly generated sets of monotone data. Notice the maximum for each counter is often significantly greater than the minimum and median, because the distribution of each counter is skewed right.}
+  \caption{The minimum, median, and maximum number of checks, fixes, and binary search steps required in the execution of \texttt{make\_spline} for increasing size sequences, $n$, over $100$ randomly generated sets of monotone data. Notice the maximum for each counter is often significantly greater than the minimum and median, because the distribution of each counter is skewed right.}
   \label{table:e3_results}
 \end{table}
 
 \section{Discussion}
 \label{sec:discussion}
 
-The monotone quintic spline interpolant provides a distinct increase in accuracy over the monotone cubic variant. Although the complexity of the algorithm is increased, the number of points required to achieve the same level of accuracy has decreased. In the present state, the algorithm for enforcing monotonicity on a spline is not as trivially parallel as the cubic algorithm, however it can still be parallelized.
+The monotone quintic spline interpolant provides a distinct increase in accuracy over the monotone cubic variant. The computational complexity of this algorithm is identical to the existing cubic method and the cost of evaluating the spline after construction is unchanged. While the number of computations required per interval has increased, the number of points required to achieve the same level of accuracy has decreased. In the present state, the algorithm for enforcing monotonicity on a spline is not as trivially parallel as the cubic algorithm, however it can still be parallelized. The checks for monotonicity across all intervals are independent and the monotonicity adjustments could be computed independently and intelligently merged with minor changes to the serial algorithm.
 
-Acknowledging that the algorithm for constructing a monotone quintic spline interpolant is slightly more complex than the cubic case, gains in accuracy or a decreased necessary number of points are often worth the computational effort.
+Acknowledging that the algorithm for constructing a monotone quintic spline interpolant is slightly more expensive than the cubic case, gains in accuracy or decreased necessary number of points are often worth the computational effort. In practice the costs of spline interpolation are often dominated by evaluation rather than construction, and the increased accuracy is afforded for a negligible increase in computational cost.
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-This paper proposes and tests an algorithm for constructing monotone quintic spline interpolants. Experiments demonstrate an improvement in approximation accuracy over monotone cubic spline interpolants, as expected based on theory.
-
-There are still open avenues of research going forward, such as an alternative sufficient condition for enforcing monotonicity or increased order monotone approximations. If the monotonicity conditions can be generalized to any order or made linear, the search for a monotone interpolating spline could potentially be formulated as a convex optimization problem. Finally, this work could be used to improve cumulative distribution function (CDF) estimates as well as predictive models that use CDFs.
+This paper proposes and tests an algorithm for constructing monotone quintic spline interpolants. Experiments demonstrate an improvement in approximation accuracy over monotone cubic spline interpolants, as expected based on theory. There are still open avenues of research going forward, such as an alternative sufficient condition for enforcing monotonicity or increased order monotone approximations. If the monotonicity conditions can be generalized to any order or made linear, the search for a monotone interpolating spline could potentially be formulated as a convex optimization problem. Finally, this work could be used to improve cumulative distribution function (CDF) estimates as well as predictive models that use CDFs.
 
 
-%% \section*{Acknowledgments}
-%% The NSF is acknowledged for its support of this project.
+\section*{Acknowledgments}
+This work was supported by the National Science Foundation Grants CNS-1565314 and CNS-1838271.
 
 % Please don't change the bibliographystyle style
 \bibliographystyle{scsproc}
@@ -503,9 +528,8 @@ There are still open avenues of research going forward, such as an alternative s
 
 \textbf{\uppercase{THOMAS C. H. LUX}} is a Ph.D. candidate in computer
 science at Virginia Polytechnic Institute and State University
-(VPI\&SU) studying under Dr. Layne Watson. His research interests
-include computational science, approximation theory, optimization, and
-artificial intelligence. His email address is \email{tchlux@vt.edu}.
+(VPI\&SU) studying under Dr. Layne Watson. His email address is
+\email{tchlux@vt.edu}.
 
 \textbf{\uppercase{Layne T. Watson}} (Ph.D., Michigan, 1974) has
 interests in numerical analysis, mathematical programming,
@@ -521,8 +545,9 @@ statistics under Dr. Yili Hong.
 \textbf{\uppercase{Yueyao Wang}} is a Ph.D. candidate at VPI\&SU
 studying statistics under Dr. Yili Hong.
 
-\textbf{\uppercase{Yili Hong}} (Ph.D., Iowa State, 2009) has interests in
-engineering statistics, statistical modeling, and data analysis.
+\textbf{\uppercase{Yili Hong}} (Ph.D., Iowa State, 2009) is an
+associate professor of Statistics at VPI\&SU.
+
 
 %% \newpage
 

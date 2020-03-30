@@ -1,0 +1,98 @@
+\section{Results}
+
+In this section, Hamiltonian embeddings for error functions of the form (\ref{eq:single-error}) and (\ref{eq:system-error}) are implemented for solving biprime factorization, polynomial SOS problems, and linear systems of equations.
+For the first two problem, the focus is placed on increasing the bit precision $n$, since
+it was shown in Section 4 that increasing the relative precision causes the physical energy gap $\Delta'$ to decay exponentially.
+For problems with $n$ bits of precision per variable, the number of samples was assigned to $500n$ (a linear increase).
+As outlined in Section \ref{sec:background}, this should maintain a (nearly) constant probability of achieving the ground state under ideal conditions.
+However, since the problem conditioning is largely determined by $\Delta'$, it is somewhat concerning that the perturbations in (\ref{eq:perturbed}) could have a significant negative impact on the computation for large precision $n$.
+In fact, the problem conditioning does seem to cause some significant decay in the probabilities.
+However, the presented results achieve the ground state for every problem that could be embedded on the current D-Wave hardware, indicating that the primary limiting factor is the number of physical qubits $N'$ required to embed the physical Hamiltonian.
+
+For the linear system problem, the focus is shifted to how the proposed methodology is affected by increasing the number of equations and variables, with a fixed four-bit precision.
+Since there is no multiplication between variables in a linear system, the analysis results of Section 4 suggest that these types of problems should scale better on the D-Wave 2000Q hardware.
+However, somewhat surprisingly, the D-Wave is unable to find exact solutions for relatively small linear systems, even when the true solution is exactly representable for the binary encoding.
+
+\subsection{Factorization}
+\label{sec:factorization}
+
+To factor a biprime $M = x^{(1)}x^{(2)}$, where $x^{(1)}$ and $x^{(2)}$ are $n$-bit unsigned integers, the corresponding polynomial is 
+$$
+p\left(x^{(1)},x^{(2)}\right) = x^{(1)}x^{(2)} - M
+$$
+and the squared error function is given by
+\begin{equation}
+E\left(x^{(1)},x^{(2)}\right) = \left(x^{(1)}x^{(2)} - M\right)^2.
+\label{eq:primefact}
+\end{equation}
+Creating $n^2$ ancillary qubits $y_{i,j} = x^{(1)}_i \wedge x^{(2)}_j$, this energy function can be embedded into a QUBO as described in Section 3.
+Note that the best available techniques also require $\mathcal{O}(n^2)$ ancillary qubits for prime factorization \cite{dridi2017prime,jiang2018quantum,peng2008quantum}. 
+The results for embedding this QUBO as a physical Hamiltonian (as described in Section 5) and running on the D-Wave hardware are shown in Table \ref{tab:biprime}.
+Similar to the work done by Jiang et al.\ for biprime factoring, this methodology encodes $M$ directly into the Hamiltonian as a constant, rather than wasting extra qubits to store $M$ as a variable.
+In fact, Jiang et al.\ used a nearly identical methodology for arbitrary integer factorization, but favored a multiplication table for factoring biprimes.
+
+\input{biprime.tex}
+
+The most recent work in biprime factorization solves a slightly larger problem \cite{dridi2017prime,jiang2018quantum} by assuming properties of the factors.
+In contrast, this methodology can factor arbitrary integers (which may not be biprimes) while still achieving the same number of bits of precision as those best known results.
+As presented, arbitrary integer factorization takes the same form as biprime factorization, but has more candidate solutions (and an innately higher likelihood of success).
+For that reason, only biprimes are considered here.
+The correct factorization is obtained up to $M=14351$ (whose prime factors are both $7$-bit unsigned integers) by minimizing (\ref{eq:primefact}), which is also the largest problem that can be successfully embedded on current quantum annealing hardware.
+At $n=8$ bits of precision, the Hamiltonian failed to embed onto the D-Wave 2000Q system, due to size limitations.
+
+\subsection{Nonlinear Least Squares}
+
+\input{fig3.tex}
+
+Let $\mathbf{v} = [x,y]^T \in \mathbb{R}^2$, and consider the following system of polynomial equations.
+\begin{equation}
+\begin{array}{rcl}
+    xy &=& 1\\
+    x^2+y^2 &=& 1\\
+    x - y &=& 0
+    \end{array}
+    \label{eq:ls-system}
+\end{equation}
+This results in the squared energy function
+$E(\mathbf{v}) = (xy-1)^2 + (x^2+y^2 - 1)^2 + (x-y)^2$.
+A graph of the system (\ref{eq:ls-system}) is shown in Figure \ref{fig:ls-graph}.
+To find the solution in the first quadrant, $x$ and $y$ are encoded as unsigned $n$-bit numbers each with an exponent of $e = -n$ using the encoding (\ref{eq:binary-encoding}).
+The true solution is $x=y\approx 0.77$, with a minimum squared residual of $r^2 = 0.2$.
+For $n=2$, the physical embedding is shown in Table \ref{tab:poly_ls_embedding}.
+As seen in Table \ref{tab:poly_ls}, for $n>2$, the physical qubit requirement appears to grow super-linearly but sub-exponentially with the logical qubit requirement.
+
+\input{poly_ls_embedding.tex}
+
+The results collected on the D-Wave machine are shown in Table \ref{tab:poly_ls}.
+For all tests through up to $6$ bits of precision, the closest representable solution is found.
+For $n=7$ bits of precision, again, the Hamiltonian failed to embed due to size constraints.
+
+\input{poly_ls.tex}
+
+\subsection{Linear System of Equations}
+
+Thus far, the presented results have featured an integer-valued and nonlinear problem, and focused on increasing the bit precision $n$.
+In general, integer valued and nonlinear problems are interesting because they do not classically admit analytic solutions, as commented on by Chang et al. \cite{chang2019quantum}.
+By contrast, as discussed by Borle et al. \cite{borle2019analyzing}, the time complexity involved in embedding linear and least squares systems of equations into a Hamiltonian rivals the time complexity of solving the system using classical techniques.
+However, linear and least squares systems of equations remain interesting problems because of their wide usage in data science and applied mathematics.
+Furthermore, the proposed method could still be useful in the context of large sparse systems.
+
+In order to study how the proposed method scales with increasing numbers of variables and equations, consider a $K \times K$ linear system of equations for $K = 2,\ldots,8$.
+To demonstrate signed linear algebra, one set of experiments is carried out using the two's complement binary encoding in (\ref{eq:binary-encoding}) with no bits of precision before the decimal and three bits of precision after the decimal.
+To demonstrate unsigned linear algebra, another set of experiments is carried out using the unsigned binary encoding from (\ref{eq:binary-encoding}) with one bit of precision before the decimal and three bits of precision after the decimal.
+The results are shown in Table \ref{tab:linear_ls}.
+Note that under the proposed methodology, it is not apparently ``easier'' to solve a trivial system.
+Therefore, for convenience of analysis and reproducability, the embedded system in the signed case is of the form $\mathbf{B}_0 \mathbf{v}=\mathbf{0}$, where the coefficients in the matrix $\mathbf{B}_0$ are randomly generated numbers in the range $(-1,1)$ rounded to the nearest multiple of $0.25$.
+In the unsigned case, a similar system $\mathbf{B}_1 \mathbf{v} = \mathbf{c}_1$ is constructed, such that the solution is instead $\mathbf{v}=\mathbf{1}$.
+All the presented problems use four bit variables, which is standard for the D-Wave 2000Q system \cite{borle2019analyzing}, and are run for $500 K$ samples.
+
+\input{linear_ls.tex}
+
+Note that Borle et al. \cite{borle2019analyzing} were able to solve least squares systems of size $100\times 8$ to reasonable accuracy, by increasing the annealing time from 20 microseconds (the default value) up to 50 microseconds and performing 10,000 samples.
+For the experiments shown here, both the signed and unsigned linear systems are solved and an exact solution is obtained up to a system of size $3\times 3$. 
+For larger systems, an inexact approximate solution is still obtained.
+Although Section 4 indicates that the proposed methodology should scale better with the number of variables $d$ than with the precision $n$, these results suggest the opposite, since the only limiting factor in Sections 6.1 and 6.2 was the size of the D-Wave 2000Q machine.
+It is worth noting that the physical qubit requirements in Table 3 do not challenge the size limitations.
+
+The primary objective of these experiments is to demonstrate generality and provide an accessible method of encoding polynomial SOS problems on modern QA systems.
+Although it was not demonstrated, it is reasonable to assume that improved results can be obtained by increasing the annealing time and sample count.

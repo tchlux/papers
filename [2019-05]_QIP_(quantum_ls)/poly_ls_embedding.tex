@@ -1,0 +1,26 @@
+\begin{table}
+    \centering
+    \begin{tabular}{c|c c c|c}
+      Logical Bit & Embedding &$\quad$& Logical Bit & Embedding \\ \cline{1-2}\cline{4-5}
+      1 & 1376, 1383, 1248 && 6  & 1390, 1382, 1384 \\
+      2 & 1380, 1379, 1251 && 7  & 1389, 1381        \\
+      3 & 1261, 1258, 1253 && 8  & 1391, 1257, 1385 \\
+      4 & 1249, 1377       && 9  & 1252, 1250       \\
+      5 & 1388, 1386       && 10 & 1255, 1263
+    \end{tabular}
+    \caption{The exact embedding used in the polynomial least squares problem for $2$ bits of precision is displayed with the logical bit index in the \textit{Logical Bit} column and the physically embedded bit indices on hardware (all of which are chained to be equal) in the \textit{Embedding} column. Notice that the Chimera graph structure requires 25 physical qubits to represent the 10 logical qubits. The physical embedding was heuristically chosen using { \tt minorminer.find_embedding}, which constructed chains of 2 and 3 qubits to match the logical Hamiltonian to the connectivity of the Chimera graph. Notice also that the physical qubit indices are an automatically selected subset of the 2000 qubits available on the D-Wave 2000Q machine. The logical QUBO uses bits 1--4 to store the variables $x$ and $y$ and bits 5--10 are ancillary bits introduced through quadratization.}
+    \label{tab:poly_ls_embedding}
+\end{table}
+
+
+%% Using embedding with 25 qubits:
+%%  0 [1376, 1383, 1248]
+%%  1 [1380, 1379, 1251]
+%%  2 [1261, 1258, 1253]
+%%  3 [1249, 1377]
+%%  4 [1388, 1386]
+%%  5 [1390, 1382, 1384]
+%%  6 [1389, 1381]
+%%  7 [1391, 1257, 1385]
+%%  8 [1252, 1250]
+%%  9 [1255, 1263]
