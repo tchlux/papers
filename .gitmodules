@@ -1,0 +1,3 @@
+[submodule "[2019-05]_QIP_(quantum_ls)/code"]
+	path = [2019-05]_QIP_(quantum_ls)/code
+	url = https://github.com/tchlux/qaml
