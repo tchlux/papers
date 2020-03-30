@@ -1,0 +1,15 @@
+\begin{table}
+    \centering
+    \begin{tabular}{c|c c|c c|c c}
+         $K$ & Logical & Physical & \multicolumn{2}{c|}{\shortstack{\textit{Unsigned}\\ S.E. $\ \ $ Occ.}} & \multicolumn{2}{c}{\shortstack{\textit{Signed}\\ S.E. $\ \ $ Occ.}} \\ \hline
+         2 & 8 & 22 & 0.000 & 24 & 0.000 & 2 \\
+         3 & 12 & 38 & 0.000 & 23 & 0.000 & 27 \\
+         4 & 16 & 80 & 0.005 & 3 & 0.013 & 1 \\
+         5 & 20 & 130 & 0.026 & 1 & 0.048 & 1 \\
+         6 & 24 & 202 & 0.037 & 1 & 0.048 & 1 \\
+         7 & 28 & 267 & 2.604 & 1 & 1.882 & 1 \\
+         8 & 32 & 312 & 0.917 & 1 & 0.767 & 1
+    \end{tabular}
+    \caption{Using the squared-error energy function methodology, a linear system is solved. The columns depict the number of variables \textit{and} equations in a test ($K \times K$ matrix), the number of logical and physical qubits required, the minimum squared error (minimum energy) achieved by the quantum annealer rounded to 2 decimal digits, and the number of samples that produced the best achieved solution. $500 K$ samples were drawn from the quantum annealer for all tests. In this test, the numbers are represented in $4$ bit fixed point notation with $3$ bits after the decimal. The embeddings used by the signed and unsigned systems are identical, only QUBO coefficients vary. Best achievable solution has $0$ error for all $K$.}
+    \label{tab:linear_ls}
+\end{table}

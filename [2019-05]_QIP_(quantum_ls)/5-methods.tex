@@ -1,0 +1,18 @@
+\section{Experimental Methods}
+
+For the results presented in Section 6, logical Hamiltonians were generated via the process described in Section 3 and run on a D-Wave 2000Q machine.
+Before performing quadratization or constructing the logical chains, the initial rescale factor $\lambda_I$ necessary to encode the logical Hamiltonian weights into the range allowed by the physical Hamiltonian was computed.
+For all demonstrations the AND weights used for quadratization were set to $\lambda_I / 8$, with $1/8$ being the largest power of 2 multiplier that yields correct solutions on all test problems.
+After adding the AND gates to the logical Hamiltonian, the final rescale factor $\lambda_F$ necessary to encode the physical Hamiltonian was computed and the chain strengths were set to $\lambda_F$.
+Finally, the {\verb minorminer.find_embedding } tool from D-Wave's Ocean toolkit was used to construct the logical chains and perform the necessary rounding, completing the physical embedding \cite{cai2014practical}.
+Any chain breaks were resolved by majority vote, and similarly, any violated AND gates were corrected in a post-processing step.
+For each run, the default annealing time of 20 microseconds is used, along with D-Wave's default annealing schedule.
+
+\subsection{Code Availability}
+
+Python code with a user-friendly interface has been produced that automates the process for generating QUBOs, handles AND gate and chain weighting, generates physical Hamiltonian embeddings, runs on either simulated or physical hardware, and resolves AND gate and chain breakage.
+Each of these steps is carried out exactly as described above.
+This code library was used for generating the Hamiltonians in the Results section and is available on GitHub at \url{https://github.com/tchlux/qaml}.
+Note, the library uses the SAPI API, and therefore depends on several D-Wave toolkits for finding physical embeddings on the Chimera graph structure and accessing D-Wave's cloud QA solvers.
+The exact code used for replicating the experiments and the corresponding data for Tables \ref{tab:biprime}, \ref{tab:poly_ls}, and \ref{tab:linear_ls} are located in the {\verb qaml/experiments } subdirectory.
+It is worth noting how concisely the following experiments are implemented in the provided framework (just 5, 7, and 14 lines of code for experiments 6.1, 6.2, and 6.3, respectively), as the high-level abstractions are conducive to programming and solving arbitrary polynomial systems on a quantum annealer with ease.

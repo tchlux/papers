@@ -1,0 +1,14 @@
+\begin{table}
+    \centering
+    \begin{tabular}{c|c c|c c|c|c}
+         Bits & $x$ & $y$ & Logical & Physical & Sq. Error & Occurrence \\ \hline
+         2 & $3/4$ & $3/4$ & 10 & 26 & 0.2070 & 455 \\
+         3 & $3/4$ & $3/4$ & 21 & 104 & 0.2070 & 50 \\
+         4 & $3/4$ & $13/16$ & 36 & 286 & 0.2061 & 82 \\
+         5 & $25/32$ & $25/32$ & 55 & 596 & 0.2005 & 21 \\
+         6 & $25/32$ & $49/64$ & 78 & 1216 & 0.2004 & 2 \\
+         7 & $99/128$ & $99/128$ & 105 & -- & -- & -- \\
+    \end{tabular}
+    \caption{Using the squared-error energy function methodology, a polynomial least squares problem is solved. The columns depict the number of bits of precision in the variables, the best representable solution to the least squares problem, the number of logical and physical qubits required, the minimum squared error (minimum energy) achieved by the quantum annealer rounded to 4 decimal digits, and the number of samples that produced the optimal solution. $500n$ samples were drawn from the quantum annealer for all tests, where $n$ is the number of bits of precision in the solution. In this test, the numbers are represented in fixed point notation where all bits are after the decimal. This means that the binary digits encode negative powers of two. The obtained solutions are the best possible solutions that can be achieved for their respective precision, however at 7-bits no physical embedding could be discovered for the logical Hamiltonian on the available the hardware.}
+    \label{tab:poly_ls}
+\end{table}

@@ -1,0 +1,46 @@
+\section{Embedding Polynomials}
+
+Let $\mathbf{v}\in\mathbb{R}^d$ and let $p(\mathbf{v})$ be a multivariate polynomial of finite degree.
+The goal of this section is to find real-valued least squares solution to equations of the form $p(\mathbf{v}) = 0$.
+To do so, define the squared error function
+\begin{equation}
+E(\mathbf{v}) = \left( p(\mathbf{v}) \right)^2.
+\label{eq:single-error}
+\end{equation}
+If $p(\mathbf{v}) = 0$ has real-valued solutions, then minimizing $E(\mathbf{v})$ will produce an element of the solution set.
+If $p(\mathbf{v}) = 0$ is not exactly solvable for $\mathbf{v}\in\mathbb{R}^d$, then minimizing $E(\mathbf{v})$ will produce a solution in the least squares sense.
+Similarly, given a system of polynomial equations $p_1(\mathbf{v})=0$, $\ldots$, $p_m(\mathbf{v})=0$, the total SOS error is given by
+\begin{equation}
+E(\mathbf{v}) = \left(p_1(\mathbf{v})\right)^2 + \ldots + \left(p_m(\mathbf{v})\right)^2.
+\label{eq:system-error}  
+\end{equation}
+This section will show how to encode $\mathcal{H}(\text{\boldmath$\sigma$}) = E(\mathbf{v}) + \tau$, where $\mathcal{H}(\text{\boldmath$\sigma$})$ is an Ising-Hamiltonian of the form (\ref{eq:hamiltonian}), $E(\mathbf{v})$ is of the form (\ref{eq:single-error}), and $\tau$ is a constant energy offset.
+SOS errors of the form (\ref{eq:system-error}) can be implemented trivially by summing over the individual Hamiltonians corresponding to each equation in the system.
+As will be shown, the following process considers binary number representations of \textit{any} fixed precision, including those with mixed-precision and integer-valued problems.
+
+Let $x_i\in\{0,1\}$ be the bit value of the $i$th bit of $x$, let $e$ denote a fixed exponent, and let $s\in\{-1,1\}$ denote whether $x$ is signed or unsigned ($-1$ for signed variables and $1$ for unsigned variables).
+Then the following equation defines an $n$-bit binary encoding of $x$ using two's complement for signed numbers and a fixed-point precision determined by the exponent $e$.
+Note that choosing $e=0$ results in an integer-valued problem.
+\begin{equation}
+x = 2^e \Bigg ( \sum_{i=1}^{n-1} 2^{i-1} x_i + 2^{n-1}x_{n}s \Bigg )
+\label{eq:binary-encoding}
+\end{equation}
+Now, let $\mathbf{v} = [x^{(1)}, \ldots, x^{(d)}]^T$ and combine (\ref{eq:single-error}) and (\ref{eq:binary-encoding}) to express the energy as a multivariate binary polynomial with real-valued coefficients.
+To get a QUBO expression of the form (\ref{eq:QUBO}), terms with three or more interacting variables must be quadratized (reduced to two-local form).
+Many quadratization methods exist \cite{dattani2019quadratization}, but all known methods that maintain the squared-error energy landscape (i.e. reproduce the ground state and the full spectrum) utilize ancillary qubits.
+This work employs reduction by substitution \cite{rosenberg1975reduction} for its equivalence with the logical AND operation.
+The accompanying AND QUBO enforces $z_3 = z_1 \wedge z_2$ by assigning weights
+\begin{equation}
+C_{\wedge}(\mathbf{z}) = 3z_3 + z_1 z_2 - 2 (z_1 z_3 + z_2 z_3).
+\label{eq:and}
+\end{equation}
+
+For example, consider the binary energy polynomial ${\tilde E}(\mathbf{x}) = x_1x_2x_3x_4$. Then setting $y_1 = x_1 \wedge x_2$ and $y_2 = x_3 \wedge x_4$ using (\ref{eq:and}) and summing over QUBOs gives 
+$$
+{\tilde C}(\mathbf{x},\mathbf{y}) = y_1y_2 + 3y_1 + 3y_2 + x_1x_2 + x_3x_4 - 2(x_1y_1 + x_2y_1) - 2(x_3y_2 + x_4y_2).
+$$
+
+When quadratizing terms as above, it is important to weight each occurrence of $C_\wedge$ by some large constant $\omega$ so that breaking an AND constraints incurs a large penalty.
+Otherwise, the annealer could conceivably break an AND constraint to achieve an impossibly low squared error, resulting in a nonsensical solution.
+As a rule of thumb, $\omega$ should be significantly greater than the expected squared residual but small enough so that $\Delta'$ is not unduly affected (as detailed in Section 4).
+As long as the AND constraints are satisfied, the resulting QUBO will satisfy $C(\mathbf{x}) \cong E(\mathbf{v})$ and the resulting logical Hamiltonian will satisfy $\mathcal{H}(\text{\boldmath$\sigma$}) \cong E(\mathbf{v}) + \tau$, where the congruence is understood through the binary encoding of each $x^{(k)}$.

@@ -5,6 +5,7 @@ from util.math import fekete_points, pairwise_distance
 from util.approximate import DelaunayP1, NeuralNetwork
 from util.random import latin
 from util.plot import Plot
+from util.data import Data
 
 # A modified version of the oscillatory test problem from:
 #    'High Dimensional Polynomial Interpolation' by Barthelman et al. (2000)
@@ -24,11 +25,11 @@ def oscillatory(x, c=1):
 use_vals = False
 # `True` if Fekete points should be used.
 # `False` if a random Latin hypercube design should be used instead.
-use_fekete = False
+use_fekete = True
 # Random seed.
 seed = 0
-dimension = 20
-test_size = 100
+dimension = 2
+test_size = 1000
 train_sizes = [2 * 4**(i) for i in range(1,6+1)]
 train = train_sizes[-1]
 snr = 0.0

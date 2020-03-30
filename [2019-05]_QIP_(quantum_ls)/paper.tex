@@ -1,0 +1,85 @@
+\documentclass[smallextended]{svjour3}       % onecolumn (second format)
+
+\usepackage{amsmath,amsfonts}  % AMS standard symbols and fonts
+\usepackage{url}       % pretty clickable links
+\usepackage{graphicx}  % including pictures
+\usepackage{tabularx}  % center-aligned columns in table
+\usepackage{mathtools} % "ceil" command
+\usepackage{breqn}
+\usepackage{color}
+
+%
+\def\UrlBreaks{\do\/\do-\do\_}
+
+% Make line breaks occur on hyphens in URLs for BibTex.
+
+% declare a "ceil" command
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+%% Command for creating multiplie-line cells inside a table
+\newcommand{\multilinecell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+% Declare title and authors
+\title{Least Squares Solutions to Polynomial Systems of Equations with Quantum Annealing
+\thanks{All authors contributed equally to this work. The author order was determined alphabetically.}}
+\author{Tyler H. Chang \and Thomas C. H. Lux \and Sai Sindhura Tipirneni}
+
+\titlerunning{LS Solution to Polynomial Systems}
+\authorrunning{Chang, Lux, and Tipirneni}
+
+\institute{T. H. Chang \at
+   Virginia Polytechnic Institute and State University, Dept. of Computer Science, Blacksburg, VA, USA, 24061 \\
+   \email{thchang@vt.edu}
+   \and
+   T. C. H. Lux \at
+   Virginia Polytechnic Institute and State University, Dept. of Computer Science, Blacksburg, VA, USA, 24061 \\
+   \email{tchlux@vt.edu}
+   \and
+   S. S. Tipirneni \at
+   Virginia Polytechnic Institute and State University, Dept. of Computer Science, Blacksburg, VA, USA, 24061 \\
+   \email{tsaisindhura@vt.edu}
+}
+
+\date{Received: date / Accepted: date}
+
+\begin{document}
+
+% Title area
+\maketitle
+
+% Abstract
+\begin{abstract}
+This work proposes and analyzes a methodology for finding least squares solutions to systems of polynomial equations.
+Systems of polynomial equations are ubiquitous in computational science, with major applications in machine learning and computer security (i.e., model fitting and integer factorization).
+The proposed methodology maps the squared error function for a polynomial equation onto the Ising-Hamiltonian model, ensuring that approximate solutions (by least squares) to real-world problems can be computed on a quantum annealer even when exact solutions do not exist. Hamiltonians for integer factorization and polynomial systems of equations are implemented and analyzed for both logical optimality and physical practicality on modern quantum annealing hardware.
+\end{abstract}
+
+\keywords{Least squares \and Quantum annealing \and Polynomial systems of equations \and Prime factorization \and Root finding}
+
+% Body
+\input{1-intro.tex}
+\input{2-background.tex}
+\input{3-Embedding-Polynomials.tex}
+\input{4-analysis.tex}
+\input{5-methods.tex}
+\input{6-results.tex}
+\input{7-conclusion.tex}
+
+\begin{acknowledgements}
+This is a pre-print of the article published in Quantum Information Processing. The final authenticated version is available online at:
+\url{https://www.doi.org/10.1007/s11128-019-2489-x}.
+%The authors would like to thank Wu-chun Feng and Mohamed W.\ Hassan for their council and feedback.
+%Also, the authors would like to acknowledge the anonymous reviewers for their helpful comments, which greatly improved this paper.
+\end{acknowledgements}
+
+% references section
+\bibliographystyle{spmpsci}
+\bibliography{paper}
+
+\end{document}
+
+

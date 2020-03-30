@@ -1,0 +1,16 @@
+
+\begin{table}
+    \centering
+    \begin{tabular}{c|c c c|c c|c|c}
+         Bits & $x^{(1)}$ & $x^{(2)}$ & $x^{(1)}x^{(2)}$ & Logical & Physical & Sq. Error & Occurrence \\ \hline
+         2 & 2 & 3 & 6 & 8 & 16 & 0 & 180 \\
+         3 & 5 & 7 & 35 & 15 & 69 & 0 & 311 \\
+         4 & 11 & 13 & 143 & 24 & 148 & 0 & 35 \\
+         5 & 29 & 31 & 899 & 35 & 349 & 0 & 82 \\
+         6 & 59 & 61 & 3599 & 48 & 658 & 0 & 7 \\
+         7 & 113 & 127 & 14351 & 63 & 1293 & 0 & 3 \\
+         8 & 241 & 251 & 60491 & 80 & -- & -- & -- \\
+    \end{tabular}
+    \caption{Using the squared-error energy function methodology, biprimes with various bits of precision are factored. The columns depict the number of bits, the numbers multiplied and their product, the number of logical and physical qubits required, the minimum squared error (minimum energy) achieved by the quantum annealer, and the number of samples that produced the optimal solution. The number of samples taken grows as $500n$, where $n$ is the number of bits. Correct solutions are found for all embedded problems, however at 8-bits no physical embedding could be discovered for the logical Hamiltonian on the available the hardware. The multiplication circuit constructed with this methodology has a dense $n^2$ subgraph as well as a dense $n$ subgraph, making the number of physical qubits required to embed the Hamiltonian grow faster than the number of logical qubits on the Chimera graph structure of the available quantum annealing hardware.}
+    \label{tab:biprime}
+\end{table}

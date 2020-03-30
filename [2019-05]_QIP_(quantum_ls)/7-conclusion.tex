@@ -1,0 +1,10 @@
+\section{Conclusion and Future Work}
+
+In this work, a methodology is proposed for encoding polynomial SOS minimization for both fixed-point decimal and integer valued problems.
+To achieve this, the squared error function is mapped to the QUBO model, which is isomorphic to the Ising-Hamiltonian model, using a two's complement encoding and the quadratization scheme of Rosenberg \cite{rosenberg1975reduction}.
+The current state-of-the-art D-Wave Chimera architecture is able to solve the proposed embedding for a wide variety of problems, some of which do not admit analytic classical solutions, with the primary limitation being the qubit requirement for large systems.
+The fact that the QA ground state is a minimum forward error solution carries tremendous advantages for ill-conditioned problems.
+In general, these results accompany and extend the recently published results of Borle et al. \cite{borle2019analyzing} and Chang et al. \cite{chang2019quantum}.
+
+Overall, this is a powerful methodology with tremendous applications in the areas of numerical analysis, machine learning, computer security, and general scientific computing.
+As the state-of-the-art in quantum annealing hardware continues to evolve, this methodology should scale to increasingly complex problems.

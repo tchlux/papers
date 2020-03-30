@@ -14,9 +14,21 @@
 \usepackage[colorlinks,allcolors=blue]{hyperref}
 \usepackage{float}    % For controlling the placement of tables.
 
+%% -------------------------------------------------------------------
+%% Command for changing the color of text within a block.
+\usepackage{xcolor}   % Color package for coloring text.
+\usepackage[normalem]{ulem} % For strikethrough text and the \sout{} command.
+\usepackage[xcolor,rightbars]{changebar}% Package for adding bars into margin next to comments.
+\renewcommand{\changebarsep}{5mm}   % Push the bar farther into the margin.
+\renewcommand{\changebarwidth}{1mm} % Increase the width of the bar.
+\cbcolor{red}
+\newcommand{\changed}[2]{\cbstart{\color{red}#1}{\color{gray}\sout{#2}}\cbend{}}
+%% -------------------------------------------------------------------
+
 %
 % please place your own definitions here and don't use \def but
 % \newcommand{}{}
+
 
 %% Command for creating multiplie-line cells inside a table environment
 \newcommand{\multilinecell}[2][c]{%
@@ -108,9 +120,12 @@ applied to prediction problems related to forest fire risk assessment
 file input/output (I/O) \cite{lux2018nonparametric}.
 
 Regression and interpolation have a considerable theoretical base in
-one dimension \cite{cheney2009course}. Splines in particular are well
-understood as an interpolation technique in one dimension
-\cite{de1978practical}, particularly B-splines. Tensor products of
+one dimension \cite{cheney2009course}. \changed{Common techniques
+  include Lagrangian interpolation, piecewise linear interpolation,
+  and more generally spline interpolation via B-splines
+  \cite{de1978practical}.}{Splines in particular are well understood
+  as an interpolation technique in one dimension
+  \cite{de1978practical}, particularly B-splines}. Tensor products of
 B-splines \cite{unther1996interpolating} or other basis functions have
 an unfortunate exponential scaling with increasing
 dimension. Exponential scaling prohibits tensor products from being
@@ -228,17 +243,18 @@ and adding two new basis functions at each iteration of the form
   B_{2j-1}(x) &= B_l(x) \bigl(x_i-x^{(p)}_i\bigr)_+, \\
   B_{2j}(x) &= B_k(x) \bigl(x_i-x^{(p)}_i\bigr)_- ,
 \end{align*}
-where $j$ is the iteration number, $1 \le p \le n$, and $B_l(x)$,
-$B_k(x)$ are basis functions from the previous iteration,
- $$w_+ = \begin{cases} w, & w \geq 0 \\ 0, & w < 0 \end{cases},$$
-and $w_- = (-w)_+$. After iteratively constructing a model, MARS then
+where \changed{$j \leq m$ is the iteration number, $m$ is the maximum
+  number of underlying basis functions}{}, $1 \le p \le n$, and
+$B_l(x)$, $B_k(x)$ are basis functions from the previous iteration,
+ $$w_+ = \begin{cases} w, & w \geq 0 \\ 0, & w < 0 \end{cases},$$ and
+$w_- = (-w)_+$. After iteratively constructing a model, MARS then
 iteratively removes basis functions that do not contribute to goodness
 of fit. In effect, MARS creates a locally component-wise tensor
 product approximation of the data. The overall computational
-complexity of Fast MARS is $\mathcal{O}(n d m^3)$ where $m$ is the
-maximum number of underlying basis functions. This paper uses an
-implementation of Fast MARS \cite{rudy2017pyearth} with $m = 200$
-throughout all experiments.
+complexity of Fast MARS is $\mathcal{O}(n d m^3)$ \changed{}{where $m$
+  is the maximum number of underlying basis functions}. This paper
+uses an implementation of Fast MARS \cite{rudy2017pyearth} with $m =
+200$ throughout all experiments.
 
 \subsection{Support Vector Regressor}
 \label{sec:svr}
@@ -276,8 +292,11 @@ and the stopping criterion of the minimization used for finding
 weights. This paper uses an MLP built from Keras and Tensorflow to
 perform regression \cite{tensorflow2015-whitepaper,chollet2015keras}
 with ten hidden layers each having thirty two nodes (a total of
-approximately ten thousand parameters), ReLU activation, and five
-thousand epochs of SGD for training.
+approximately ten thousand parameters), ReLU activation, and
+\changed{one hundred}{five} thousand \changed{steps}{epochs} of SGD
+for training. \changed{It should be noted that the choice of neural
+  network architecture impacts approximation performance, but no
+  architecture tuning is performed here}{}.
 
 %% ===================================================================
 \section{Multivariate Interpolation}
@@ -311,6 +330,24 @@ found, then the $d+1$ vertices (points in $X$) of $S$ are used to
 assign weights to each vertex and produce the predicted function value
 for point $y$.
 
+\changed{
+\begin{figure}
+  \centering
+  \includegraphics[width=0.4\textwidth,]{example_delaunay.pdf}
+  \includegraphics[width=0.4\textwidth,]{example_not_delaunay.pdf}
+  \caption{\color{red} On the left above is a depiction of a Delaunay
+    triangulation over four points, notice that the circumball (shaded
+    circle) for the left simplex does not contain the fourth point.
+    On the right above, a non-Delaunay mesh is depicted. Notice that
+    the circumball for the top simplex (shaded circle, clipped at
+    bottom edge of the visual) contains the fourth point which
+    violates the Delaunay condition for a simplex.
+  \vspace{-.1cm}}
+  \label{fig:delaunay}
+\end{figure}
+}{}
+
+
 \subsection{Modified Shepard}
 \label{sec:modified-shepard}
 
@@ -321,13 +358,30 @@ neighbor interpolant \cite{cover1967nearest}. This model is a type of
 \cite{gordon1978shepard,shepard1968two}. The interpolant has the form
  $$ p(x) = \frac{\sum\limits_{k=1}^{n}W_k(x)f\bigl(x^{(k)}\bigr)}
      {\sum\limits_{k=1}^{n}W_k(x)} ,$$
-where $W_k(x) = \bigl(r_k - \bigl\|x - x^{(k)}\bigr\|\bigr)_+^2 \big/
-\bigl\|x - x^{(k)}\bigr\|_2^2$ and $r_k \in \mathbb{R}$ is the
-smallest radius such that at least $d+1$ other points $x^{(j)}$, $j
-\not = k$, are inside the closed Euclidean ball of radius $r_k$ about
-$x^{(k)}$. The computational complexity of ShepMod is
-$\mathcal{O}(n^2d)$. This paper uses a Fortran 95 implementation of
-ShepMod derived from SHEPPACK \cite{thacker2010algorithm}.
+where \changed{$W_k(x^{(k)}) = 1$, $W_k(x) = \bigl(\bigl(r_k - \bigl\|x -
+x^{(k)}\bigr\|_2\bigr)_+ \big/ \bigl( r_k \bigl\|x - x^{(k)}\bigr\|_2 \bigr)\bigr)^2$}{}
+and $r_k \in \mathbb{R}$ is the smallest radius such that at least
+$d+1$ other points $x^{(j)}$, $j \not = k$, are inside the closed
+Euclidean ball of radius $r_k$ about $x^{(k)}$. The computational
+complexity of ShepMod is $\mathcal{O}(n^2d)$. This paper uses a
+Fortran 95 implementation of ShepMod derived from SHEPPACK
+\cite{thacker2010algorithm}.
+
+\changed{
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth,]{example_shepard_with_weight.pdf}
+  \caption{\color{red} On the left above is a depiction of the radius
+    of influence for three chosen points of a collection using the
+    modified Shepard criteria. On the right is the shape of the weight
+    function $W_k$ for all data points, where $W_k(x) = 0$ when
+    $\|x-x^{(k)}\|_2 \geq r_k$. It can also be seen that in the limit
+    as $W_k$ goes to infinity at $x_k$, the relative weight of $x_k$
+    goes to one.
+  \vspace{-.1cm}}
+  \label{fig:shepard}
+\end{figure}
+}{}
 
 \subsection{Linear Shepard}
 The linear Shepard method (LSHEP) is a blending function using local
@@ -335,7 +389,7 @@ linear interpolants, a special case of the general Shepard algorithm
 \cite{thacker2010algorithm}. The interpolant has the form
  $$ p(x) = \frac{\sum\limits_{k=1}^{n}W_k(x)P_k(x)}
  {\sum\limits_{k=1}^{n}W_k(x)} ,$$
-where $W_k(x)$ is a locally supported weighting function and $P_k(x)$
+where $W_k(x)$ is \changed{the same as for the modified Shepard method}{a locally supported weighting function} and $P_k(x)$
 is a local linear approximation to the data satisfying
 $P_k\bigl(x^{(k)}\bigr) = f\bigl(x^{(x)}\bigr)$. The computational
 complexity of LSHEP is $\mathcal{O}(n^2d^3)$. This paper uses the
@@ -345,14 +399,15 @@ Fortran 95 implementation of LSHEP in SHEPPACK
 \subsection{Box Splines}
 \label{sec:box-splines}
 
-The box spline model used here is a sparse grid interpolation
-technique built from overlapping box splines \cite{de2013box}. The box
-splines serve as basis functions that are shifted and scaled to have
-support over box shaped regions. The boxes are constructed in a way to
-guarantee a covering of the domain \cite{lux2018novel}. Given a set of
-box splines $\bigl\{b^{x^{(i)}}\bigr\}$ with the iterative box
-properties outlined in \cite{lux2018novel} and anchored at interior
-points $\bigl\{x^{(i)}\bigr\}$,
+The box spline model used here is \changed{an}{sparse grid}
+interpolation technique built from overlapping box splines
+\cite{de2013box}. The box splines serve as basis functions that are
+shifted and scaled to have support over box shaped regions. The boxes
+are constructed in a way to guarantee a covering of the domain
+\cite{lux2018novel}. Given a set of box splines
+$\bigl\{b^{x^{(i)}}\bigr\}$ with the iterative box properties outlined
+in \cite{lux2018novel} and anchored at interior points
+$\bigl\{x^{(i)}\bigr\}$,
  $$ \hat f(y) = \frac{\sum\limits_{i=1}^n b^{x^{(i)}}(y) f\bigl(x^{(i)}\bigr)}{\sum\limits_{i=1}^n b^{x^{(i)}}(y)}. $$
 Note that the box splines always satisfy
 $b^{x^{(i)}}\bigl(x^{(j)}\bigr) = \delta_{ij}$ and $b^{x^{(i)}}(y)
@@ -361,6 +416,21 @@ spline model is $\mathcal{O}(n^2 d)$.
 
 \subsection{Voronoi}
 \label{sec:voronoi}
+
+\changed{
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth,]{VM_Construction.pdf}
+  \caption{\color{red} Above is a depiction of the Voronoi cell
+    boundaries (dashed lines) about a set of interpolation points
+    (dots). In this example, the Voronoi model basis function about
+    the center most point has nonzero weight in the shaded region and
+    transitions from a value of one at the point to zero at the
+    boundary of the twice expanded Voronoi cell (solid line).
+  \vspace{-.1cm}}
+  \label{fig:voronoi-basis}
+\end{figure}
+}{}
 
 The nearest neighbor algorithm \cite{cover1967nearest} is a
 well-studied technique for classification and approximation. Nearest
@@ -410,23 +480,25 @@ of known function values $f\bigl(x^{(i)}\bigr)$.
 
 When the range of an approximation is the real numbers, error is
 reported with summary statistics including: min absolute error, max
-absolute error, and absolute error quartiles. When the range of an
-approximation is the space of cumulative distribution functions, the
-Kolmogorov-Smirnov statistic (max-norm difference between the
+absolute error, and absolute error quartiles. When the range
+of an approximation is the space of cumulative distribution functions,
+the Kolmogorov-Smirnov statistic (max-norm difference between the
 functions) is used.
 
 A hurdle when modeling function-valued outputs such as cumulative
 distribution functions (CDFs) or probability density functions (PDFs)
 is that certain properties must be maintained. It is necessary that a
 PDF $f: \mathbb{R} \rightarrow \mathbb{R}$ have the properties $f(x)
-\geq 0$ and $\int_{-\infty}^{\infty}f(x)dx = 1$. However, for a CDF
+\geq 0$ and $\int_{-\infty}^{\infty}f(x)dx = 1$. \changed{Instead}{However}, for a CDF
 $F: \mathbb{R} \rightarrow \mathbb{R}$ the properties are
 $F(x) \in [0,1]$ and $F(x)$ is absolutely continuous and
 nondecreasing. This work utilizes the fact that a convex combination
 of CDFs (or PDFs) results in a valid CDF (or PDF). Given $G(x) =
 \sum_{i}w_i F_i(x)$, $\sum_{i} w_i = 1$, $w_i \geq 0$, and each $F_i$
 is a valid CDF, $G$ must also be a valid CDF. A demonstration of how
-this is applied can be seen in Figure \ref{fig:prediction-example}.
+this is applied can be seen in Figure \ref{fig:prediction-example}. 
+\changed{In this example the KS test null hypothesis is rejected at $p$-value
+0.01, however it is not rejected at $p$-value 0.001.}{}
 
 The performance of approximation techniques that predict probability
 functions can be analyzed through a variety of summary
@@ -441,7 +513,7 @@ underlying distribution) is rejected at level $p \in [0,1]$ when
  $$ KS > \sqrt{-\frac{1}{2}\ln\biggl(\frac{p}{2}\biggr)} \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}, $$
 with distribution sample sizes $n_1,n_2 \in \mathcal{N}$. For all
 applications of the KS test presented in this work $n_1 = n_2$. An
-example of the round-trip prediction methodology from known and
+example of the \changed{end-to-end}{round-trip} prediction methodology from known and
 predicted distributions to the calculation of error can be seen in
 Figure \ref{fig:prediction-example}. A brief listing of relevant
 statistical terms used throughout this work is provided in
@@ -506,7 +578,7 @@ bound.
   \qed
 \end{proofdot}
 
-\newpage
+%% \newpage
 
 \begin{plainlemma}
   \label{lemma:3}
@@ -648,7 +720,10 @@ context with approximation algorithms that do not have similar known
 uniform error bounds. For that reason, an analytic function is used to
 measure the error of a piecewise linear interpolant (Delaunay) and a
 piecewise linear regressor (the MLP) when provided an increasing
-amount of data with varying levels of random noise.
+amount of data with varying levels of random noise. \changed{Only
+  Delaunay and the MLP are considered in this demonstration because
+  all other mentioned techniques are not strictly piecewise linear
+  approximations.}{}
 
 The test function chosen here for analysis resembles the
 \textit{oscillatory} function used by \cite{barthelmann2000high}.
@@ -682,8 +757,8 @@ Fekete points.
 Finally an additional aspect is added to this test problem by
 incorporating random uniform noise into the evaluations of $f.$ For
 each test two experiments are executed, one with exact function
-evaluations (for interpolation) and one with a constant signal-to-noise
-(SNR) ratio of 10:1 (for regression).
+evaluations (an interpolation problem) and one with a constant
+signal-to-noise (SNR) ratio of 10:1 (a regression problem).
 
 \begin{figure}
   \centering
@@ -701,16 +776,16 @@ evaluations (for interpolation) and one with a constant signal-to-noise
 
 
 The bound from the theorem suggests that exponentially increasing the
-number of data points should result in a decreasing error. The $d = 2$
-test seen on the left half of Figure \ref{fig:convergence-2d} shows a
-consistent decrease in error for Delaunay and also shows the eventual
-accuracy plateau obtained by a parametric regression form (the MLP, at
-roughly 500 points). On the right hand side of Figure
-\ref{fig:convergence-2d} the random noise clearly prohibits Delaunay
-from converging to $f$, while the MLP is able to improve its
-approximation with more data points on average.  The convergence
-result for a very low-dimensional problem like this is expected.
-However, intuition fails for higher dimensional problems.
+number of \changed{well-spaced}{} data points should result in a
+decreasing error. The $d = 2$ test seen on the left half of Figure
+\ref{fig:convergence-2d} shows a consistent decrease in error for
+Delaunay and also shows the eventual accuracy plateau obtained by a
+parametric regression form (the MLP, at roughly 500 points). On the
+right hand side of Figure \ref{fig:convergence-2d} the random noise
+clearly prohibits Delaunay from converging to $f$, while the MLP is
+able to improve its approximation with more data points on average.
+The convergence result for a very low-dimensional problem like this is
+expected.  However, intuition fails for higher dimensional problems.
 
 Figure \ref{fig:convergence-20d} shows the test function with $d = 20$
 presents a significantly more challenging approximation problem than
@@ -724,12 +799,49 @@ the noise-free data (left). This result emphasizes the relevance of
 interpolation for problems in high dimension. It also reveals that the
 outcome of MLP regressions can get worse when adding more data points.
 
-In summary, the regime of interpolation is much greater for moderate
-to high dimensional problems, even for functions with random noise
-incorporated into their evaluation. Acknowledging the viability of
-interpolation for problems of moderate dimension, the next section
-will consider real-world problems of similar proportion (thousands of
-examples in tens of dimensions).
+\changed{
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \node (img)  {\includegraphics[width=0.9\textwidth,]{theorem-convergence.pdf}};
+    \node[below=of img, node distance=1cm, yshift=1cm] {Number of Data Points};
+    \node[left=of img, node distance=0cm, rotate=90, anchor=center,yshift=-0.7cm] {Euclidean Distance};
+  \end{tikzpicture}
+  \caption{\color{red}The distribution of absolute error, distance to
+    the nearest data point, smallest singular value and the longest
+    edge of the simplex containing each approximation point in the
+    tests from Fig. \ref{fig:convergence-2d} and
+    Fig. \ref{fig:convergence-20d} for Delaunay. In two dimensions it
+    can be seen that $\|z - x_0\|_2$, $\sigma_d$, and $k$ all shrink
+    at the same rate for well-spaced approximation points, resulting
+    in a faster rate of decrease for approximation error. Notice that
+    in higher dimension the data remains sparse even with thousands of
+    data points. This is seen by the relatively small reduction in
+    $k$, and this explains the slow reduction in error seen by
+    Delaunay in Fig. \ref{fig:convergence-20d}.}
+  \label{fig:data-spacing}
+\end{figure}
+}{}
+
+\changed{The results achieved for both the $d = 2$ and $d = 20$ align
+  with the theoretical error bound as can be seen in Figure
+  \ref{fig:data-spacing}. In low dimension, thousands of data points
+  meaningfully reduce the sparsity of the approximation problem.
+  However, in higher dimension it takes many more points to achieve a
+  reduction in data sparsity. The same result holds for a Latin
+  hypercube well-spaced point set, suggesting that sparsity is an
+  inherent problem in high dimension approximation problems. This
+  result is not a product of the chosen test function, but rather the
+  exponential increase in complexity that accompanies increased
+  dimension.}{}
+
+In summary, the regime of interpolation is \changed{}{much} greater
+for moderate to high dimensional problems \changed{due to increased
+  sparsity}{}, even for functions with random noise incorporated into
+their evaluation. Acknowledging the viability of interpolation for
+problems of moderate dimension, the next section will consider
+real-world problems of similar proportion (thousands of examples in
+tens of dimensions).
 
 
 %% ===================================================================
@@ -1271,7 +1383,8 @@ describes the probability that a value lies within an interval. The
 statistic) that the expected value of the observed statistic is equal
 to an assumed population statistic. The $p$ value is the probability
 of observing a given statistic if the \textit{null hypothesis} is
-true.
+true. \changed{For a more detailed introduction to statistics and 
+related terminology, see the work of Navidi \cite{navidi_2015}.}{}
 
 \vspace{4mm}
 \noindent \textbf{Raw Numerical Results.} The tables that follow show the

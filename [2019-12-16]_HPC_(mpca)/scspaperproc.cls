@@ -23,11 +23,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% The copyright line. This is now assembled from several macros found in the .tex file, in order to enforce form.
-\newcommand\copyrighttext{\footnotesize%
-\begin{raggedright}%
-    \mbox{{\protect\SCSconferenceacro}, {\protect\SCSconferencedates}, {\protect\SCSpublicationyear}, {\protect\SCSconferencevenue};} {\protect\SCSlinebreak}\mbox{\copyright{\protect\SCSpublicationyear} Society for Modeling \& Simulation International (SCS)}
-\end{raggedright}%
-}
+\newcommand\copyrighttext{}
+%% \newcommand\copyrighttext{\footnotesize%
+%% \begin{raggedright}%
+%%     \mbox{{\protect\SCSconferenceacro}, {\protect\SCSconferencedates}, {\protect\SCSpublicationyear}, {\protect\SCSconferencevenue};} {\protect\SCSlinebreak}\mbox{\copyright{\protect\SCSpublicationyear} Society for Modeling \& Simulation International (SCS)}
+%% \end{raggedright}%
+%% }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
