@@ -13,6 +13,7 @@
 \usepackage{tabularx} % For tables with nice column widths.
 \usepackage[colorlinks,allcolors=blue]{hyperref}
 \usepackage{float}    % For controlling the placement of tables.
+\usepackage{enumitem} % For changing item indents in enumerate.
 
 %% -------------------------------------------------------------------
 %% Command for changing the color of text within a block.
@@ -22,7 +23,8 @@
 \renewcommand{\changebarsep}{5mm}   % Push the bar farther into the margin.
 \renewcommand{\changebarwidth}{1mm} % Increase the width of the bar.
 \cbcolor{red}
-\newcommand{\changed}[2]{\cbstart{\color{red}#1}{\color{gray}\sout{#2}}\cbend{}}
+%% \newcommand{\changed}[2]{\cbstart{\color{red}#1}{\color{gray}\sout{#2}}\cbend{}}
+\newcommand{\changed}[2]{\cbstart{\color{red}#1}{}\cbend{}}
 %% -------------------------------------------------------------------
 
 %
@@ -51,6 +53,10 @@
 %
 \begin{document}
 
+%% Include the response to reviewers at the beginning of the document.
+\include{tchlux-NA-response-2020-04}
+
+%% Set the title.
 \title{Interpolation of Sparse High-Dimensional Data\thanks
   {This work was supported by the National Science Foundation Grant CNS-1565314.}
 }
@@ -73,9 +79,13 @@
 }
 
 \date{Received: date / Accepted: date}
-% The correct dates will be entered by the editor
+%% The correct dates will be entered by the editor
 
-\maketitle
+{\let\newpage\relax\maketitle}
+
+%% \maketitle
+
+\setcounter{page}{1}
 
 \begin{abstract}
 Increases in the quantity of available data have allowed all fields of
@@ -123,7 +133,7 @@ Regression and interpolation have a considerable theoretical base in
 one dimension \cite{cheney2009course}. \changed{Common techniques
   include Lagrangian interpolation, piecewise linear interpolation,
   and more generally spline interpolation via B-splines
-  \cite{de1978practical}.}{Splines in particular are well understood
+  \cite{de1978practical}}{Splines in particular are well understood
   as an interpolation technique in one dimension
   \cite{de1978practical}, particularly B-splines}. Tensor products of
 B-splines \cite{unther1996interpolating} or other basis functions have
@@ -135,17 +145,31 @@ splines \cite{de2013box}, of which one of the approximation techniques
 in this work is composed \cite{lux2018novel}.
 
 The theoretical foundation of low dimensional interpolation allows the
-construction of strong error bounds that are absent from high
-dimensional problems. This work extends some known results regarding
-the secant method \cite{dennis1996numerical} to construct an
-interpolation error bound for problems of arbitrary dimension. These
-error bounds are useful, considering the same cannot be said for
-regression algorithms in general. The maximum complexity of an
-interpolant is bounded by the amount of data available, while the
-maximum complexity of a regressor is bounded by both the amount of
-data and the chosen parametric form. For this reason, generic uniform
-bounds are largely unobtainable for regression techniques on arbitrary
-approximation problems, even when the approximation domain is bounded.
+construction of strong error bounds that are \changed{lacking
+  in}{absent from} high dimensional problems. \changed{A large body of
+  literature exists studying the construction and application of
+  sparse grids \cite{bungartz2004sparse,chkifa2014high}, which attempt
+  to address the problem of dimensional scaling. The sparse grid point
+  sets combined with specific approximation functions are used to
+  construct total error bounds by considering projections onto
+  orthogonal polynomials
+  \cite{migliorati2013approximation,nobile2016convergence}. However,
+  sparse grids have exponential size in dimension making them
+  intractable for more than tens of dimensions and do not immediately
+  apply to the problem of scattered data interpolation.}{} This work
+extends some known results regarding the secant method
+\cite{dennis1996numerical} to construct \changed{a uniform error bound
+  for interpolants over arbitrary scattered data in any dimension}{an
+  interpolation error bound for problems of arbitrary
+  dimension}. These error bounds are useful, considering
+\changed{similar uniform bounds}{the same cannot} cannot be
+\changed{constructed}{said} for regression algorithms in general. The
+maximum complexity of an interpolant is bounded by the amount of data
+available, while the maximum complexity of a regressor is bounded by
+both the amount of data and the chosen parametric form. For this
+reason, generic uniform bounds are largely unobtainable for regression
+techniques on arbitrary approximation problems, even when the
+approximation domain is bounded.
 
 Aside from theoretical motivation for the use of interpolants, there
 are often computational advantages as well. Interpolants do not have
@@ -183,10 +207,12 @@ often what parametric form to adopt for any given application.
 The most challenging problem when scaling in dimension is that the
 number of possible interactions between dimensions grows
 exponentially. Quantifying all possible interactions becomes
-intractable, and hence beyond three-dimensional data mostly linear
-models are used. That is not to say nonlinear models are absent, but
-nonlinearities are often either preconceived or model pairwise
-interactions between dimensions at most. Even globally nonlinear
+intractable, and hence \changed{problems}{} beyond \changed{ten to
+  twenty dimensions usually rely on linear models}{three-dimensional
+  data mostly linear models are used}. That is not to say nonlinear
+models are absent, but nonlinearities are often either preconceived or
+model \changed{interactions between small subsets of}{pairwise
+  interactions between} dimensions at most. Even globally nonlinear
 approximations such as neural networks are constructed from
 compositions of summed low-interaction functions
 \cite{clevert2015fast}.
@@ -358,13 +384,14 @@ neighbor interpolant \cite{cover1967nearest}. This model is a type of
 \cite{gordon1978shepard,shepard1968two}. The interpolant has the form
  $$ p(x) = \frac{\sum\limits_{k=1}^{n}W_k(x)f\bigl(x^{(k)}\bigr)}
      {\sum\limits_{k=1}^{n}W_k(x)} ,$$
-where \changed{$W_k(x^{(k)}) = 1$, $W_k(x) = \bigl(\bigl(r_k - \bigl\|x -
-x^{(k)}\bigr\|_2\bigr)_+ \big/ \bigl( r_k \bigl\|x - x^{(k)}\bigr\|_2 \bigr)\bigr)^2$}{}
-and $r_k \in \mathbb{R}$ is the smallest radius such that at least
-$d+1$ other points $x^{(j)}$, $j \not = k$, are inside the closed
-Euclidean ball of radius $r_k$ about $x^{(k)}$. The computational
-complexity of ShepMod is $\mathcal{O}(n^2d)$. This paper uses a
-Fortran 95 implementation of ShepMod derived from SHEPPACK
+where \changed{$W_k(x^{(k)}) = 1$, $W_k(x) = \bigl(\bigl(r_k -
+  \bigl\|x - x^{(k)}\bigr\|_2\bigr)_+ \big/ \bigl( r_k \bigl\|x -
+  x^{(k)}\bigr\|_2 \bigr)\bigr)^2$ for $x \neq x^{(k)}$,}{} and $r_k
+\in \mathbb{R}$ is the smallest radius such that at least $d+1$ other
+points $x^{(j)}$, $j \not = k$, are inside the closed Euclidean ball
+of radius $r_k$ about $x^{(k)}$. The computational complexity of
+ShepMod is $\mathcal{O}(n^2d)$. This paper uses a Fortran 95
+implementation of ShepMod derived from SHEPPACK
 \cite{thacker2010algorithm}.
 
 \changed{
@@ -372,12 +399,12 @@ Fortran 95 implementation of ShepMod derived from SHEPPACK
   \centering
   \includegraphics[width=0.9\textwidth,]{example_shepard_with_weight.pdf}
   \caption{\color{red} On the left above is a depiction of the radius
-    of influence for three chosen points of a collection using the
-    modified Shepard criteria. On the right is the shape of the weight
-    function $W_k$ for all data points, where $W_k(x) = 0$ when
-    $\|x-x^{(k)}\|_2 \geq r_k$. It can also be seen that in the limit
-    as $W_k$ goes to infinity at $x_k$, the relative weight of $x_k$
-    goes to one.
+    of influence for three chosen points of a collection in two
+    dimensions using the modified Shepard criteria. On the right is
+    the shape of the weight function $W_k$ for all data points, where
+    $W_k(x) = 0$ when $\|x-x^{(k)}\|_2 \geq r_k$. It can also be seen
+    that in the limit as $W_k$ tends towards infinity at $x_k$, the
+    relative weight of $x_k$ tends to one.
   \vspace{-.1cm}}
   \label{fig:shepard}
 \end{figure}
@@ -389,8 +416,9 @@ linear interpolants, a special case of the general Shepard algorithm
 \cite{thacker2010algorithm}. The interpolant has the form
  $$ p(x) = \frac{\sum\limits_{k=1}^{n}W_k(x)P_k(x)}
  {\sum\limits_{k=1}^{n}W_k(x)} ,$$
-where $W_k(x)$ is \changed{the same as for the modified Shepard method}{a locally supported weighting function} and $P_k(x)$
-is a local linear approximation to the data satisfying
+where $W_k(x)$ is \changed{the same as for the modified Shepard
+  method}{a locally supported weighting function} and $P_k(x)$ is a
+local linear approximation to the data satisfying
 $P_k\bigl(x^{(k)}\bigr) = f\bigl(x^{(x)}\bigr)$. The computational
 complexity of LSHEP is $\mathcal{O}(n^2d^3)$. This paper uses the
 Fortran 95 implementation of LSHEP in SHEPPACK
@@ -423,10 +451,11 @@ spline model is $\mathcal{O}(n^2 d)$.
   \includegraphics[width=0.6\textwidth,]{VM_Construction.pdf}
   \caption{\color{red} Above is a depiction of the Voronoi cell
     boundaries (dashed lines) about a set of interpolation points
-    (dots). In this example, the Voronoi model basis function about
-    the center most point has nonzero weight in the shaded region and
-    transitions from a value of one at the point to zero at the
-    boundary of the twice expanded Voronoi cell (solid line).
+    (dots) in two dimensions. In this example, the Voronoi model basis
+    function about the center most point has nonzero weight in the
+    shaded region and transitions from a value of one at the point to
+    zero at the boundary of the twice expanded Voronoi cell (solid
+    line).
   \vspace{-.1cm}}
   \label{fig:voronoi-basis}
 \end{figure}
@@ -457,26 +486,26 @@ of known function values $f\bigl(x^{(i)}\bigr)$.
 \section{Measuring Error}
 \label{sec:error}
 
-\begin{figure}[htb]
+\changed{
+\begin{figure}
   \centering
-  \begin{tikzpicture}
-    \node (img)  {\includegraphics[width=0.75\textwidth,]{Fig1.pdf}};
-    \node[below=of img, node distance=1cm, yshift=1cm] {I/O Throughput};
-    \node[left=of img, node distance=0cm, rotate=90, anchor=center,yshift=-0.7cm] {CDF Value};
-  \end{tikzpicture}
-  \vspace{-0.3cm}
+  \includegraphics[width=0.8\textwidth,]{example_distribution_prediction.pdf}
   \caption{In this HPC I/O example, the general methodology for
-    predicting a CDF and evaluating error can be seen. The Delaunay
-    method chose three source distributions (dotted lines) and
-    assigned weights \{.3, .4, .3\} (top to bottom at arrow). The
-    weighted sum of the three known CDFs produces the predicted CDF
-    (dashed line). The KS Statistic (arrow) computed between the true
-    CDF (solid line) and predicted CDF (dashed line) is 0.2 for this
-    example. For this example the KS test null hypothesis is rejected
-    at $p$-value 0.01, however it is not rejected at $p$-value 0.001.
+    predicting a CDF and evaluating error can be seen\color{red},
+    where M means $\times 10^6$\color{black}. The Delaunay method
+    chose three source distributions (dotted lines) and assigned
+    weights \color{red}\{.1, .3, .6\} \color{black} (top to bottom at
+    \color{red}middle\color{black}). The weighted sum of the three
+    known CDFs produces the predicted CDF (dashed line). The KS
+    Statistic (\color{red}vertical line\color{black}) computed between
+    the true CDF (solid line) and predicted CDF (dashed line) is 0.2
+    for this example. For this example the KS test null hypothesis is
+    rejected at $p$-value 0.01, however it is not rejected at
+    $p$-value 0.001.
   \vspace{-.1cm}}
   \label{fig:prediction-example}
 \end{figure}
+}{}
 
 When the range of an approximation is the real numbers, error is
 reported with summary statistics including: min absolute error, max
@@ -507,17 +536,20 @@ the Kolmogorov-Smirnov (KS) statistic \cite{lilliefors1967kolmogorov}
 for its compatibility with the KS test.
 
 The two-sample KS test is a useful nonparametric test for comparing
-two CDFs while only assuming stationarity, finite mean, and finite
-variance. The null hypothesis (that two CDFs come from the same
-underlying distribution) is rejected at level $p \in [0,1]$ when
- $$ KS > \sqrt{-\frac{1}{2}\ln\biggl(\frac{p}{2}\biggr)} \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}, $$
-with distribution sample sizes $n_1,n_2 \in \mathcal{N}$. For all
-applications of the KS test presented in this work $n_1 = n_2$. An
-example of the \changed{end-to-end}{round-trip} prediction methodology from known and
-predicted distributions to the calculation of error can be seen in
+two \changed{empirical}{} CDFs while only assuming stationarity,
+finite mean, and finite variance. The null hypothesis (that two
+\changed{empirical}{} CDFs come from the same underlying distribution)
+is rejected at level $p \in [0,1]$ when
+ $$ KS > \sqrt{-\frac{1}{2}\ln\biggl(\frac{p}{2}\biggr)}
+\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}, $$ with distribution sample
+sizes $n_1,n_2 \in \mathcal{N}$. For all applications of the KS test
+presented in this work $n_1 = n_2$. An example of \changed{the process
+  of generating predicted distributions from known distributions and
+  the subsequent}{the round-trip prediction methodology from known and
+  predicted distributions to the} calculation of error can be seen in
 Figure \ref{fig:prediction-example}. A brief listing of relevant
-statistical terms used throughout this work is provided in
-the Appendix (Section \ref{sec:appendix}).
+statistical terms used throughout this work is provided in the
+Appendix (Section \ref{sec:appendix}).
 
 \section{Theoretical Error Bound}
 \label{sec:theory}
@@ -598,15 +630,17 @@ bound.
   the line segment $x(t)=(1-t)x_0 + tx_j$, $0\le t\le1$, from $x_0$ to
   $x_j$.  Observe that $g(0)=f(x_0) - \hat f(x_0) = 0$, $g(1)=f(x_j) -
   \hat f(x_j) = 0$, and $g'(t)$ is $\g$-Lipschitz continuous with $\g
-  = \gamma \|x_j-x_0\|_2^2$.
+  = \gamma \|x_j-x_0\|_2^2$. \changed{The following is visualized in 
+  Figure \ref{fig:lemma3}.}{}
 
   Suppose $g'(0) > \g/2$. Then $|g'(0)-g'(t)| \le \g t \implies g'(0)
   - \g t \le g'(t)$, and the line $w=g'(0)-\g t$ intersects the
   $t$-axis at $\tilde t=g'(0)/\g > 1/2$. $\tilde t<1$ necessarily,
   since by Rolle's Theorem there exists $0<z<1$ such that $g'(z)=0$
-  and so $g'(0) - \g z \le g'(z) = 0$. Now
+  and so $g'(0) - \g z \le g'(z) = 0$. Now \changed{by integrating}{}
   $$\frac{g'(0)^2}{2\g} = \frac{g'(0)\tilde t}{2} = \int_0^{\tilde t}
   (g'(0)-\g t)dt \le \int_0^{\tilde t} g'(t)dt = g(\tilde t),$$ and
+  \changed{acknowledging $g'(0) > \g / 2$}{}
   \begin{align*}
     \frac{-g'(0)^2}{2\g} < g'(0) - \frac{g'(0)^2}{2\g} - \g/2 =
     \frac{(1-\tilde t)(g'(0)-\g)}{2} &= \int_{\tilde t}^1 (g'(0)-\g
@@ -622,6 +656,29 @@ bound.
   \implies \|\nabla f(x_0)-c\|_2 \le \frac{\sqrt{d} \, \gamma
     k^2}{2\sigma_d}.$$ \qed
 \end{proofdot}
+
+\changed{
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth,]{example_lemma_3.pdf}
+  \def\g{\gamma_g}
+  \caption{\color{red} Three different scenarios visualizing {\it
+      Lemma \ref{lemma:3}}, where $g(t)$ is the difference between a
+    piecewise linear interpolant and the approximated function along a
+    normalized line segment between interpolation points, $g'(t)$ is
+    $\g$-Lipschitz continuous, and $w$ and $\tilde t$ are defined in
+    the proof. Leftmost is a randomly chosen permissible shape of $g$
+    and $g'$. The middle is the only possible shape of $g$ and $g'$
+    given $g'(0) = \g / 2$, establishing the case of equality in the
+    lemma. Rightmost is the resulting contradiction when $g'(0) > \g /
+    2$, notice it is impossible to ensure $g'(t)$ is $\g$-Lipschitz
+    continuous and satisfy $g(1) = 0$ (highlighted with red circle on
+    the right).
+  \vspace{-.1cm}}
+  \label{fig:lemma3}
+\end{figure}
+}{}
+
 
 \begin{onetheorem}
   Under the assumptions of {\it Lemma \ref{lemma:1}} and {\it Lemma
@@ -650,13 +707,13 @@ bound.
 In summary, the approximation error of a linear (simplicial)
 interpolant tends quadratically towards zero when approaching observed
 data only when the diameter of the simplex is also reduced at a
-proportional rate.  Only linear convergence to the true function can
-be achieved in practice, without the incorporation of additional
-observations. Notice that the approximation error is largely
-determined by the spacing of observed data. Predictions made by
-simplices whose vertices are not well-spaced (i.e., have large
-diameter, or are nearly contained in a hyperplane) have higher
-error.
+proportional rate. Only linear convergence to the true function
+\changed{is}{can be} achieved in practice\changed{}{,} without the
+incorporation of additional observations\changed{, by moving closer to
+  interpolation points}{}. Notice that the approximation error is
+largely determined by the spacing of observed data. Predictions made
+by simplices whose vertices are not well-spaced (i.e., have large
+diameter, or are nearly contained in a hyperplane) have higher error.
 
 That the theoretical error bound is sharp can be observed with the
 test function $q(x) = \|x\|_2^2,$ $x \in \mathbb{R}^d,$ and the
@@ -742,23 +799,26 @@ uniformly decrease the distance to the nearest data point across the
 unit cube, exponentially more data points must be available for
 approximation. For this experiment $N = 2(4^i),$ $i = 1,$ $\ldots,$
 $6,$ chosen points are kept well spaced by computing approximate
-Fekete points. Fekete points have a history in potential theory
-\cite{kovari_pommerenke_1968} and are most generally defined as those
-points that maximize the absolute value of a Vandermonde
-determinant. Here, the QR method outlined in \cite{bos2010computing}
-is used to identify approximate Fekete points from a Vandermonde
-matrix. A multivariate polynomial basis of size $2N$ is constructed
-containing all polynomials of degree $\leq n$ for the largest $n$ such
-that ${d+n \choose n} \leq 2N$ and $2N - {d+n \choose n}$
-arbitrarily selected polynomials of degree $n + 1.$ The Vandermonde
-matrix for these $2N$ polynomials is used to select $N$ approximate
-Fekete points.
+Fekete points. \changed{The following experiment was also run with a
+  Latin hypercube design \cite{park1994optimal}, which produced almost
+  identical results that are not reported here.}{} Fekete points have
+a history in potential theory \cite{kovari_pommerenke_1968} and are
+most generally defined as those points that maximize the absolute
+value of a Vandermonde determinant. Here, the QR method outlined in
+\cite{bos2010computing} is used to identify approximate Fekete points
+from a Vandermonde matrix. A multivariate polynomial basis of size
+$2N$ is constructed containing all polynomials of degree $\leq n$ for
+the largest $n$ such that ${d+n \choose n} \leq 2N$ and $2N - {d+n
+  \choose n}$ arbitrarily selected polynomials of degree $n + 1.$ The
+Vandermonde matrix for these $2N$ polynomials is used to select $N$
+approximate Fekete points.
 
 Finally an additional aspect is added to this test problem by
 incorporating random uniform noise into the evaluations of $f.$ For
 each test two experiments are executed, one with exact function
-evaluations (an interpolation problem) and one with a constant
-signal-to-noise (SNR) ratio of 10:1 (a regression problem).
+evaluations (\changed{an interpolation problem}{}) and one with a
+constant signal-to-noise ratio (SNR) of 10:1 (\changed{a regression
+  problem}{}).
 
 \begin{figure}
   \centering
@@ -775,9 +835,10 @@ signal-to-noise (SNR) ratio of 10:1 (a regression problem).
 \end{figure}
 
 
-The bound from the theorem suggests that exponentially increasing the
-number of \changed{well-spaced}{} data points should result in a
-decreasing error. The $d = 2$ test seen on the left half of Figure
+The bound from the theorem suggests that \changed{by}{exponentially}
+increasing the number of \changed{well-spaced}{} data points,
+\changed{approximation error can be reliably decreased}{results in a
+  decreasing error}. The $d = 2$ test seen on the left half of Figure
 \ref{fig:convergence-2d} shows a consistent decrease in error for
 Delaunay and also shows the eventual accuracy plateau obtained by a
 parametric regression form (the MLP, at roughly 500 points). On the
@@ -805,43 +866,45 @@ outcome of MLP regressions can get worse when adding more data points.
   \begin{tikzpicture}
     \node (img)  {\includegraphics[width=0.9\textwidth,]{theorem-convergence.pdf}};
     \node[below=of img, node distance=1cm, yshift=1cm] {Number of Data Points};
-    \node[left=of img, node distance=0cm, rotate=90, anchor=center,yshift=-0.7cm] {Euclidean Distance};
+    \node[left=of img, node distance=0cm, rotate=90, anchor=center,yshift=-0.7cm] {Error, Distance, and Smallest SV };
   \end{tikzpicture}
   \caption{\color{red}The distribution of absolute error, distance to
-    the nearest data point, smallest singular value and the longest
-    edge of the simplex containing each approximation point in the
-    tests from Fig. \ref{fig:convergence-2d} and
+    the nearest data point, smallest singular value (SV) and the
+    longest edge of the simplex containing each approximation point in
+    the tests from Fig. \ref{fig:convergence-2d} and
     Fig. \ref{fig:convergence-20d} for Delaunay. In two dimensions it
     can be seen that $\|z - x_0\|_2$, $\sigma_d$, and $k$ all shrink
     at the same rate for well-spaced approximation points, resulting
     in a faster rate of decrease for approximation error. Notice that
     in higher dimension the data remains sparse even with thousands of
-    data points. This is seen by the relatively small reduction in
-    $k$, and this explains the slow reduction in error seen by
-    Delaunay in Fig. \ref{fig:convergence-20d}.}
+    data points, and the decay in data spacing is more prominant. The
+    relatively small reduction in $k$ along with the decrease in
+    $\sigma_d$ explain the minimal reduction in error seen by Delaunay
+    in Fig. \ref{fig:convergence-20d}.}
   \label{fig:data-spacing}
 \end{figure}
 }{}
 
-\changed{The results achieved for both the $d = 2$ and $d = 20$ align
-  with the theoretical error bound as can be seen in Figure
+\changed{The results achieved for both $d = 2$ and $d = 20$ align with
+  the theoretical error bound as can be seen in Figure
   \ref{fig:data-spacing}. In low dimension, thousands of data points
   meaningfully reduce the sparsity of the approximation problem.
   However, in higher dimension it takes many more points to achieve a
-  reduction in data sparsity. The same result holds for a Latin
-  hypercube well-spaced point set, suggesting that sparsity is an
-  inherent problem in high dimension approximation problems. This
-  result is not a product of the chosen test function, but rather the
-  exponential increase in complexity that accompanies increased
-  dimension.}{}
+  reduction in data sparsity while simultaneously being more difficult
+  to produce well-\color{red}conditioned simplices. This evidences the inherent
+  challenge of data sparsity in high dimension approximation
+  problems. The analytic results presented are not caused by the
+  chosen test function, but rather the exponential increase in
+  complexity that accompanies increased dimension.}{}
 
-In summary, the regime of interpolation is \changed{}{much} greater
-for moderate to high dimensional problems \changed{due to increased
-  sparsity}{}, even for functions with random noise incorporated into
-their evaluation. Acknowledging the viability of interpolation for
-problems of moderate dimension, the next section will consider
-real-world problems of similar proportion (thousands of examples in
-tens of dimensions).
+In summary, the regime of \changed{signal-to-noise ratios that 
+  result in competitively accurate interpolants}{} is \changed{}{much}
+greater for moderate to high dimensional problems \changed{due to
+  increased sparsity}{, even for functions with random noise
+  incorporated into their evaluation}. Acknowledging the viability of
+interpolation for problems of moderate dimension, the next section
+will consider real-world problems of similar proportion (thousands of
+examples in tens of dimensions).
 
 
 %% ===================================================================
@@ -883,9 +946,10 @@ that neither this method nor others can provide a universally unbiased
 estimator for the variance of prediction error \cite{bengio2004no}.
 
 In addition to the figures displaying approximation results for each
-data set, tables of accompanying numerical results are located in the
-Appendix (Section \ref{sec:appendix}). All of the test data sets
-capture underlying functions that are almost certainly stochastic. As
+data set, tables of accompanying numerical results \changed{including
+  timings and exact prediction errors}{} are located in the Appendix
+(Section \ref{sec:appendix}). All of the test data sets capture
+underlying functions that are almost certainly stochastic. As
 described in Section \ref{sec:introduction}, regression techniques
 appear most appropriate for these problems. However, typically data
 grows exponentially more sparse with increasing dimension. Given that
@@ -909,10 +973,9 @@ viable approximation techniques on these problems.
     most values are small with exponentially fewer fires on record
     that burn large areas.}
   \label{fig:hist-forest-fire}
-\end{figure}
 
-\begin{figure}
-  \centering
+  \vspace{.3cm}
+
   \begin{tikzpicture}
     \node (img)  {\includegraphics[width=0.8\textwidth,]{Fig5.pdf}};
     \node[below=of img, node distance=1cm, yshift=1cm] {Area Burned Error};
@@ -966,10 +1029,9 @@ low-burn-area data points.
   \caption{Histogram of the Parkinson's patient total UPDRS clinical
     scores that will be approximated by each algorithm.}
   \label{fig:hist-parkinsons}
-\end{figure}
 
-\begin{figure}
-  \centering
+  \vspace{.3cm}
+
   \begin{tikzpicture}
     \node (img)  {\includegraphics[width=0.8\textwidth,]{Fig7.pdf}};
     \node[below=of img, node distance=1cm, yshift=1cm] {Total UPDRS Score Error};
@@ -1021,10 +1083,9 @@ favoring a nearest-neighbor strategy of prediction.
     the value $0$, which has a notable effect on the resulting model
     performance.}
   \label{fig:hist-weather}
-\end{figure}
 
-\begin{figure}
-  \centering
+  \vspace{.3cm}
+
   \begin{tikzpicture}
     \node (img)  {\includegraphics[width=0.8\textwidth,]{Fig9.pdf}};
     \node[below=of img, node distance=1cm, yshift=1cm] {Sydney Rainfall Tomorrow Error};
@@ -1077,10 +1138,9 @@ quartile due to the high occurrence of the value zero in the data.
     purchases are in excess of five orders of magnitude greater than
     the smallest purchases.}
   \label{fig:hist-credit-card}
-\end{figure}
 
-\begin{figure}
-  \centering
+  \vspace{.3cm}
+
   \begin{tikzpicture}
     \node (img)  {\includegraphics[width=0.8\textwidth,]{Fig11.pdf}};
     \node[below=of img, node distance=1cm, yshift=1cm] {Transaction Amount Error};
@@ -1369,7 +1429,7 @@ approximation in science.
 defined by its \textit{cumulative distribution function} (CDF) $F_X$
 and the derivative of the CDF, the \textit{probability density
   function} (PDF) $f_X.$ For any possible value $x$ of $X$, the
-\textit{percentile} of $x$ is $100$ $F_X(x)$, the percentage values
+\textit{percentile} of $x$ is $100$ $F_X(x)$, the percentage of values
 drawn from $X$ that would be less than or equal to $x$ as the number
 of samples tends towards infinity. The \textit{quartiles} of $X$ are
 its $25$-th, $50$-th (median), and $75$-th percentiles. The absolute
