@@ -1,0 +1,155 @@
+%% ========================================================================================================================================================================================================
+
+\setcounter{page}{0}\thispagestyle{empty}
+
+{\huge \noindent \bf Response to Reviewers}
+\vspace{.25cm}
+
+\noindent \today
+\vspace{1cm}
+
+\noindent Dear reviewers,
+\vspace{.25cm}
+
+\noindent We have carefully considered all of your comments and feedback, and are grateful for your time and effort. The following revisions have been made to account for the feedback given:
+\vspace{.25cm}
+
+\begin{enumerate}[leftmargin=1cm]
+  \setlength{\itemsep}{.4cm}
+\item A description and set of references to sparse grid methodologies has been placed in the introduction. (Page \hyperlink{page.2}{2}) \label{review:item1}
+\item The descriptions of approximation algorithms have been modified for greater clarity, and three new visuals depicting relevant Delaunay, Voronoi, and Modified Shepard properties have been added. (Pages \hyperlink{page.4}{4}--\hyperlink{page.8}{8}) \label{review:item2}
+\item Slight textual modifications were made to Lemma \ref{lemma:3} for clarity, and a new visual was constructed to illustrate the logic of the accompanying proof. (Pages \hyperlink{page.11}{11}--\hyperlink{page.12}{12}) \label{review:item3}
+\item A new visual was added to the analytic test subsection to demonstrate the link between the theory and practice, accompanying text was added as well. (Pages \hyperlink{page.15}{15}--\hyperlink{page.16}{16}) \label{review:item4}
+\item Minor rephrasing and additional references were added throughout the text to address specific concerns and/or misunderstandings. (Pages \hyperlink{page.3}{3}, \hyperlink{page.9}{9}--\hyperlink{page.10}{10}, \hyperlink{page.13}{13}--\hyperlink{page.14}{14}, \hyperlink{page.17}{17}, and \hyperlink{page.28}{28}) \label{review:item5}
+\end{enumerate}
+\vspace{.7cm}
+
+\noindent For the reviewers' convenience, all newly introduced modifications in this revision are marked with \changed{red text}{} and have a red bar in the margin accompanying them. In addition, all colored links in this response point directly to the associated positions in the revised paper. Responses to individual requests / comments follow.
+\vspace{.25cm}
+
+\begin{itemize}[leftmargin=.5cm]
+  \setlength{\itemsep}{.4cm}
+
+\item[*] {\it It is not clear why only Delaunay and the MLP are compared in the analytic test.} \vspace{.2cm}
+
+The reason for only studying these two methods is twofold. First and foremost, only Delaunay and MLP are strictly piecewise linear approximations, which means the theorem directly applies to these techniques. Secondly, there is a lot of potential for clutter / overabundance of information in the visuals that follow and little for a reader to gain from seeing all techniques compared on this test. The text was modified to clarify this point at the end of the first paragraph of Section \ref{sec:analytic}.
+
+\newpage\setcounter{page}{0}\thispagestyle{empty}
+\item[*] {\it Why does the error of Delaunay not decrease with more points in Figure \ref{fig:convergence-20d}?}\vspace{.2cm}
+
+This question has multiple answers, but in short there are not enough data points to see a meaningful decrease in error. It is our hope that item \ref{review:item4} answers this question thoroughly in the paper.
+
+\item[*] {\it The connection between the analytic test and the theorem is unclear. A simulation in which the error is studied with respect to $d(z,x_0)$ for the Delaunay interpolant should be included.}\vspace{.2cm}
+
+Addressed by item \ref{review:item4}.
+
+\item[*] {\it It is not clear why the performed simulation is in Section 5.1, and not in a new section.}\vspace{.2cm}
+
+As more clearly shown by item \ref{review:item4}, the analytic test specifically demonstrates the validity of the theorem. This is why the analytic test is considered part of Section \ref{sec:theory}.
+
+\item[*] {\it Report the mean computational time in the main text and leave only the details at the appendix.}\vspace{.2cm}
+
+The mean computation time is included in the main text in Table \ref{table:avg-performance}.
+
+\item[*] {\it The statement, "In summary, the regime of interpolation is much greater \ldots" is way too ambitious.}\vspace{.2cm}
+
+The phrasing has been reworked (page \hyperlink{page.16}{16}) to emphasize the underlying fact: the transition point at which regression algorithms become better than interpolation algorithms is (at least partially) a function of the signal-to-noise ratio (SNR) and the data sparsity. When data is more sparse, the range of SNRs for which interpolants are useful grows.
+
+\item[*] {\it Add a mention of piecewise linear and Lagrangian interpolation to the list of ``well understood'' interpolation techniques.}\vspace{.2cm}
+
+Done on page \hyperlink{page.2}{2}.
+
+\item[*] {\it A high dimension interpolation survey is not complete without mention of sparse grids.}\vspace{.2cm}
+
+Addressed by item \ref{review:item1}.
+
+\newpage\setcounter{page}{0}\thispagestyle{empty}
+\item[*] {\it ``\ldots generic uniform bounds are largely unobtainable for regression techniques on arbitrary approximation problems.'' Not true, bounds for regression techniques can be found using projection onto orthogonal polynomials.}\vspace{.2cm}
+
+We have reworded the statement and referenced the sparse grid error bounds in the same paragraph (page \hyperlink{page.2}{2}).
+
+\item[*] {\it ``\ldots interactions are either preconceived or model pairwise interactions between dimensions at most.'' This statement is not true for sparse grids.}\vspace{.2cm}
+
+The wording has been clarified to say that this statement applies to problems with more than tens of dimensions (page \hyperlink{page.3}{3}).
+
+\item[*] {\it What is the range of $j$ for MARS? Mention that the choice of the MLP network architecture is crucial. Add a picture of a mesh that satisfies the Delaunay criterion and one that doesn’t. Comment on the singularity at $W^{(k)}(x^{(k)})$ for modified Shepard and plot the shape of $W^{(k)}(x)$. Please remove the sparse grid reference from Box Splines. Add a plot showing the Voronoi tessellation and $v^{x^{(i)}}(y)$.}\vspace{.2cm}
+
+All of these have been addressed in each individual subsection and in part by item \ref{review:item2} above. Regarding the shape of $W_k$ in Modified Shepard and LSHEP, the weight equation was rewritten to provoke a more clear understanding in accompaniment with the visual.
+
+\item[*] {\it How would you measure the error if the range of approximation is the space of continuous functions?}\vspace{.2cm}
+
+This is answered in the last paragraph of Section \ref{sec:discussion}, the Discussion.
+
+\item[*] {\it Rewrite as ``Instead, for a CDF \ldots'' on page \hyperlink{page.9}{9}. Move the sentence in Figure \ref{fig:prediction-example} regarding the KS test to the main text. Add ``empirical'' before ``CDF'' where appropriate.}\vspace{.2cm}
+
+All addressed on page \hyperlink{page.9}{9}.
+
+\item[*] {\it I think that the Appendix provided on the meaning of confidence intervals and null hypothesis is too short for someone without a background in statistics.}\vspace{.2cm}
+
+A reference to an introductory statistics textbook has been provided for readers that need a more thorough introduction to statistics (page \hyperlink{page.28}{28}).
+
+\item[*] {\it I don’t understand the expression “round-trip prediction methodology”.}\vspace{.2cm}
+
+The phrasing has been changed (page \hyperlink{page.10}{10}). This is a reference the process of converting source data into predictions and then measuring the error.
+
+\newpage\setcounter{page}{0}\thispagestyle{empty}
+\item[*] {\it Add a picture of $g(t)$, $g'(t)$, and the line $w$ to Lemma \ref{lemma:3}. Give details on these equalities}
+  $$ \frac{g'(0) \tilde t}{2} = \int_0^{\tilde t} \bigl( g'(0) - \gamma_g t \bigr) dt$$
+  $$ \frac{-g'(0)^2}{2 \gamma_g} = g'(0) - \frac{-g'(0)^2}{2 \gamma_g} - \frac{\gamma_g}{2}$$
+\vspace{.2cm}
+
+The first equation is the definition of an integral recalling $\tilde t = g'(0) / \gamma_g$. The second equation is misunderstood. In Lemma \ref{lemma:3} it is correctly written as
+  $$ \frac{-g'(0)^2}{2 \gamma_g} \color{red}<\color{black} g'(0) - \frac{\color{red}+\color{black} g'(0)^2}{2 \gamma_g} - \frac{\gamma_g}{2},$$ \newline\noindent which follows directly from the statement that $g'(0) > \gamma_g / 2$. Some text has been added to the lemma to attempt to make this more clear. The requested picture has been added as per item \ref{review:item3}.
+
+\item[*] {\it You should also try the analytic test with other space-filling points.}\vspace{.2cm}
+
+The tests were additionally run with a Latin hypercube design, however nearly identical results were achieved (mentioned on page \hyperlink{page.14}{14}). The purpose of this test is not to provide a review of space filling / well-conditioned designs, but rather to pick a reasonable design and observe the connections between the observed error and the theorem. Fekete points were specifically requested as such a reasonable design by reviewers in the first revision of this paper.
+
+\item[*] {\it Add in Figure \ref{fig:convergence-2d} the reference slopes that show linear and quadratic decay of the error with respect to the number of points.}\vspace{.2cm}
+
+Notice that the number of points is increasing in this visual. There is no obvious ``reference'' for linear and quadratic decay here. This is only possible when something approaches 0 in log-log plots. Instead, readers are given the relative decay in longest edge length to compare with decrease in error per item \ref{review:item4}. In that figure, it is acknowledged that the approximation error is decreasing at a faster rate than the longest edge length.
+
+\item[*] {\it Plot the Fekete points used in the case $d = 2$ (e.g. the case with 128 or 512 points).}\vspace{.2cm}
+
+While potentially interesting for those unaware of Fekete points, this visual is easy to find elsewhere and would distract readers from the purpose of this subsection in the paper. The specific sample design methodology is not as important as decreasing the longest edge length of all simplices at roughly the same rate as the decrease in $\sigma_d$ as seen in Figure \ref{fig:data-spacing}.
+
+\newpage\setcounter{page}{0}\thispagestyle{empty}
+\item[*] {\it On the test where $d = 20$: could it be that you just need more points before you can see convergence?}\vspace{.2cm}
+
+Yes certainly more points would help, but in order to achieve meaningful density in 20 dimensions at least millions of points would be needed. Consider that it takes roughly a million points to cover all corners of a box in $d = 20$, and that's with no points on the interior! The intent behind this example is to show that sparsity is very common in tens of dimensions and up.
+
+\item[*] {\it Are the Fekete points in $d = 20$ just bad and you should use another design?}\vspace{.2cm}
+
+In general it is very difficult to construct well-spaced point sets in high dimension. This is a known problem. The Fekete points are a reasonable choice and are expected to perform similarly to other well-spaced point sets.
+
+\item[*] {\it On the test with d = 2: could it be that the MLP stagnation is due to not having done enough epochs of training?}\vspace{.2cm}
+
+No. To check for this the amount of training was extended by five times. No meaningful improvement in performance was achieved.
+
+\item[*] {\it What do you need the polynomials of order $n+1$ for (the Fekete points are obtained by the polynomials of order n)?}\vspace{.2cm}
+
+This is a misunderstanding. The paper reads ``\ldots polynomials of \color{red}degree \color{black} $n+1$.'' and the degree of a polynomial is one less than the order. So order $n$ polynomials are used here.
+
+\item[*] {\it Don’t you perform both interpolation and regression on both the data sets with and without noise?}\vspace{.2cm}
+
+Yes, the phrasing in the parenthetical statements was unclear. It is been reworded to emphasize that having no noise poses an interpolation problem and having noise poses a regression problem (bottom of page \hyperlink{page.14}{14} and top of page \hyperlink{page.15}{15}).
+
+\item[*] {\it The statement, ``\ldots exponentially increasing the number of data points should result in a decreasing error.'' is imprecise: increasing even exponentially won’t help if you place the points badly.}\vspace{.2cm}
+
+The original statement was made in the context of using Fekete points. In general yes, the points must be well spaced for convergence to be achieved. The wording has been adjusted to make this more clear (page \hyperlink{page.15}{15}).
+
+\newpage\setcounter{page}{0}\thispagestyle{empty}
+\item[*] {\it Test on forest fire: you should mention that timings and lowest absolute prediction error can be checked in the Appendix (same for the other tests).}\vspace{.2cm}
+
+The wording in the paragraph that introduces the empirical tests has been modified to make this more clear (page \hyperlink{page.17}{17}).
+
+\item[*] {\it Add at least for the forest fire test a scatter plot of predicted values versus correct values, at least for the two/three best methods.}\vspace{.2cm}
+
+This suggestion is appreciated. Such specific outcomes are not obviously related to the error bound theorem, which is the central component of this paper. For this reason, we would like to abstain from including information that might distract readers from the main purposes of the text.
+
+%% \newpage\setcounter{page}{0}\thispagestyle{empty}
+
+\end{itemize}
+
+\newpage
+%% ========================================================================================================================================================================================================
