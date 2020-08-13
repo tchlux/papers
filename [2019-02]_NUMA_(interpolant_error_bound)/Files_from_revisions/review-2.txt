@@ -1,0 +1,13 @@
+Reviewer #3: The authors have done a quite good job of responding to some of the issues raised in the previous reviews. The main objective of the work it is now much better explained in the introduction. However, some relatively minor points remain. 
+
+1.	The authors have included a simulation study in with they compare an interpolant and a regression technique (Section 5.1). However, it is not clear to me why they decided to compare only these two methods and not all the methods considered in Section 6. Usually, simulated data are employed to compare methods instead of real data since in this way the true function to be estimated is known and the error can be computed exactly. I would suggest comparing all the methods also in the simulation setting. 
+
+2.	Regarding the simulation in Section 5.1, it is not clear why the error in Figure 3, left panel, it is not decreasing when the number of point increases. I can imagine that the MLP has already reached the plateau mentioned in case of Figure 2, and if this is the case maybe the simulation setting could be changed a little bit to show the initial convergence. However I would expect from the theoretical bound found in Section 5 that the error for the Delaunay should decrease, why it is not happening? 
+
+3.	The simulation performed can compare the two techniques, but it is not useful to numerically show the theoretical result proved. As already requested in the previous review, the author should include a simulation also in that direction, in which the error is studied with respect to d(z,x_0) for the Delaunay interpolant. 
+
+4.	It is not clear to me why the performed simulation is in Section 5.1, and not in a new section. It seems like the scope of the simulation in to show the result of the Theorem in Section 5, but as already mentioned I believe that this is not the case. 
+
+5.	Since one of the big advantages of interpolation over regression is the computational time (as stressed in the introduction) I would at least report the mean computational time in the main text and leave only the details at the appendix, both for the simulation in Section 5.1 and for the real data study in Section 6. 
+
+6.	The conclusion of Section 5 "In summary, the regime of interpolation is much greater for moderate to high dimensional problems, even for functions with random noise incorporated into their evaluation" is way too ambitious, since this is obtained as the conclusion of a single simulation study, in which only two methods are compared, moreover, considering that the results of the simulations are not well understood for the case d = 20.
