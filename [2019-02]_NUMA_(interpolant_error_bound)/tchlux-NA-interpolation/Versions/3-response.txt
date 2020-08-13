@@ -1,0 +1,143 @@
+Response to Reviewers
+
+Thank you all for the thoughtful reviews and comments on the paper. We
+have revised the paper and believe the revisions address all concerns.
+Responses to individual requests / comments by reviewers follow.
+
+----------------------------------------------------------------------
+
+  * Everyone with a statistical background would expect to see the
+    comparison performed in Section 6 on synthetic data and not real
+    data, since this is not what it is done, the reason behind your
+    choice must be explained.
+
+A sentence was added to the beginning of Section 6 to further clarify
+this decision. The purpose of this paper is to construct an insightful
+error bound for approximation in arbitrary dimension, and to
+demonstrate the viability of interpolants as an alternative to
+regressors for real world approximation problems with medium to large
+dimension. An in depth comparison of algorithms designed to rank
+those algorithms for certain classes or approximation problems would
+be a more appropriate place for synthetic data.
+
+
+  * Section 6 the reader would be helped in reading the results if the
+    regression and interpolation methods were highlighted in some way,
+    perhaps with different colors, or with a line to divide the two
+    groups. This would be helpful both in the boxplots (Figures 10-17)
+    and in the Tables 1-12.
+
+A thin line was added between regressors and interpolants in all
+tables, colors differentiate the two in all figures.
+
+
+  * In Figure 20 each color should be assign to a method and not be
+    reused for a different method in the other subfigures.
+
+This visual was redone. Now each algorithm has a unique style.
+
+
+  * Ref 36 is not about sparse grids, but rather about providing
+    convergence estimates for high-dimensional regression. Please move
+    it a few lines below, next to the sentence "similar uniform bounds
+    cannot be constructed for regressors in general".
+
+Done.
+
+  * The sentence "However, sparse grids are not studied here because
+    they have exponential size in dimension" is still wrong. Sparse
+    grids are precisely built so that the size in dimension grows less
+    than exponentially. What you can say is something milder, like
+    "However, sparse grids are not studied here because their size
+    still grows quite fast with dimensions (although less than
+    exponentially) making them not readily tractable for more than a
+    few tens of dimensions, and ...".
+
+Done.
+
+
+  * What is the relation between 2j-1 and l, as well as 2j and k in
+    the definition of MARS?
+
+There is no relation. The indices using j were chosen this way because
+two new basis functions are added at each iteration. The indices k and
+l are exactly as stated, "B_l(x) and B_k(x) are basis functions from
+the previous iteration," no other restrictions.
+
+
+  * How is x^{(p)} chosen at each iteration in the construction of MARS?
+
+By evaluating the goodness of fit for all x^{(i)} 1 <= i <= n and
+choosing the one with the best fit. Text was added to refer readers to
+the full description of MARS for more detailed explanation.
+
+
+  * The formula has a subscript in x^{(p)}_i, but it is also unclear why
+    one should consider only one coordinate of x^{(p)}, could it be
+    that there is a typo?
+
+No, the selection of one coordinate is deliberate.
+
+
+  * Add references to figures 1 through 3 to the text.
+
+Done.
+
+
+  * Move the sentence about the KS null hypothesis to the paragraph
+    describing the two sample KS test.
+
+Done.
+
+
+  * Mention that n_1, n_2 do not refer to the number of points used
+    for function interpolation, but to the numerosity of the samples
+    used to compute the empirical CDFs that are being compared by the
+    KS test.
+
+The text reads, "distribution sample sizes n_1, n_2." An additional
+clarifying statement was added afterwards.
+
+
+  * Use blackboard N instead of calligraphic N in the paper for
+    natural numbers.
+
+Done.
+
+
+  * Page 13, “THE FACT That the theoretical error bound ...”.
+
+Done.
+
+
+  * Figure 20: the scatter plot for the forest fire dataset (top-left)
+    looks weird, the clouds of point are not even slightly aligned to
+    the bisector of the X − Y plan. If this was correct, the
+    interpolation methods would be working terribly bad in this
+    example. Please clarify.
+
+The text in the figure caption reads, "There are a large of number of
+0-valued entries in the forest fire and rainfall data sets that are
+not included in the visuals making the true ranking of the models
+appear to disagree with the observed outcomes."
+
+
+  * Saying that the p-value is "the probability of observing a given
+    statistic if the null hypothesis is true" is imprecise. I'd rather
+    say "the probability that other sets of data would produce a value
+    of the given statistic at least as extreme as what obtained with
+    the current data, if the null hypothesis were true". I would also
+    add the following comment, which could benefit a reader with
+    little familiarity with the subject: "In other words, the p-value
+    is a way of measuring the "likelihood" of a set of data assuming
+    that the null hypothesis is true: a small p-value indicates a
+    strong statistical evidence that the null hypothesis can be
+    rejected".
+
+The text has been corrected to read: The $p$-value of a given
+statistic value $\rho$ for a given data set (sample from a
+distribution) is the probability of observing a statistic at least as
+extreme as $\rho$ for other data sets (samples from that same
+distribution), assuming the null hypothesis holds.  The smaller the
+$p$-value, the stronger the statistical evidence is for rejecting the
+null hypothesis.
