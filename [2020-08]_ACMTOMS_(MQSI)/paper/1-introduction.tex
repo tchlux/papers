@@ -1,0 +1,75 @@
+\bigskip\hrule\bigskip\medskip
+\heading{1. INTRODUCTION}
+
+Many domains of science rely on smooth approximations to real-valued
+functions over a closed interval. Piecewise polynomial functions
+(splines) provide the smooth approximations for animation in graphics
+[Herman et al.\ 2015; Quint 2003], aesthetic structural support in
+architecture [Brennan 2020], efficient aerodynamic surfaces in
+automotive and aerospace engineering [Brennan 2020], prolonged
+effective operation of electric motors [Berglund et al.\ 2009], and
+accurate nonparametric approximations in statistics [Knott
+2012]. While polynomial interpolants and regressors apply broadly,
+splines are often a good choice because they can approximate globally
+complex functions while minimizing the local complexity of an
+approximation.
+
+It is often the case that the true underlying function or phenomenon
+being modeled has known properties like convexity, positivity,
+various levels of continuity, or monotonicity. Given a reasonable
+amount of data, it quickly becomes difficult to achieve desirable
+properties in a single polynomial function. In general, the
+maintenance of function properties through interpolation/regression is
+referred to as {\it shape preserving} [Fritsch and Carlson 1980;
+Gregory 1985]. The specific properties the present algorithm will
+preserve in approximations are monotonicity and $C^2$ continuity. In
+addition to previously mentioned applications, these properties are
+crucially important in statistics to the approximation of a cumulative
+distribution function and subsequently the effective generation of
+random numbers from a specified distribution [Ramsay 1988].  A spline
+function with these properties could approximate a cumulative
+distribution function to a high level of accuracy with relatively few
+intervals. A twice continuously differentiable approximation to a
+cumulative distribution function (CDF) would produce a corresponding
+probability density function (PDF) that is continuously
+differentiable, which is desirable.
+
+The currently available software for monotone piecewise polynomial
+interpolation includes quadratic [He and Shi 1998], cubic [Fritsch and
+Carlson 1980], and (with limited application) quartic [Wang and Tan
+2004; Piah and Unsworth 2011; Yao and Nelson 2018] cases. In
+addition, a statistical method for bootstrapping the construction of
+an arbitrarily smooth monotone fit exists [Leitenstorfer and Tutz
+2006], but the method does not take advantage of known analytic
+properties of quintic polynomials. The code by Fritsch [1982] for
+$C^1$ cubic spline interpolation is the predominantly utilized code
+for constructing monotone interpolants at present. Theory has been
+provided for the quintic case [Ulrich and Watson 1994; He{\ss} and
+Schmidt 1994] and that theory was recently utilized in a proposed
+algorithm [Lux 2020] for monotone quintic spline construction, however
+no published mathematical software exists.
+
+The importance of piecewise quintic interpolation over lower order
+approximations can be simply observed. In general, the order of a
+polynomial determines the number of function (and derivative) values
+it can interpolate, which in turn determines the growth rate of error
+away from interpolated values. $C^2$ quintic (order six) splines
+match the function value and two given derivatives at each breakpoint.
+This work provides a Fortran 2003 subroutine {\tt MQSI} based on the
+necessary and sufficient conditions in Ulrich and Watson [1994] for the
+construction of monotone quintic spline interpolants of monotone data.
+Precisely, the problem is, given a strictly increasing sequence $X_1<X_2<
+\cdots <X_n$ of breakpoints with corresponding monotone increasing
+function values $Y_1\le Y_2\le \cdots \le Y_n$, find a $C^2$ monotone
+increasing quintic spline $Q(x)$ with the same breakpoints satisfying
+$Q(X_i)=Y_i$ for $1\le i\le n$. ({\tt MQSI} actually does something slightly
+more general, producing $Q(x)$ that is monotone increasing (decreasing)
+wherever the data is monotone increasing (decreasing).)
+
+The remainder of this paper is structured as follows: Section 2 provides
+the algorithms for constructing a $C^2$ monotone quintic spline interpolant
+to monotone data, Section 3 outlines the method of spline representation
+($B$-spline basis) and evaluation, Section 4 analyzes the complexity and
+sensitivity of the algorithms in {\tt MQSI}, and Section 5 presents 
+timing data and some graphs of constructed interpolants.
+
