@@ -64,8 +64,7 @@ SUBROUTINE FIT_SPLINE(XI, FX, T, BCOEF, INFO)
 !                      the interpolating spline.
 !   INFO -- Integer representing the subroutine execution status:
 !     0    Successful execution.
-!     1    SIZE(XI) is less than 1.
-!     2    SIZE(FX) is less than 1.
+!     1    SIZE(XI) is less than 3.
 !     3    SIZE(FX,1) does not equal SIZE(XI).
 !     4    SIZE(T) too small, should be at least NB*NCC + 2*NCC.
 !     5    SIZE(BCOEF) too small, should be at least NB*NCC.
@@ -144,8 +143,7 @@ DEGREE = K - 1
 INFO = 0
 
 ! Check the shape of incoming arrays.
-IF      (NB .LT. 2)             THEN; INFO = 1; RETURN
-ELSE IF (NSPL .LT. 2)           THEN; INFO = 2; RETURN
+IF      (NB .LT. 3)             THEN; INFO = 1; RETURN
 ELSE IF (SIZE(FX,1) .NE. NB)    THEN; INFO = 3; RETURN
 ELSE IF (SIZE(T) .LT. NK)       THEN; INFO = 4; RETURN
 ELSE IF (SIZE(BCOEF) .LT. NSPL) THEN; INFO = 5; RETURN
@@ -285,7 +283,7 @@ SUBROUTINE EVAL_SPLINE(T, BCOEF, XY, INFO, D)
 !   INFO -- Integer representing subroutine execution status.
 !     0  Successful execution.
 !     1  The sizes of T and BCOEF are incompatible.
-!     2  T is not nondecreasing or only has one unique value.
+!     2  Given the sizes of T and BCOEF, T is an invalid knot sequence.
 ! 
 ! OPTIONAL INPUT:
 !   D --  The order of the derivative of the spline to take at the
@@ -296,12 +294,13 @@ SUBROUTINE EVAL_SPLINE(T, BCOEF, XY, INFO, D)
 ! 
 !   This subroutine serves as a convenient wrapper to the underlying
 !   calls to EVAL_BSPLINE to evaluate the full spline. Internally this
-!   evaluates the spline at each provided point by first using a
+!   evaluates the spline at each provided point XY(.) by first using a
 !   bisection search to identify which B-splines could be nonzero at
-!   that point, then computing the B-splines and taking their weighted
-!   sum to produce the spline value. Optimizations are incorporated
-!   that make the evaluation of nearby points in sorted order most
-!   efficient, hence it is recommended that provided points be sorted.
+!   that point, then computing the B-splines and taking a linear
+!   combination of them to produce the spline value. Optimizations are
+!   incorporated that make the evaluation of successive points in increasing
+!   order most efficient, hence it is recommended that the provided points
+!   XY(:) be increasing.  
 ! 
 USE REAL_PRECISION, ONLY: R8
 IMPLICIT NONE
@@ -311,7 +310,7 @@ REAL(KIND=R8), INTENT(INOUT), DIMENSION(:) :: XY
 INTEGER, INTENT(OUT) :: INFO
 INTEGER, INTENT(IN), OPTIONAL :: D
 ! Local variables.
-INTEGER :: DERIV, I, I1, I2, ITEMP, J, K, N, NSPL
+INTEGER :: DERIV, I, I1, I2, ITEMP, J, K, NB, NCC, NK, NSPL
 REAL(KIND=R8), DIMENSION(1+SIZE(T)-SIZE(BCOEF)) :: BIATX
 INTERFACE
    SUBROUTINE EVAL_BSPLINE(T, XY, D)
@@ -321,75 +320,67 @@ INTERFACE
      INTEGER, INTENT(IN), OPTIONAL :: D
    END SUBROUTINE EVAL_BSPLINE
 END INTERFACE
-N = SIZE(T) ! Number of knots.
+NK = SIZE(T) ! Number of knots.
 NSPL = SIZE(BCOEF) ! Number of spline basis functions (B-splines).
 ! Check for size-related errors.
-IF ( ((N-NSPL)/2 .LT. 1) .OR. (MOD(N-NSPL,2) .NE. 0) )&
+IF ( ((NK - NSPL)/2 .LT. 1) .OR. (MOD(NK - NSPL, 2) .NE. 0) )&
   THEN; INFO = 1; RETURN; ENDIF
-! Check for the uniqueness of T values.
-IF (T(1) .EQ. T(N)) THEN; INFO = 2; RETURN; ENDIF
-! Check for valid (nondecreasing) knot sequence.
-DO I = 1, N-1
+! Compute the order for each B-spline (number of knots per B-spline minus one).
+K = NK - NSPL ! = 2*NCC, where NCC = number of continuity conditions at each
+   ! breakpoint.
+NCC = K/2
+NB = NSPL/NCC ! Number of breakpoints.
+! Check for nondecreasing knot sequence.
+DO I = 1, NK-1
    IF (T(I) .GT. T(I+1)) THEN; INFO = 2; RETURN; END IF
+END DO
+! Check for valid knot sequence for splines of order K.
+DO I = 1, NK-K
+   IF (T(I) .EQ. T(I+K)) THEN; INFO = 2; RETURN; END IF
 END DO
 ! Assign the local value of the optional derivative argument D.
 IF (PRESENT(D)) THEN; DERIV = D;  ELSE; DERIV = 0; END IF
-! Compute the order for each B-spline (number of knots per B-spline minus one).
-K = N - NSPL ! = 2*NCC, where NCC = number of continuity conditions at each
-   ! breakpoint.
-! Initialize the location of the first knot of the last B-spline.
-I2 = 1
-! Evaluate all the B-splines at all the points in XY(:).
+
+! In the following code, I1 (I2, respectively) is the smallest (largest,
+! respectively) index of a B-spline B_{I1}(.) (B_{I2}(.), respectively)
+! whose support contains XY(I).  I1 = I2 + 1 - K .
+!
+! Initialize the indices I1 and I2 before looping.
+I1 = 1; I2 = K ! For evaluation points in first breakpoint interval.
+! Evaluate all the B-splines that have support at each point XY(I) in XY(:).
 evaluate_at_x : DO I = 1, SIZE(XY)
-   ! Skip the evaluation of points that are not covered by the spline.
-   IF ((XY(I) .LT. T(1)) .OR. (T(N) .LE. XY(I))) THEN
+   ! Return zero for points that are outside the spline's support.
+   IF ((XY(I) .LT. T(1)) .OR. (XY(I) .GE. T(NK))) THEN
       XY(I) = 0.0_R8
       CYCLE evaluate_at_x
-   ! Find the first knot of the last B-spline that is nonzero at 
-   ! XY(I), if it is not within the next K knots, then use a
-   ! bisection search to find its position.
-   ELSE IF ((T(I2) .GT. XY(I)) .OR. (T(MIN(NSPL,I2+K)) .LE. XY(I))) THEN
-      ! Do a bisection search to find the first knot less than or
-      ! equal to XY(I), store in I2.
-      I1 = 1
-      I2 = NSPL
-      DO WHILE (I1 .NE. I2)
-         ITEMP = (I1+I2) / 2
-         IF (T(ITEMP) .GT. XY(I)) THEN
-            I2 = ITEMP
-         ELSE IF (I1 .EQ. ITEMP) THEN
-            IF (T(I2) .LE. XY(I)) THEN 
-               I1 = I2
-            ELSE
-               I2 = I1
-            END IF
-         ELSE
-            I1 = ITEMP
-         END IF
-      END DO
-   ! Otherwise, if the first knot of the last B-spline that is nonzero
-   ! at XY(I) is within K steps, step to that index.
-   ELSE IF (I2 .LT. NSPL) THEN
-      I2 = I2 + 1
-      DO WHILE ((I2 .LT. NSPL) .AND. (T(I2) .LE. XY(I)))
-         I2 = I2 + 1
-      END DO
-      I2 = I2 - 1
+   ELSE IF ( (T(I2) .LE. XY(I)) .AND. (XY(I) .LT. T(I2+1)) ) THEN
+      CONTINUE
+   ELSE IF ( (I2 .NE. NB*NCC) .AND. (T(I2+NCC) .LE. XY(I)) .AND. &
+      (XY(I) .LT. T(I2+NCC+1)) ) THEN
+      I1 = I1 + NCC; I2 = I2 + NCC
+   ELSE ! Find breakpoint interval containing XY(I) using a bisection method
+        ! on the breakpoint indices.
+      I1 = 1; I2 = NB
+      DO WHILE (I2 - I1 .GT. 1)
+         J = (I1+I2)/2 ! Breakpoint J = knot T((J+1)*NCC).
+         IF ( T((J+1)*NCC) .LE. XY(I) ) THEN; I1 = J; ELSE; I2 = J; END IF
+      END DO ! Now I2 = I1 + 1, and XY(I) lies in the breakpoint interval
+             ! [ T((I1+1)*NCC), T((I1+2)*NCC) ).
+      I2 = (I1 + 1)*NCC ! Spline index = knot index.
+      I1 = I2 + 1 - K ! The index range of B-splines with support containing
+                      ! XY(I) is I1 to I2.
    END IF
-   ! Find the first knot of the *first* B-spline that is nonzero at 
-   ! XY(I) by computing the B-spline whose last knot is at I2+1.
-   I1 = MAX(1,I2+1-K)
    ! Store only the single X value that is relevant to this iteration.
-   BIATX(1:1+I2-I1) = XY(I)
+   BIATX(1:K) = XY(I) ! K = I2-I1+1.
    ITEMP = 0
    ! Compute the values of selected B-splines.
    DO J = I1, I2
       ITEMP = ITEMP + 1
       CALL EVAL_BSPLINE(T(J:J+K), BIATX(ITEMP:ITEMP), D=DERIV)
    END DO
-   ! Evaluate spline interpolant at XY(I) by computing the weighted
-   ! sum of B-spline values, returning values in XY(:).
-   XY(I) = DOT_PRODUCT(BIATX(1:ITEMP), BCOEF(I1:I2))
+   ! Evaluate spline interpolant at XY(I) as a linear combination of B-spline
+   ! values, returning values in XY(:).
+   XY(I) = DOT_PRODUCT(BIATX(1:K), BCOEF(I1:I2))
 END DO evaluate_at_x
 INFO = 0  ! Set INFO to indicate successful execution.
 END SUBROUTINE EVAL_SPLINE

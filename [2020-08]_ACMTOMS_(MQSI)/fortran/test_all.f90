@@ -340,7 +340,8 @@ INTEGER, INTENT(IN) :: N_TEST
 REAL(KIND=R8) :: MAX_ERROR
 !  Spline coefficients SC, spline knots SK, temporary
 !  input/output storage U, and test point storage Z.
-REAL(KIND=R8) :: SC(1:3*SIZE(X)), SK(1:3*SIZE(X)+6), U(1:SIZE(X)), Z(1:N_TEST)
+REAL(KIND=R8) :: SC(1:3*SIZE(X)), SK(1:3*SIZE(X)+6), U(1:SIZE(X)), &
+     V(1:N_TEST), Z(1:N_TEST)
 !  Iteration variables I, J, and subroutine status integer INFO.
 INTEGER :: I, INFO, J
 ! Construct the monotone quintic spline interpolant.
@@ -381,8 +382,42 @@ check_monotonicity :DO I = 1, SIZE(X)-1
       RETURN
    END IF
 END DO check_monotonicity
-PASSES = .TRUE.
+! Check that results are identical for random and strictly increasing data.
+!   Generate random evaluation points.
+CALL RANDOM_NUMBER(V(:))
+!   Compute copy of random evaluation points sorted to increasing order.
+Z(:) = V(:)
+CALL SORT(Z(:))
+!   Evaluate the spline at the sorted increasing points.
+CALL EVAL_SPLINE(SK, SC, Z(:), INFO, D=0)
+IF (INFO .NE. 0) THEN
+   WRITE (*,101) INFO
+103 FORMAT(/,'Failed to evaluate spline, error code',I4,'.')
+   PASSES = .FALSE.
+   RETURN
+END IF
+!   Evaluate the spline at the randomized points.
+CALL EVAL_SPLINE(SK, SC, V(:), INFO, D=0)
+IF (INFO .NE. 0) THEN
+   WRITE (*,101) INFO
+104 FORMAT(/,'Failed to evaluate spline, error code',I4,'.')
+   PASSES = .FALSE.
+   RETURN
+END IF
+!   Sort both sets of spline evaluations to compare by value, this
+!   order is irrelevant, but allows for direct comparison.
+CALL SORT(Z(:))
+CALL SORT(V(:))
+MAX_ERROR = MAXVAL( ABS((Z(:) - V(:))) / (1.0_R8 + ABS(Z(:))) )
+IF (MAX_ERROR .GT. ERROR_TOLERANCE) THEN
+   WRITE (*,102) MAX_ERROR, ERROR_TOLERANCE
+105 FORMAT(/,'Value test: FAILED',/,'  relative error:', ES11.3,/, &
+           ' error tolerance:',ES11.3)
+   PASSES = .FALSE.
+   RETURN
+END IF
 ! End of test subroutine.
+PASSES = .TRUE.
 END SUBROUTINE RUN_TEST
 
 ! --------------------------------------------------------------------
