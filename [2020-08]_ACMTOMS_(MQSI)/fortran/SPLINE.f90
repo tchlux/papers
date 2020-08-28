@@ -311,7 +311,7 @@ INTEGER, INTENT(OUT) :: INFO
 INTEGER, INTENT(IN), OPTIONAL :: D
 ! Local variables.
 INTEGER :: DERIV, I, I1, I2, ITEMP, J, K, NB, NCC, NK, NSPL
-REAL(KIND=R8), DIMENSION(1+SIZE(T)-SIZE(BCOEF)) :: BIATX
+REAL(KIND=R8), DIMENSION(SIZE(T)-SIZE(BCOEF)) :: BIATX
 INTERFACE
    SUBROUTINE EVAL_BSPLINE(T, XY, D)
      USE REAL_PRECISION, ONLY: R8
@@ -372,8 +372,8 @@ evaluate_at_x : DO I = 1, SIZE(XY)
    END IF
    ! Store only the single X value that is relevant to this iteration.
    BIATX(1:K) = XY(I) ! K = I2-I1+1.
-   ITEMP = 0
    ! Compute the values of selected B-splines.
+   ITEMP = 0
    DO J = I1, I2
       ITEMP = ITEMP + 1
       CALL EVAL_BSPLINE(T(J:J+K), BIATX(ITEMP:ITEMP), D=DERIV)
