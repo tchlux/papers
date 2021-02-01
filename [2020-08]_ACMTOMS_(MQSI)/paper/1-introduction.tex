@@ -35,19 +35,30 @@ probability density function (PDF) that is continuously
 differentiable, which is desirable.
 
 The currently available software for monotone piecewise polynomial
-interpolation includes quadratic [He and Shi 1998], cubic [Fritsch and
-Carlson 1980], and (with limited application) quartic [Wang and Tan
-2004; Piah and Unsworth 2011; Yao and Nelson 2018] cases. In
-addition, a statistical method for bootstrapping the construction of
-an arbitrarily smooth monotone fit exists [Leitenstorfer and Tutz
-2006], but the method does not take advantage of known analytic
-properties of quintic polynomials. The code by Fritsch [1982] for
-$C^1$ cubic spline interpolation is the predominantly utilized code
-for constructing monotone interpolants at present. Theory has been
-provided for the quintic case [Ulrich and Watson 1994; He{\ss} and
-Schmidt 1994] and that theory was recently utilized in a proposed
-algorithm [Lux 2020] for monotone quintic spline construction, however
-no published mathematical software exists.
+interpolation includes quadratic [He and Shi 1998, McAllister and 
+Roulier 1981], cubic [Fritsch and Carlson 1980], and (with limited
+application) quartic [Wang and Tan 2004; Piah and Unsworth 2011; Yao
+and Nelson 2018] cases. In addition, a statistical method for
+bootstrapping the construction of an arbitrarily smooth monotone fit
+exists [Leitenstorfer and Tutz 2006], but the method does not take
+advantage of known analytic properties of quintic polynomials. 
+Conversely the work on quadratic shape preserving splines by Schumaker
+[1983] is widely utilized in theory for its conservation of both
+monotonicity and convexity, but a mathematical software is not readily
+available.
+
+The code by Fritsch [1982] for $C^1$ cubic spline interpolation is the
+predominantly utilized code for constructing monotone interpolants at
+present. Theory has been provided for the quintic case [Ulrich and
+Watson 1994; He{\ss} and Schmidt 1994] and that theory was recently
+utilized in a proposed algorithm [Lux 2020] for monotone quintic
+spline construction, however no published mathematical software
+exists. This work improves upon the algorithm presented by Lux et al.
+[2020] by refactoring computations for improved numerical stability,
+estimating minimum curvature derivatives at breakpoints with a
+quadratic facet model, and using a binary search to reduce the
+magnitude of the modifications made to initial derivative estimates
+when constructing a monotone spline interpolant.
 
 The importance of piecewise quintic interpolation over lower order
 approximations can be simply observed. In general, the order of a

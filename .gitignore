@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__
+*.dvi
+*.log
+*.pyc
+*.so
+/papers/[2020-08]_ACMTOMS_(MQSI)/code/SPLINE
+/papers/[2020-08]_ACMTOMS_(MQSI)/code/MQSI
