@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159265 (TeX Live 2019) (preloaded format=tex 2019.5.8)  10 AUG 2020 21:36
+This is TeX, Version 3.14159265 (TeX Live 2019) (preloaded format=tex 2019.5.8)  1 FEB 2021 01:14
 **mqsi20
 (./mqsi20.tex
 (/usr/local/texlive/2019/texmf-dist/tex/generic/dvips/colordvi.tex)
@@ -17,11 +17,11 @@ This is `epsf.tex' v2.7.4 <14 February 2011>
 \pspoints=\dimen23
 )
 \headdigit=\dimen24
- (./1-introduction.tex [1]) (./2-monotone-quintic.tex [2] [3] [4] [5] [6])
-[7] (./3-spline-rep.tex) (./4-analysis.tex
+ (./1-introduction.tex [1] [2]) (./2-monotone-quintic.tex [3] [4] [5] [6]
+[7]) (./3-spline-rep.tex) (./4-analysis.tex
 (vis/1-sensitivity.eps
 )
-) (./5-applications.tex
+) (./5-applications.tex [8]
 (vis/2-piecewise-polynomial.eps
 )
 (vis/3-large-tangent.eps
@@ -32,5 +32,5 @@ This is `epsf.tex' v2.7.4 <14 February 2011>
 )
 (vis/6-random-monotone.eps
 )
-[8]) [9] [10] [11] [12] )
-Output written on mqsi20.dvi (12 pages, 47328 bytes).
+) [9] [10] [11] [12] )
+Output written on mqsi20.dvi (12 pages, 48580 bytes).
