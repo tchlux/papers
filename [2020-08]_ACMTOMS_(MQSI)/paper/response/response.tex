@@ -25,7 +25,7 @@ After carefully reading and considering the comments from the reviewer, we would
 
 }
 
-That conference paper was an earlier version of this work and may appear similar at first glance, but there are many critical differences between the two (computations refactored for numerical stability, different method for estimating derivatives, using a binary search to find feasible derivative values for the entire spline rather than a single interval). Notably, there was no code published with that conference paper, which is one of the most important components of this submission.
+That conference paper was an earlier version of this work and may appear similar at first glance, but there are many critical differences between the two (computations refactored for numerical stability, different method for estimating derivatives, using a binary search to find feasible derivative values for the entire spline rather than a single interval). Notably, there was no code published with that conference paper, which is one of the most important components of this submission. To make these differences more clear, two sentences were added to the end of paragraph 4 in section 1.
 
 {\parindent=20pt \it
 
@@ -45,7 +45,7 @@ The binary search referred to in (1) is used to make a single interval of the in
 
 }
 
-The submission cites quadratic, cubic, and quartic previous works. The work by Larry Schumaker can readily be included in this list, and has been included in the attached update to the paper. It is our understanding that one of the most widely used shape-preserving spline algorithms is a cubic spline methodology proposed by Fritsch and Carlson (known as PCHIP), which is included in many mathematical software libraries and cited in the submission. 
+The submission cites quadratic, cubic, and quartic previous works. The work by Larry Schumaker can readily be included in this list, and has been included in the attached update to the paper (section 1, paragraph 3). It is our understanding that one of the most widely used shape-preserving spline algorithms is a cubic spline methodology proposed by Fritsch and Carlson (known as PCHIP), which is included in many mathematical software libraries and cited in the submission. 
 
 {\parindent=20pt \it
 
@@ -53,9 +53,9 @@ The submission cites quadratic, cubic, and quartic previous works. The work by L
 
 }
 
-This is a reasonable criticism, but also easily addressed with minor revisions to the submission. While the reviewer may disagree with the language we used, there are objective reasons for the decisions made in this work in addition to the subjective comments made. Specifically, the quadratic facet model picks the minimum curvature local estimate for second derivatives which has the smallest magnitude second derivative, and the binary search identifies derivative values absolutely nearer to the initial estimates than the previous method of shrinking derivative values used in (1).
+This is a reasonable criticism, but also easily addressed with minor revisions to the submission. While the reviewer may disagree with the language we used, there are objective reasons for the decisions made in this work in addition to the subjective comments made. Specifically, the quadratic facet model picks the minimum curvature local estimate for second derivatives which has the smallest magnitude second derivative, and the binary search identifies derivative values absolutely nearer to the initial estimates than the previous method of shrinking derivative values used in (1). These facts are now mentioned in the paper (section 4, paragraphs 2 and 3).
 
-Comparisons with lower order methods can be included if greatly desired, noting that the comparisons will only be aesthetic because there is no published mathematical software that also constructs a monotone quintic spline interpolant. These comparisons were not originally included because subjective decisions must be made about what visuals to show and those decisions might draw criticisms that distract from the unique purpose and achievement of this work (producing $C^2$ monotonicity preserving approximations to data).
+Comparisons with lower order methods are not appropriate for this work. There is no published mathematical software that also constructs a monotone quintic spline interpolant to data. If a user desires a monotonicity preserving $C^2$ approximation, this would be the only published software that achieves that goal. This paper is not intended to be a review and comparison of all available shape preserving spline packages. Including such comparisons would also require subjective decisions about what visuals to show, and those decisions might draw criticisms that distract from the unique purpose and achievement of this work (producing $C^2$ monotonicity preserving approximations to data). To emphasize that this work is not a replacement for previous works, but rather an additional method to consider, the first sentence of section 1, paragraph 5 that mentioned the importance of this work ``over'' previous methods was removed.
 
 {\parindent=20pt \it
 
@@ -69,7 +69,7 @@ The reviewer may have missed the reason for the global linear system, from the s
 
 \bigskip
 
-To the best of our knowledge, rejection based on a single review has not been a journal policy and we respectfully request additional reviews. We believe this algorithm and the accompanying code has great potential for TOMS, noting that the cubic work preceding this has remained state-of-the-art for forty years. Thank you for both your time and consideration.
+To the best of our knowledge, rejection based on a single review has not been a journal policy and we respectfully request additional reviews. We believe this algorithm and the accompanying code has great potential for TOMS, noting that the quadratic and cubic works preceding this have remained state-of-the-art for forty years. Thank you for both your time and consideration.
 
 Sincerely,
 

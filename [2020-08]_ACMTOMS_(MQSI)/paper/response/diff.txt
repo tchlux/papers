@@ -1,8 +1,10 @@
 LINES WITH "+" IN FRONT OF THEM WERE ADDED, LINES WITH "-" WERE REMOVED.
+LINES WITH " " IN FRONT ARE UNCHANGED, ONLY PRESENT TO PROVIDE CONTEXT.
 
 ----------------------------------------------------------------------
 
-ADDED TWO REFERENCES TO THE PAPER, MCALLISTER and SCHUMAKER
+
+ADDED FOUR REFERENCES TO THE PAPER, MCALLISTER, MOLER, AND SCHUMAKER.
 
    Systems}{30(8):1843--1856}
    and predicting variability in computer systems}{Thesis, Virginia
@@ -10,8 +12,17 @@ ADDED TWO REFERENCES TO THE PAPER, MCALLISTER and SCHUMAKER
  
 +% mcallister1981algorithm
 +\refj{McAllister, D. F. and Roulier, J. A.}{1981}{An algorithm for 
-+  computing a shape-preserving osculatory quadratic spline.}{ACM 
++  computing a shape-preserving osculatory quadratic spline}{ACM 
 +  Transactions on Mathematical Software (TOMS)}{7(3):331--347}
++ 
++ % mcallister1981shape
++\refj{McAllister, D. F. and Roulier, J. A.}{1981}{Algorithm 574:
++  Shape-Preserving Osculatory Quadratic Splines [E1, E2]}{ACM
++  Transactions on Mathematical Software (TOMS)}{7(3):384--386}
++
++% moler2004numerical
++\refb{Moler, C. B.}{2008}{Numerical Computing with {\caps Matlab}}{
++  The MathWorks Inc., Natick, Massachusetts}
 +
  % piah2011improved
  \refj{Piah, A. R. M. and Unsworth, K.}{2011}{Improved sufficient
@@ -29,10 +40,14 @@ ADDED TWO REFERENCES TO THE PAPER, MCALLISTER and SCHUMAKER
  \refj{Ulrich, G. and Watson, L. T.}{1994}{Positivity conditions for
    quartic polynomials}{SIAM Journal on Scientific
 
+
 ----------------------------------------------------------------------
 
+
 REWROTE THE INTRODUCTION SECTION THAT DISCUSSES PREVIOUS MATHEMATICAL
-SOFTWARE FOR DOING SHAPE-PRESERVING SPLINE INTERPOLATION.
+SOFTWARE FOR DOING SHAPE-PRESERVING SPLINE INTERPOLATION. DELETED
+SENTENCE STATING QUINTIC SPLINES WERE ``OVER'' (BETTER THAN) OLDER
+METHODS.
 
  probability density function (PDF) that is continuously
  differentiable, which is desirable.
@@ -77,20 +92,66 @@ SOFTWARE FOR DOING SHAPE-PRESERVING SPLINE INTERPOLATION.
 +magnitude of the modifications made to initial derivative estimates
 +when constructing a monotone spline interpolant.
  
- The importance of piecewise quintic interpolation over lower order
- approximations can be simply observed. In general, the order of a
+-The importance of piecewise quintic interpolation over lower order		
+-approximations can be simply observed. In general, the order of a		
+-polynomial determines the number of function (and derivative) values		
+-it can interpolate, which in turn determines the growth rate of error		
+-away from interpolated values. $C^2$ quintic (order six) splines		
+-match the function value and two given derivatives at each breakpoint.
+
+ This work provides a Fortran 2003 subroutine {\tt MQSI} based on the
+ necessary and sufficient conditions in Ulrich and Watson [1994] for the
+
 
 ----------------------------------------------------------------------
 
-CHANGED THE WORDING IN THE ANALYSIS SECTION TO SAY A BINARY SEARCH FOR
-A POINT *ON* THE  BOUNDARY OF MONOTONICITY, NOT JUST *NEAR*.
 
- preferred because it generally provides aesthetically pleasing (low
- {\it wiggle}) initial estimates of the first and second derivatives at
- the breakpoints while perfectly capturing local low-order phenomena
- (e.g., a run of points on a straight line) in the data. The binary
--search for a point near the monotone boundary in $(\tau_1$, $\alpha$,
-+search for a point on the monotone boundary in $(\tau_1$, $\alpha$,
- $\beta$, $\gamma)$ space is preferred because it results in monotone
- quintic spline interpolants that are nearer to initial estimates than
- a policy that strictly shrinks derivative values.
+ADDED REFERENCE TO MOLER AND HARMONIC MEAN ESTIMATES, MENTIONED LARGE
+WIGGLE AS REASON FOR THE CHOICE OF QUADRATIC FACET MODEL.
+
++Fritsch and Carlson [1980] originally proposed the use of central     
++differences to estimate derivatives, however this often leads to extra
++and unnecessary {\it wiggles} in the spline when used to approximate  
++second derivatives. Modern shape-preserving spline implementations use
++a weighted harmonic mean to estimate derivative values at breakpoints 
++[Moler 2008], however this method also yields approximations whose    
++second derivative functions often have large $L2$ norm (approximations
++with large {\it wiggle}). In an attempt to capture the local shape of 
++the data while minimizing wiggle, this package uses a facet model from
++image processing [Haralick and Watson 1981] to estimate first and     
++second derivatives at breakpoints. Rather than picking a local linear 
++or quadratic fit with minimal residual, this work uses a quadratic    
+ facet model that selects the local quadratic interpolant with minimum
+ magnitude curvature.
+
+
+----------------------------------------------------------------------
+
+
+CHANGED THE WORDING IN THE ANALYSIS SECTION, BROKE UP PARAGRAPHS,
+FOCUSED ON QUADRATIC FACET MODEL JUSTIFICATION, EXPANDED ON BINARY
+SEARCH JUSTIFICATION.
+
+ The quadratic facet model produces a unique sensitivity to input
+ perturbation, as small changes in input may cause different quadratic
+ facets to be associated with a breakpoint, and thus different initial
+ derivative estimates can be produced. This phenomenon is depicted in
++Figure 1. Despite this sensitivity, the quadratic facet model is still
++preferred because it exactly captures local linear and quadratic
++behavior while empirically producing final approximations with less
++wiggle ($L2$ norm of the second derivative) than other methods. A
++weighted harmonic mean estimate of first derivatives may be more
++accurate when the underlying function changes at a rate greater than a
++quadratic, but that method increases the sensitivity to small
++perturbations in data and empirically results in quintic splines with
++greater wiggle.
++
+ The binary search for a point on the monotone boundary in $(\tau_1$,
+ $\alpha$, $\beta$, $\gamma)$ space is performed because it results in
+ monotone quintic spline interpolants with derivative values that are
++absolutely nearer to initial estimates than a search that strictly
++shrinks derivative values. Given the initial derivative estimates have
++desirable properties (capture low-order phenomena and are low wiggle),
++this search results in an approximation that is both monotone and has
++derivative values similar to the initial estimates.
+

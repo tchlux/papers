@@ -12,9 +12,9 @@ differences to estimate derivatives, however this often leads to extra
 and unnecessary {\it wiggles} in the spline when used to approximate
 second derivatives. Modern shape-preserving spline implementations use
 a weighted harmonic mean to estimate derivative values at breakpoints
-[Moler 2008], however this method also yields approximations with
-large {\it wiggle}, or whose second derivative functions have large
-$L2$ norm over the domain. In an attempt to capture the local shape of
+[Moler 2008], however this method also yields approximations whose
+second derivative functions often have large $L2$ norm (approximations
+with large {\it wiggle}). In an attempt to capture the local shape of
 the data while minimizing wiggle, this package uses a facet model from
 image processing [Haralick and Watson 1981] to estimate first and
 second derivatives at breakpoints. Rather than picking a local linear
