@@ -35,13 +35,13 @@ probability density function (PDF) that is continuously
 differentiable, which is desirable.
 
 The currently available software for monotone piecewise polynomial
-interpolation includes quadratic [He and Shi 1998, McAllister and 
+interpolation includes quadratic [He and Shi 1998, McAllister and
 Roulier 1981], cubic [Fritsch and Carlson 1980], and (with limited
 application) quartic [Wang and Tan 2004; Piah and Unsworth 2011; Yao
 and Nelson 2018] cases. In addition, a statistical method for
 bootstrapping the construction of an arbitrarily smooth monotone fit
 exists [Leitenstorfer and Tutz 2006], but the method does not take
-advantage of known analytic properties of quintic polynomials. 
+advantage of known analytic properties of quintic polynomials.
 Conversely the work on quadratic shape preserving splines by Schumaker
 [1983] is widely utilized in theory for its conservation of both
 monotonicity and convexity, but a mathematical software is not readily
@@ -53,19 +53,15 @@ present. Theory has been provided for the quintic case [Ulrich and
 Watson 1994; He{\ss} and Schmidt 1994] and that theory was recently
 utilized in a proposed algorithm [Lux 2020] for monotone quintic
 spline construction, however no published mathematical software
-exists. This work improves upon the algorithm presented by Lux et al.
-[2020] by refactoring computations for improved numerical stability,
-estimating minimum curvature derivatives at breakpoints with a
-quadratic facet model, and using a binary search to reduce the
-magnitude of the modifications made to initial derivative estimates
-when constructing a monotone spline interpolant.
+exists. The software presented here represents the first published
+software package for producing $C^2$ shape preserving splines. This
+work improves upon the algorithm presented by Lux et al. [2020] by
+refactoring computations for improved numerical stability, estimating
+minimum curvature derivatives at breakpoints with a quadratic facet
+model, and using a binary search to reduce the magnitude of the
+modifications made to initial derivative estimates when constructing a
+monotone spline interpolant.
 
-The importance of piecewise quintic interpolation over lower order
-approximations can be simply observed. In general, the order of a
-polynomial determines the number of function (and derivative) values
-it can interpolate, which in turn determines the growth rate of error
-away from interpolated values. $C^2$ quintic (order six) splines
-match the function value and two given derivatives at each breakpoint.
 This work provides a Fortran 2003 subroutine {\tt MQSI} based on the
 necessary and sufficient conditions in Ulrich and Watson [1994] for the
 construction of monotone quintic spline interpolants of monotone data.
