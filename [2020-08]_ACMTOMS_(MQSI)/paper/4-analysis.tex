@@ -13,21 +13,21 @@ derivative estimates can be produced. This phenomenon is depicted in
 Figure 1. Despite this sensitivity, the quadratic facet model is still
 preferred because it exactly captures local linear and quadratic
 behavior while empirically producing final approximations with less
-wiggle ($L2$ norm of the second derivative) than other methods. A
+wiggle ($L^2$ norm of the second derivative) than other methods. A
 weighted harmonic mean estimate of first derivatives may be more
 accurate when the underlying function changes at a rate greater than a
-quadratic, but that method increases the sensitivity to small
-perturbations in data and empirically results in quintic splines with
-greater wiggle.
+quadratic, but that method increases the second derivative sensitivity
+to small perturbations in data and empirically results in quintic
+splines with greater wiggle.
 
 The binary search for a point on the monotone boundary in $(\tau_1$,
 $\alpha$, $\beta$, $\gamma)$ space is performed because it results in
 monotone quintic spline interpolants with derivative values that are
 absolutely nearer to initial estimates than a search that strictly
-shrinks derivative values. Given the initial derivative estimates have
-desirable properties (capture low-order phenomena and are low wiggle),
-this search results in an approximation that is both monotone and has
-derivative values similar to the initial estimates.
+shrinks derivative values. Given that the initial derivative estimates
+have desirable properties (capture low-order phenomena and are low
+wiggle), this search results in an approximation that is both monotone
+and has derivative values similar to the initial estimates.
 
 
 \topinsert
