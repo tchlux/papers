@@ -1,7 +1,7 @@
 
 %% General paragraph settings (no indent, big line skip).
 \parindent=0pt
-\parskip=12pt
+\parskip=9pt
 
 %% Fonts (for title)
 \font\titlebf=cmbx20
@@ -45,7 +45,7 @@ The binary search referred to in (1) is used to make a single interval of the in
 
 }
 
-The submission cites quadratic, cubic, and quartic previous works. The work by Larry Schumaker can readily be included in this list, and has been included in the attached update to the paper (section 1, paragraph 3). It is our understanding that one of the most widely used shape-preserving spline algorithms is a cubic spline methodology proposed by Fritsch and Carlson (known as PCHIP), which is included in many mathematical software libraries and cited in the submission. 
+The submission cites quadratic, cubic, and quartic previous works. The work by Larry Schumaker is now referenced in the attached update to the paper (section 1, paragraph 3). It is our understanding that one of the most widely used shape-preserving spline algorithms is a cubic spline methodology proposed by Fritsch and Carlson (known as PCHIP), which is included in many mathematical software libraries and cited in the submission. 
 
 {\parindent=20pt \it
 
@@ -55,7 +55,7 @@ The submission cites quadratic, cubic, and quartic previous works. The work by L
 
 This is a reasonable criticism, but also easily addressed with minor revisions to the submission. While the reviewer may disagree with the language we used, there are objective reasons for the decisions made in this work in addition to the subjective comments made. Specifically, the quadratic facet model picks the minimum curvature local estimate for second derivatives which has the smallest magnitude second derivative, and the binary search identifies derivative values absolutely nearer to the initial estimates than the previous method of shrinking derivative values used in (1). These facts are now mentioned in the paper (section 4, paragraphs 2 and 3).
 
-Comparisons with lower order methods are not appropriate for this work. There is no published mathematical software that also constructs a monotone quintic spline interpolant to data. If a user desires a monotonicity preserving $C^2$ approximation, this would be the only published software that achieves that goal. This paper is not intended to be a review and comparison of all available shape preserving spline packages. Including such comparisons would also require subjective decisions about what visuals to show, and those decisions might draw criticisms that distract from the unique purpose and achievement of this work (producing $C^2$ monotonicity preserving approximations to data). To emphasize that this work is not a replacement for previous works, but rather an additional method to consider, the first sentence of section 1, paragraph 5 that mentioned the importance of this work ``over'' previous methods was removed.
+Comparisons with lower order methods are not appropriate for this work. There is no published mathematical software that also constructs a monotone quintic spline interpolant to data. If a user desires a monotonicity preserving $C^2$ approximation, this would be the only published software that achieves that goal. This paper is not intended to be a review and comparison of all available shape preserving spline packages. Including such comparisons would also require subjective decisions about what visuals to show, and those decisions might draw criticisms that distract from the unique purpose and achievement of this work (producing $C^2$ monotonicity preserving approximations to data). To emphasize that this work is not a replacement for previous works, but rather an additional method to consider, the first sentence of section 1, paragraph 5 that mentioned the importance of this work ``over'' previous methods was removed. The inherent difficulty of comparing this work with existing lower order methods is now mentioned in section 5, paragraph 5.
 
 {\parindent=20pt \it
 
@@ -65,7 +65,7 @@ Comparisons with lower order methods are not appropriate for this work. There is
 
 }
 
-The reviewer may have missed the reason for the global linear system, from the submission (section 5, paragraph 4), ``It would be faster to construct splines over intervals independently ... the single linear system is chosen here for the decreased redundancy''. To be clear, the de Boor-Cox algorithm {\it is} used to evaluate the underlying B-splines (section 5, paragraph 1). The linear combination in the submission is of the (quintic) B-splines that define the interpolant.
+The reviewer may have missed the reason for the global linear system, from the submission (section 5, paragraph 4), ``It would be faster to construct splines over intervals independently ... the single linear system is chosen here for the decreased redundancy''. Comments in the paper and the Fortran source code indicated an option for returning the derivatives at the data points, so one can use either the piecewise polynomial or the B-spline representations. Further, the time for the banded system solve is $O(n)$, reasonable for $n$ data points. To be clear, the de Boor-Cox algorithm {\it is} used to evaluate the underlying B-splines (section 5, paragraph 1). The linear combination in the submission is of the (quintic) B-splines that define the interpolant.
 
 \bigskip
 
