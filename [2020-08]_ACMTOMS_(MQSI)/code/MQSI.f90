@@ -69,6 +69,8 @@ SUBROUTINE MQSI(X, Y, T, BCOEF, INFO, UV)
 !     8  The optional array UV must have size at least ND x 2.
 !   >10  20 plus the info flag as returned by DGBSV from LAPACK when
 !        computing the final spline interpolant.
+!   <-10 (negated) 20 plus the info flag as returned by DGESV from
+!        LAPACK when computing the quadratic interpolants.
 !   UV(1:ND,1:2) -- First and second derivatives of Q(X) at the breakpoints
 !     (optional argument).
 !   
@@ -211,7 +213,9 @@ estimate_derivatives : DO I = 1, ND
             A = (Y(I) - Y(IM1)) / (X(I) - X(IM1))**2
             B = -2.0_R8 * X(IM1) * A
          ! Otherwise use the standard quadratic on the left.
-         ELSE; CALL QUADRATIC(X, Y, IM1, A, B)
+         ELSE
+            CALL QUADRATIC(X, Y, IM1, A, B, INFO)
+            IF (INFO .NE. 0) RETURN
          END IF
          DX = 2.0_R8*A*X(I) + B
          IF (DX*DIRECTION .GE. 0.0_R8) THEN
@@ -226,7 +230,8 @@ estimate_derivatives : DO I = 1, ND
          IF (.NOT. ((SHRINKING(IM1) .OR. GROWING(IM1)) .AND. &
               (SHRINKING(IP1) .OR. GROWING(IP1)))) THEN
             ! Construct quadratic interpolant through this point and neighbors.
-            CALL QUADRATIC(X, Y, I, A, B)
+            CALL QUADRATIC(X, Y, I, A, B, INFO)
+            IF (INFO .NE. 0) RETURN
             DX = 2.0_R8*A*X(I) + B
             ! Keep this new quadratic if it has less curvature.
             IF ((DX*DIRECTION .GE. 0.0_R8) .AND. (ABS(A) .LT. ABS(FX(I,3)))) THEN
@@ -243,7 +248,9 @@ estimate_derivatives : DO I = 1, ND
             A = (Y(I) - Y(IP1)) / (X(I) - X(IP1))**2
             B = -2.0_R8 * X(IP1) * A
          ! Otherwise use the standard quadratic on the right.
-         ELSE; CALL QUADRATIC(X, Y, IP1, A, B)
+         ELSE
+            CALL QUADRATIC(X, Y, IP1, A, B, INFO)
+            IF (INFO .NE. 0) RETURN
          END IF
          DX = 2.0_R8*A*X(I) + B
          ! Keep this new quadratic if it has less curvature.
@@ -411,10 +418,10 @@ END DO
 CALL FIT_SPLINE(X, FX, T, BCOEF, INFO)
 
 ! Restore Y to its original value and unscale spline and derivative values.
+Y(:) = SCALE*Y(:)
 BCOEF(1:3*ND) = SCALE * BCOEF(1:3*ND)
-Y(:) = SCALE*Y(:) ! Restore original Y.
-IF (PRESENT(UV)) THEN; UV(1:ND,1:2) = FX(1:ND,2:3); END IF ! Return first
-! and second derivative values at breakpoints.
+! Return first and second derivative values at breakpoints.
+IF (PRESENT(UV)) THEN; UV(1:ND,1:2) = FX(1:ND,2:3); END IF 
 
 CONTAINS
 
@@ -527,27 +534,39 @@ ELSE
 END IF
 END FUNCTION IS_MONOTONE
 
-SUBROUTINE QUADRATIC(X, Y, I2, A, B)
+SUBROUTINE QUADRATIC(X, Y, I2, A, B, INFO)
 ! Given data X, Y, an index I2, compute the coefficients A of x^2 and B
 ! of x for the quadratic interpolating Y(I2-1:I2+1) at X(I2-1:I2+1).
 REAL(KIND=R8), INTENT(IN),  DIMENSION(:) :: X, Y
 INTEGER, INTENT(IN) :: I2
 REAL(KIND=R8), INTENT(OUT) :: A, B
+INTEGER, INTENT(OUT) :: INFO
 ! Local variables.
-REAL(KIND=R8) :: C1, C2, C3, & ! Intermediate terms for computation.
-  D ! Denominator for computing A and B via Cramer's rule.
-INTEGER :: I1, I3
+REAL(KIND=R8) :: W ! Interval width.
+REAL(KIND=R8) :: S ! Sum of interval ends.
+REAL(KIND=R8), DIMENSION(3,3) :: C ! Coefficient matrix.
+REAL(KIND=R8), DIMENSION(3) :: R   ! Right-hand side vector.
+INTEGER, DIMENSION(3) :: IPIV      ! Pivots for DGESV.
+INTEGER :: I1, I3 ! Neighboring indices of points defining quadratic.
 I1 = I2-1
 I3 = I2+1
-! The earlier tests for extreme data (X,Y) keep the quantities below 
-! within floating point range. Compute the shared denominator.
-D = (X(I1) - X(I2)) * (X(I1) - X(I3)) * (X(I2) - X(I3))
+S = (X(I1) + X(I3))
+W = (X(I3) - X(I1))
+! Compute Chebyshev basis functions (over shifted data).
+C(1:3,1) = 1.0_R8
+C(1:3,2) = (2.0_R8 * X(I1:I3) - S) / W
+C(1:3,3) = 2.0_R8 * C(1:3,2) ** 2 - 1.0_R8
+R(1:3) = Y(I1:I3)
+! Solve linear system (Chebyshev basis for quadratic interpolant).
+CALL DGESV(3, 1, C(:,:), 3, IPIV, R, 3, INFO)
+! Check for an error code, return if nonzero.
+IF (INFO .NE. 0) THEN
+   INFO = - (20 + INFO)
+   RETURN
+END IF
 ! Compute coefficients A and B in quadratic interpolant  Ax^2 + Bx + C.
-C1 = X(I1) * (Y(I3) - Y(I2))
-C2 = X(I2) * (Y(I1) - Y(I3))
-C3 = X(I3) * (Y(I2) - Y(I1))
-A = (C1 + C2 + C3) / D
-B = - (X(I1)*C1 + X(I2)*C2 + X(I3)*C3) / D
+B = 2.0_R8 * (R(2) - 4.0_R8 * R(3) * S / W) / W
+A = (R(3) / W) * (8.0_R8 / W)
 END SUBROUTINE QUADRATIC
 
 END SUBROUTINE MQSI

@@ -99,12 +99,12 @@ optional argument to {\tt MQSI} returns the derivative information at the
 breakpoints (interval endpoints) for the Newton form of the interpolating
 polynomial (piece of $Q(x)$) over each interval.
 
-Comparisons between this work and lower order spline algorithms are
-problematic, especially with sparse data. For exact data from smooth
-functions, comparing derivative values, higher order methods always win
-as the data density increases. This result is demonstrated in the work of
-Lux et al. [2020]. For sparse or synthetic data, what constitutes a
-better fit is either subjective (e.g., less wiggle) or dependent on the
-specific problem. If an application demands $C^2$ continuity and
-monotonicity, the target of {\tt MQSI}, then this software provides such
-solutions while no existing published spline algorithms suffice.
+Comparisons between this work and lower order methods are problematic,
+especially with sparse data. For exact data from smooth functions,
+comparing derivative values, higher order methods always win (all
+other things being equal) as the data density increases. For sparse or
+synthetic data, what constitutes a better fit is either subjective or
+dependent on the specific problem. If an application demands $C^2$
+continuity and monotonicity, the target of {\tt MQSI}, then this
+package provides such interpolants while no existing published spline
+software suffices.
