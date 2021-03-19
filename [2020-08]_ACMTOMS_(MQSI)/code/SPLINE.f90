@@ -166,8 +166,8 @@ END DO
 ! Assign the last knot to exist a small step outside the supported
 ! interval to ensure the B-spline basis functions are nonzero at the
 ! rightmost breakpoint.
-T(NK-DEGREE:NK) = MAX( XI(NB) + ABS(XI(NB))*SQRT(EPSILON(XI(NB))),  &
-                       XI(NB) + SQRT(EPSILON(XI(NB))) )
+T(NK-DEGREE:NK) = MAX( XI(NB) + ABS(XI(NB))*SQRT(SQRT(EPSILON(XI(NB)))),  &
+                       XI(NB) + SQRT(SQRT(EPSILON(XI(NB)))) )
 
 ! The next block of code evaluates each B-spline and it's derivatives
 ! at all breakpoints. The first and last elements of XI will be
