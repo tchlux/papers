@@ -113,6 +113,8 @@ REAL(KIND=R8), PARAMETER :: ACCURACY = SQRT(EPSILON(1.0_R8)), &
 INTEGER :: I, IM1, IP1, J, NC, ND, NG, NS
 !  Boolean indicating whether the bisection search is in progress.
 LOGICAL :: SEARCHING
+! LAPACK subroutine for solving linear systems.
+EXTERNAL :: DGESV
 INTERFACE
    SUBROUTINE FIT_SPLINE(XI, FX, T, BCOEF, INFO)
      USE REAL_PRECISION, ONLY: R8
