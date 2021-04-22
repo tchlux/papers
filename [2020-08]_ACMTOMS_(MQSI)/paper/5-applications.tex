@@ -98,3 +98,13 @@ is chosen here for the decreased redundancy in the spline description. An
 optional argument to {\tt MQSI} returns the derivative information at the
 breakpoints (interval endpoints) for the Newton form of the interpolating
 polynomial (piece of $Q(x)$) over each interval.
+
+Comparisons between this work and lower order methods are problematic,
+especially with sparse data. For exact data from smooth functions,
+comparing derivative values, higher order methods always win (all
+other things being equal) as the data density increases. For sparse or
+synthetic data, what constitutes a better fit is either subjective or
+dependent on the specific problem. If an application demands $C^2$
+continuity and monotonicity, the target of {\tt MQSI}, then this
+package provides such interpolants while no existing published spline
+software suffices.
