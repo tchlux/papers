@@ -7,13 +7,18 @@ at data points need to be estimated. Second, the estimated derivative
 values need to be modified to enforce monotonicity on all polynomial
 pieces.
 
-Fritsch and Carlson [1980] originally proposed the use of central differences
-to estimate derivatives, however this often leads to extra and unnecessary
-{\it wiggles} in the spline when used to approximate second derivatives.
-In an attempt to capture the local shape of the data, this package uses a
-facet model from image processing [Haralick and Watson 1981] to estimate
-first and second derivatives at breakpoints. Rather than picking a local
-linear or quadratic fit with minimal residual, this work uses a quadratic
+Fritsch and Carlson [1980] originally proposed the use of central
+differences to estimate derivatives, however this often leads to extra
+and unnecessary {\it wiggles} in the spline when used to approximate
+second derivatives. Modern shape-preserving spline implementations use
+a weighted harmonic mean to estimate derivative values at breakpoints
+[Moler 2008], however this method also yields approximations whose
+second derivative functions often have large $L^2$ norm (approximations
+with large {\it wiggle}). In an attempt to capture the local shape of
+the data while minimizing wiggle, this package uses a facet model from
+image processing [Haralick and Watson 1981] to estimate first and
+second derivatives at breakpoints. Rather than picking a local linear
+or quadratic fit with minimal residual, this work uses a quadratic
 facet model that selects the local quadratic interpolant with minimum
 magnitude curvature.
 
@@ -21,9 +26,10 @@ magnitude curvature.
 %%                   Algorithm 1: QUADRATIC_FACET
 \vskip 5mm
 {\parindent 0mm
-{\bf Algorithm 1:} {
-\tt QUADRATIC\_FACET}$\bigl(X(1{:}n)$, $Y(1{:}n)$, $i \bigr)$
+{\bf Algorithm 1:}
+{\tt QUADRATIC\_FACET}$\bigl(X(1{:}n)$, $Y(1{:}n)$, $i \bigr)$
 
+\nobreak
 where $X_j$, $Y_j$ $\in \bbb{R}$ for $j = 1$, $\ldots$, $n$, $1 \le i
 \le n$, and $n \ge 3$. Returns the slope and curvature at $X_i$ of the
 local quadratic interpolant with minimum magnitude curvature.
@@ -95,23 +101,26 @@ magnitude curvature among existing quadratics is chosen.}
 \vskip 5mm
 %% ----------------------------------------------------------------------
 
-The estimated derivative values by the quadratic facet model are not
-guaranteed to produce monotone quintic polynomial segments. Ulrich and
-Watson [1994] established tight constraints on the monotonicity of a
-quintic polynomial piece, while deferring to He{\ss} and Schmidt
-[1994] for a relevant simplified case. The following algorithm
-implements a sharp check for monotonicity by considering the
-nondecreasing case. The nonincreasing case is handled similarly.
+For constructing a quadratic interpolant in $x$ over the interval
+$[L,R]$, the Chebyshev basis $1$, $z$, $2z^2-1$ is used, where
+$z={x-(L+R)/2 \over (R-L)/2}$. The estimated derivative values by the
+quadratic facet model are not guaranteed to produce monotone quintic
+polynomial segments. Ulrich and Watson [1994] established tight
+constraints on the monotonicity of a quintic polynomial piece, while
+deferring to He{\ss} and Schmidt [1994] for a relevant simplified
+case. The following algorithm implements a sharp check for
+monotonicity by considering the nondecreasing case. The nonincreasing
+case is handled similarly.
 
 %% ===================================================================
 %%                    Algorithm 2: IS_MONOTONE
 \vskip 5mm
 {\parindent 0mm
 {\bf Algorithm 2:}
-
 {\tt IS\_MONOTONE}$\bigl(x_0$, $x_1$, $f(x_0)$, $Df(x_0)$,
 $D^2f(x_0)$, $f(x_1)$, $Df(x_1)$, $D^2f(x_1) \bigr)$
 
+\nobreak
 where $x_0$, $x_1 \in {\bbb R}$, $x_0 < x_1$, and $f$ is an order six
 polynomial defined by $f(x_0)$, $Df(x_0)$, $D^2f(x_0)$, $f(x_1)$,
 $Df(x_1)$, $D^2f(x_1)$. Returns {\tt TRUE} if $f$ is monotone
@@ -193,8 +202,10 @@ accompanying package.
 %%       Algorithm 3: MQSI - Monotone quintic spline interpolant
 \vskip 3mm
 {\parindent 0mm
-{\bf Algorithm 3:} {\tt MQSI}$\bigl(X(1{:}n), Y(1{:}n) \bigr)$
+{\bf Algorithm 3:}
+{\tt MQSI}$\bigl(X(1{:}n), Y(1{:}n) \bigr)$
 
+\nobreak
 where $(X_i,Y_i) \in \bbb{R}\times\bbb{R}$, $i = 1$, $\ldots$, $n$ are data
 points. Returns monotone quintic spline interpolant $Q(x)$ such that
 $Q(X_i) = Y_i$ and is monotone increasing (decreasing) on all
@@ -265,9 +276,10 @@ below.
 
 %% ===================================================================
 %%              Algorithm 4: Global binary search
-\vskip 5mm {\parindent 0mm {\bf Algorithm 4:} {\tt
-    BINARY\_SEARCH}$\bigl(X(1{:}n), Y(1{:}n), u(1{:}n), v(1{:}n) \bigr)$
+\vskip 5mm {\parindent 0mm {\bf Algorithm 4:}
+{\tt BINARY\_SEARCH}$\bigl(X(1{:}n), Y(1{:}n), u(1{:}n), v(1{:}n) \bigr)$
 
+\nobreak
 where $(X_i,Y_i) \in \bbb{R}\times\bbb{R}$, $i = 1$, $\ldots$, $n$ are
 data points, and $Q(x)$ is a quintic spline interpolant such that
 $Q(X_i) = Y_i$, $DQ(X_i) = u_i$, $D^2Q(X_i) = v_i$. Modifies

@@ -4,20 +4,31 @@ schedule for shrinking derivative values, Algorithm 3 has a ${\cal
   O}(n)$ runtime for $n$ data points. In execution, the majority of
 the time, still ${\cal O}(n)$, is spent solving the banded linear
 system of equations for the B-spline coefficients. Thus for $n$ data
-points, the overall execution time is ${\cal O}(n)$. The quadratic
-facet model produces a unique sensitivity to input perturbation, as
-small changes in input may cause different quadratic facets to be
-associated with a breakpoint, and thus different initial derivative
-estimates can be produced. This phenomenon is depicted in Figure
-1. Despite this sensitivity, the quadratic facet model is still
-preferred because it generally provides aesthetically pleasing (low
-{\it wiggle}) initial estimates of the first and second derivatives at
-the breakpoints while perfectly capturing local low-order phenomena
-(e.g., a run of points on a straight line) in the data. The binary
-search for a point near the monotone boundary in $(\tau_1$, $\alpha$,
-$\beta$, $\gamma)$ space is preferred because it results in monotone
-quintic spline interpolants that are nearer to initial estimates than
-a policy that strictly shrinks derivative values.
+points, the overall execution time is ${\cal O}(n)$.
+
+The quadratic facet model produces a unique sensitivity to input
+perturbation, as small changes in input may cause different quadratic
+facets to be associated with a breakpoint, and thus different initial
+derivative estimates can be produced. This phenomenon is depicted in
+Figure 1. Despite this sensitivity, the quadratic facet model is still
+preferred because it exactly captures local linear and quadratic
+behavior while empirically producing final approximations with less
+wiggle ($L^2$ norm of the second derivative) than other methods. A
+weighted harmonic mean estimate of first derivatives may be more
+accurate when the underlying function changes at a rate greater than a
+quadratic, but that method increases the second derivative sensitivity
+to small perturbations in data and empirically results in quintic
+splines with greater wiggle.
+
+The binary search for a point on the monotone boundary in $(\tau_1$,
+$\alpha$, $\beta$, $\gamma)$ space is performed because it results in
+monotone quintic spline interpolants with derivative values that are
+absolutely nearer to initial estimates than a search that strictly
+shrinks derivative values. Given that the initial derivative estimates
+have desirable properties (capture low-order phenomena and are low
+wiggle), this search results in an approximation that is both monotone
+and has derivative values similar to the initial estimates.
+
 
 \topinsert
 \centerline{\epsfxsize=4truein \epsffile{vis/1-sensitivity.eps}}
