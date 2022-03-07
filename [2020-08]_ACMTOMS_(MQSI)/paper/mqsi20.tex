@@ -153,12 +153,12 @@ University, Rock Hill, SC 29733; {\ttVIII thackerw@winthrop.edu}.
 
 % Abstract and Introduction
 {\rmVIII\parindent=0pt MQSI is a Fortran 2003 subroutine for constructing
-monotone quintic spline interpolants to monotone data. Using sharp
+monotone quintic spline interpolants to univariate monotone data. Using sharp
 theoretical monotonicity constraints, first and second derivative estimates
 at data provided by a quadratic facet model are refined to produce a
-$\scriptstyle C^2$ monotone interpolant.  Algorithm and implementation
-details, complexity and sensitivity analyses, usage information, and a
-brief performance study are included.
+univariate $\scriptstyle C^2$ monotone interpolant.  Algorithm and implementation
+details, complexity and sensitivity analyses, usage information, a
+brief performance study, and comparisons with other spline approaches are included.
 
 \medskip
 Categories and Subject Descriptors: G.1.1 [{\bfVIII Numerical Analysis}]:
@@ -191,6 +191,8 @@ General Terms: Algorithms, Monotonicity, Spline
 Additional Key Words and Phrases: quintic spline, interpolation
 
 }
+
+\bigskip\hrule\bigskip
 
 %% Section 1
 \input 1-introduction
@@ -249,6 +251,49 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %  #4 -- Technical report ID, Publisher, City, State
 \def\reft#1#2#3#4{\noindent\hangindent=10pt\hangafter=1
 {\caps #1}\ys #2.\ys{\rm #3}. {\rm #4}.\vskip 6pt minus 3pt}
+
+
+%% No extra knots, rational functions, sufficiency and necessity proven, works for unequally spaced data, no code associated with the paper, no algorithm provided for the initialization for free shape parameters.
+\refj{Abbas M., Majid, A. A. and Ali, J. M.}{2012}{Monotonicity-preserving $C^2$ rational cubic spline for monotone data}{Applied Mathematics and Computation}{219(6):2885--2895}
+
+%% 
+\refj{Beatson, R. K.}{1982}{Monotone and convex approximation by splines: error estimates and a curve fitting algorithm}{SIAM Journal on Numerical Analysis}{19(6):1278--1285}
+
+%% Proves existence of splines that maintain monotonicity and convexity while having fixed continuity and order.
+\refj{Costantini, P.}{1986}{On monotone and convex spline interpolation}{Mathematics of Computation}{46(173):203--214}
+
+\refj{Cravero, I., C. Manni}{2003}{Shape-preserving interpolants with high smoothness}{Journal of computational and applied mathematics}{157, 383--405}
+
+\refj{Delbourgo, R., Gregory,  J. A.}{1983}{$C^2$ rational quadratic spline interpolation to monotonic data}{IMA J. Numer. Anal.}{3, 141--152}
+
+\refj{Delbourgo, R.}{1993}{Accurate $C^2$ rational interpolations in tension}{SIAM J. Numer. Anal.}{30, 595--607}
+
+\refj{DeVore, R. A.}{1977}{Monotone approximation by splines}{SIAM J. Math. Anal.}{8, 891-905}
+
+\refj{DeVore, R. A.}{1977}{Monotone approximation by polynomials}{SIAM J. Math. Anal.}{8, 906-921}
+
+\refj{Dougherty, R. L., Edelman, A., Hyman, J. M.}{1989}{Nonnegativity-, monotonicity- convexity-preserving cubic and quintic Hermite interpolation}{Math. Comp.}{52, 471--494}
+
+\refj{Gregory, J. A.,Delbourgo,  R.}{1982}{Piecewise rational quadratic interpolation to monotonic data}{IMA J. Numer. Anal.}{2, 123--130}
+
+\refj{Fiorot, J. C., Tabka, J.}{1991}{Shape-preserving $C^2$ cubic polynomial interpolating splines}{Math. Comp.}{57, 291--298}
+
+\refj{Han, X.}{2018}{Shape-preserving piecewise rational interpolation with higher order continuity}{Applied Mathematics and Computation}{337, 1-13}
+
+\refj{Huynh, H. T.}{1993}{Accurate monotone cubic interpolation}{SIAM J. Numer. Anal.}{30, 57--100}
+
+\refj{Kvasov, B. I.}{2014}{Monotone and convex interpolation by weighted quadratic splines}{Adv. Comput. Math.}{40, 91-116}
+
+\refj{Manni, C., Sablonni\`ere, P.}{1997}{Monotone interpolation of order 3 by $C^2$ cubic splines}{IMA J. Numer.Anal.}{17, 305--320}
+
+\refj{Manni, C.}{2001}{On shape preserving $C^2$ Hermite interpolation}{BIT Numerical Mathematics}{41, 127--148}
+
+\refj{Pruess, S.}{1993}{Shape preserving $C^2$ cubic spline interpolation}{IMA J. Numer. Anal.}{13, 493--507}
+
+\refj{Zhu, Y.,Han, X.}{2015}{$C^2$ rational quartic interpolation spline with local shape preserving property}{Appl. Math. Lett.}{46, 57-63}
+
+\refj{Zhu, Y.,Han, X.}{2015}{Shape preserving $C^2$ rational quartic interpolation spline with two parameters}{International Journal of Computer Mathematics}{92, 2160-2177}
+
 
 %% -------------------------------------------------------------------
   

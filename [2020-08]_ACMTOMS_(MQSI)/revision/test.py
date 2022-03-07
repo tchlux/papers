@@ -41,7 +41,7 @@ def toms_574_spline(x, y, pts=1000):
             py = eval_quadratic(px)
             f = fit_polynomial(px, py)
             return f.derivative()(z)
-    def deriv_2(z, s=.01):
+    def deriv_2(z, s=.001):
         try: return [deriv_2(v) for v in z]
         except:
             if (min(abs(z - x_min), abs(z - x_max)) <= s): return 0.0
@@ -75,8 +75,9 @@ def schumaker_spline(x, y):
     # Import the "schumaker" package from R.
     schumaker = importr('schumaker')
     # Calculate the response for the given x with R
+    edge_gradient = py2rpy(np.asarray([0.0, 0.0]))
     Spline, DerivativeSpline, SecondDerivativeSpline, IntervalTab = (
-        schumaker.Schumaker(py2rpy(x), py2rpy(y), Vectorised=True)
+        schumaker.Schumaker(py2rpy(x), py2rpy(y), edgeGradients=edge_gradient, Vectorised=True)
     )
     # Construct python functions for evaluating the fit spline.
     def second_derivative(x, ddf=SecondDerivativeSpline):
@@ -175,7 +176,8 @@ def bvspis_spline(x, y):
                                y2tab, erre, work, nwork)
         (x, y, np, n, k, xtab, ntab, sbopt, y0opt, y1opt, y2opt, 
          errc, d, d2, y0tab, y1tab, y2tab, erre, work, nwork) = output
-        assert (erre == 0), f"The DBVSSC routine reported a nonzero error {erre}. Check the documentation for more information about ERRE."
+        assert (erre == 0), f"The DBVSSC routine reported a nonzero error ERRE = {erre}. Check the documentation for more information about ERRE."
+        assert (errc == 0), f"The DBVSSC routine reported a nonzero error ERRC = {errc}. Check the documentation for more information about ERRC."
         return y0tab
     # First derivative evaluation.
     def df(xtab, x=x, y=y, np=np, n=n, k=k, sbopt=sbopt,
@@ -194,7 +196,8 @@ def bvspis_spline(x, y):
                                y2tab, erre, work, nwork)
         (x, y, np, n, k, xtab, ntab, sbopt, y0opt, y1opt, y2opt, 
          errc, d, d2, y0tab, y1tab, y2tab, erre, work, nwork) = output
-        assert (erre == 0), f"The DBVSSC routine reported a nonzero error {erre}. Check the documentation for more information about ERRE."
+        assert (erre == 0), f"The DBVSSC routine reported a nonzero error ERRE = {erre}. Check the documentation for more information about ERRE."
+        assert (errc == 0), f"The DBVSSC routine reported a nonzero error ERRC = {errc}. Check the documentation for more information about ERRC."
         return y1tab
     # Second derivative evaluation.
     def ddf(xtab, x=x, y=y, np=np, n=n, k=k, sbopt=sbopt,
@@ -213,12 +216,42 @@ def bvspis_spline(x, y):
                                y2tab, erre, work, nwork)
         (x, y, np, n, k, xtab, ntab, sbopt, y0opt, y1opt, y2opt, 
          errc, d, d2, y0tab, y1tab, y2tab, erre, work, nwork) = output
-        assert (erre == 0), f"The DBVSSC routine reported a nonzero error {erre}. Check the documentation for more information about ERRE."
+        assert (erre == 0), f"The DBVSSC routine reported a nonzero error ERRE = {erre}. Check the documentation for more information about ERRE."
+        assert (errc == 0), f"The DBVSSC routine reported a nonzero error ERRC = {errc}. Check the documentation for more information about ERRC."
         return y2tab
     # Stack and return the function.
     function.derivative = df
     function.derivative.derivative = ddf
     return function
+
+
+# Produce a piecewise monotone spline fit of the specified continuity.
+def monotone_fit(x, y, c=3, steps=10000, root=1, step_size=0.01, multiplier=0.0001):
+    import monotone_fit as monofit
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    # Create a monotone fit of the data (using an optimization procedure).
+    fx = np.zeros(shape=(x.size, c), dtype=float, order='F')
+    t = np.zeros(shape=(x.size*c+2*c), dtype=float, order='F')
+    bcoef = np.zeros(shape=(x.size*c), dtype=float, order='F')
+    monofit.monotone_fit(x, y, c, steps//2, steps//2, root, step_size,
+                         multiplier, fx, t, bcoef)
+    # Evaluate the spline fit.
+    def fit(x, t=t, bcoef=bcoef, d=0):
+        xy = np.array(x, dtype=float)
+        xy, info = monofit.eval_spline(t, bcoef, xy, d=d)
+        assert info == 0, f"EVAL_SPLINE produced nonzero info {info}."
+        return xy
+    fit.derivative = lambda x: fit(x, d=1)
+    fit.derivative.derivative = lambda x: fit(x, d=2)
+    # Evaluate a b-spline with a given knot sequence.
+    def bspline(x, t=np.asarray([0.,0,0,1,1,1]), d=0):
+        t = t * 0.8 + 0.1
+        xy = np.array(x, dtype=float)
+        spline.eval_bspline(t, xy, d=d)
+        return xy
+    # Return the fit function.
+    return fit
 
 
 # Construct and returnn an MQSI spline fit to data.
@@ -251,7 +284,7 @@ def mqsi_spline(x, y):
 # Given a spline fit function and some data, plot the fit over the
 #  interval covered by the data.
 def plot_spline_fit(x, y, spline_fit, name=None, p=None, color=None,
-                    dash=None, d1=False, d2=False):
+                    dash=None, d1=False, d2=False, plot_points=5000):
     print("spline_fit: ",spline_fit)
     print()
     spline = spline_fit(x, y)
@@ -273,61 +306,77 @@ def plot_spline_fit(x, y, spline_fit, name=None, p=None, color=None,
     # Get the bounds of the data to evaluate.
     bounds = [x.min(), x.max()]
     # Evaluate the fit and two derivatives.
-    p.add_func(f"{name}", spline, bounds, vectorized=True, color=color, group=color, dash=dash)
+    p.add_func(f"{name}", spline, bounds, vectorized=True, color=color, group=color, dash=dash, plot_points=plot_points)
     if d1:
         p.add_func("First derivative", spline.derivative, bounds, vectorized=True,
-                   color=color, group=color, dash="dash")
+                   color=color, group=color, dash="dash", plot_points=plot_points)
     if d2:
         p.add_func("Second derivative", spline.derivative.derivative, bounds, vectorized=True,
-                   color=color, group=color, dash="dot")
+                   color=color, group=color, dash="dot", plot_points=plot_points)
     # Return the plot.
     return p
 
 
 
-from test_functions import signal as f_df_ddf
+# from test_functions import signal as f_df_ddf
+# from test_functions import trig as f_df_ddf
+# from test_functions import large_tangent as f_df_ddf
+from test_functions import piecewise_polynomial as f_df_ddf
+
+
+# n = 8 
+# x = np.linspace(0, 1, n)
+# y = np.log(x)
+# y = np.asarray(f_df_ddf[0](x), dtype=float)
+
+x = np.asarray([
+    0.025926231827891333, 0.13457994534493356, 0.18443986564691528, 0.2046486340378425, 0.26682727510286663, 0.29965467367452314, 0.3303348210038741, 0.42036780208748903, 0.4353223926182769, 0.43599490214200376, 0.5135781212657464, 0.5291420942770391, 0.5496624778787091, 0.6192709663506637, 0.6211338327692949, 0.7853351478166735
+])
+y = np.asarray([
+    0.06528650438687811, 0.079645477009061, 0.09653091566061256, 0.10694568430998297, 0.12715997170127746, 0.20174322626496533, 0.2203062070705597, 0.22601200060423587, 0.34982628500329926, 0.42812232759738944, 0.46778748458230024, 0.4942368373819278, 0.505246090121704, 0.5967453089785958, 0.846561485357468, 0.8539752926394888
+])
 
 print()
-x = np.linspace(0, 1, 20)
-# y = np.log(x)
-y = np.asarray(f_df_ddf[0](x), dtype=float)
-print("type(x): ",type(x))
-print("y.dtype: ",y.dtype)
-print("type(y): ",type(y))
 print("x: ",x)
 print("y: ",y)
 print()
 
 from util.plot import Plot
-p = Plot()
+
+# Show the various fits of the data.
+def show_fits(x, y, d1=False, d2=False, **plot_kwargs):
+    p = Plot()
+    color = (200,200,200)
+    p.add("Data", x, y, marker_size=8, color=color+(0.0,),
+          marker_line_width=2, marker_line_color="rgb{color}")
+    c = 1
+    plot_spline_fit(x, y, toms_574_spline, p=p, color=c, d1=d1, d2=d2)
+    c += 1
+    plot_spline_fit(x, y, schumaker_spline, p=p, color=c, d1=d1, d2=d2)
+    c += 1
+    plot_spline_fit(x, y, pchip_spline, p=p, color=c, d1=d1, d2=d2)
+    c += 1
+    plot_spline_fit(x, y, bvspis_spline, p=p, color=c, d1=d1, d2=d2)
+    c += 2
+    plot_spline_fit(x, y, mqsi_spline, p=p, color=c, d1=d1, d2=d2)
+    c += 1
+    plot_spline_fit(x, y, monotone_fit, p=p, color=c, d1=d1, d2=d2)
+    p.show(**plot_kwargs)
+
+show_fits(x, y,                       show=False)
+show_fits(x, y, d1=True, append=True, show=False)
+show_fits(x, y, d2=True, append=True, show=True)
+
+
+# 2022-03-06 13:08:57
+# 
+########################################################################################
+# # plot_spline_fit(x, y, mqsi_spline, p=p, color=0)#, d1=True, d2=True)               #
+# # plot_spline_fit(x, y, bvspis_spline, p=p, color=1, dash="dot")#, d1=True, d2=True) #
+# # p.show()                                                                           #
+# # exit()                                                                             #
 # color = (255,100,150)
-color = (200,200,200)
-p.add("Data", x, y, marker_size=8, color=color+(0.0,),
-      marker_line_width=2, marker_line_color="rgb{color}")
-
-
-# plot_spline_fit(x, y, mqsi_spline, p=p, color=0)#, d1=True, d2=True)
-# plot_spline_fit(x, y, bvspis_spline, p=p, color=1, dash="dot")#, d1=True, d2=True)
-# p.show()
-# exit()
-
-d1 = True
-d2 = True
-
-c = 1
-plot_spline_fit(x, y, toms_574_spline, p=p, color=c, d1=d1, d2=d2)
-c += 1
-plot_spline_fit(x, y, schumaker_spline, p=p, color=c, d1=d1, d2=d2)
-c += 1
-plot_spline_fit(x, y, pchip_spline, p=p, color=c, d1=d1, d2=d2)
-c += 1
-plot_spline_fit(x, y, bvspis_spline, p=p, color=c, d1=d1, d2=d2)
-c += 2
-plot_spline_fit(x, y, mqsi_spline, p=p, color=c, d1=d1, d2=d2)
-
-
-p.show()
-
 # plot(xarray, Result, ylim=c(-0.5,2))
 # lines(xarray, Result2, col = 2)
 # lines(xarray, Result3, col = 3)
+########################################################################################
