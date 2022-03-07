@@ -1,0 +1,148 @@
+
+%% General paragraph settings (no indent, big line skip).
+\parindent=0pt
+\parskip=9pt
+
+%% Fonts (for title)
+\font\titlebf=cmbx20
+\font\titlett=cmtt20
+
+%% Title
+{\titlebf Revision of {\titlett TOMS-2021-0028} \bigskip}
+
+%% Body
+Dear reviewers,
+
+We are deeply grateful for the comments, questions, and references you have all provided. In accordance with your feedback we have made significant changes to the manuscript to improve clarity, expand the summary of related literature, and incorporate visual comparisons with existing spline software. We hope you find these changes have resulted in an overall better manuscript.
+
+Each numbered item and italicized text block below is a reviewer comment (or summary of similar comments). Our responses immediately follow.
+
+{\parindent=20pt \it
+
+\item{(1)} The authors should include references to more related works and justify the differences between this work and the many prior works on $C^2$ interpolation. [given 23 references]
+
+}
+
+In order to properly satisfy this request, we've added a new subsection to the introduction that summarizes the individual tracks of research represented by the conglomerate of references provided. After reviewing all of those works we are still quite certain that this manuscript represents a novel and meaningful contribution to the literature, and have justified it's position amongst those works in subsection 1.1 of the revised manuscript.
+
+
+{\parindent=20pt \it
+
+\item{(2)} The authors should include references to and comparisons with the following software packages.
+
+\itemitem{} Costantini, P. An algorithm for computing shape-preserving interpolating splines
+of arbitrary degree, Journal of Computational and Applied Mathematics, 1988, 22(1), pp. 89-136.
+
+\item{} While the concerns about subjectivity in comparisons are acknowledged, users will still want to know the context of this work and the trade-offs would they use this package instead of other spline softwares. For this reason a comparison with other methods including visuals should be provided.
+
+}
+
+We appreciate this perspective and have included such a comparison in the updated Section 5. The comparison shows methods from ...
+
+
+{\parindent=20pt \it
+
+\item{()} The monotonicity of Q(x) is not proved.
+
+}
+
+Per Section {\bf blank}, the theory proving the monotonicity of the resulting spline is quite dense and is formally covered by the cited references Ulrich and Watson, and {\bf blank} and {\bf blank}.
+
+{\parindent=20pt \it
+
+\item{()} The approximation order of the algorithm is not shown.
+
+}
+
+A new sentence has been added to Section {\bf blank} explaining that the approximation order of the method achieves second order convergence in almost all scenarios where the approximated function is twice continuously differentiable.
+
+{\parindent=20pt \it
+
+\item{()} Why use piecewise degree 5? In principle, piecewise degree 3 is enough for $C^2$. The additional degrees of freedom for making the interpolant monotone could be obtained by adding knots between the breakpoints. It would be great if you could motivate your choice in more detail.
+
+}
+
+In general it is not possible to form a $C^2$ approximation of arbitrary data without the incorporation of additional knots. The restriction of a fixed set of knots is somewhat arbitrary, but that is the application targeted by this line of research.
+
+
+{\parindent=20pt \it
+
+\item{()} Some statements depend on two variables being ``approximately equal'', but what does that mean? Equal up to some small threshold?
+
+}
+
+The definition of approximately equal for this work is when two IEEE 64-bit floating point numbers are equal up to 32 of 42 mantissa bits (precision bits, or significand in base two scientific notation).
+
+{\parindent=20pt \it
+  
+\item{()} In Algorithm 1 (and also in the text), you use the term "curvature" to refer to the second derivative. I would avoid this, since "curvature" is a term reserved for curves, but you are dealing with functions. Similarly, the term "minimum curvature derivative" is inappropriate.
+
+}
+
+This has been rephrased to reduce confusion.
+
+{\parindent=20pt \it
+  
+\item{()} In Algorithm 2, it might be better to say that f is a "degree 5" polynomial, instead of "order 6".
+
+}
+
+Noted and changed.
+
+{\parindent=20pt \it
+  
+\item{()} Your binary search results in a particular set of derivatives, for which the local quintic piece is guaranteed to be monotone, but it is clearly not a unique choice. Alternatively, one could try to find, among all possible sets of derivatives and corresponding monotone quintic interpolants, the best, according to some criterion, e.g. least L2 norm. This would turn the problem into a constrained optimization problem, which is probably harder to solve, but it might, at the same time, give better results and overcome the limitation shown in Fig. 1. More motivating details would be appreciated.
+
+}
+
+This was a point of our own severe consideration before submitting the manuscript and these comments reflect our thoughts. In proper response to this we implemented naive $L2$ minimization algorithm that uses gradient descent over the spline representation to enforce local monotonicity constraints in a Lagrangian fashion (with an adaptive multiplier on monotonicity violations). The results we achieved were quite mixed and we've incorporated our commentary from this excursion into Section 4 of the manuscript. In truth, formally expanding on this trajectory would require an entirely new manuscript with deeper study of the problem, while it is not immediately obvious that the results would be {\it better} than the present approach. Included in this response (to reviewers only) are some of the preliminary visuals we produced in exploring this approach.
+
+{\parindent=20pt \it
+  
+\item{()} It is quite probable that a user would want to convert the piecewise Hermite representation of the interpolant to quintic B-spline form. But the authors say in Sections 3 and 4 that they solve a banded linear system of length n (n the number of data points) to make this conversion. However, this is not necessary. At each data point, only three of the quintic B-splines are non-zero. Therefore, the three associated B-spline coefficients can be computed from the value, first, and second derivatives of the interpolant at that single point. Thus one can just solve a small 3*3 linear system to get one group of 3 B-spline coefficients. Well, it requires a bit of algebraic work to write out this 3*3 linear system, but it can be done.
+
+}
+
+As mentioned in the manuscript, the banded linear system representation is favored for two reasons in this package. The complexity order is unchanged by solving a single banded system, while the numerical stability is {\it theoretically} improved. In practice it is almost certainly slower than solving individual linear systems, but the increased stability and decreased redundancy in representation of the current approach is favored here. For users interested in constructing alternative representations, the optional argument {\it \bf UV} exists precisely for returning the computed first and second derivatives at knots.
+
+{\parindent=20pt \it
+  
+\item{()} I'm confused by the O(1) and O(n) discussion in Section 4.
+If there are n data points then surely the main algorithm (estimating first and second
+derivatives at each data point) must require at least an O(n) algorithm, not O(1).
+
+}
+
+This was poorly worded on our part. The entire algorithm is O(n), however the binary search itself has a fixed number of loop iterations. The original intent of the statement was that the complexity order of the outer loop (the binary search) is constant, which ensures the overall complexity of O(n) is not changed. See the new phrasing in Section {\bf BLANK} paragraph {\bf BLANK}.
+
+{\parindent=20pt \it
+  
+\item{()} The output are values -- why not the spline coefficients? If the output are values one would hope for a visualization package.
+
+}
+
+Response
+
+{\parindent=20pt \it
+  
+\item{()} I was not familiar with the term/notion  "quadratic facet model". The term facet made me believe that the paper was on bivariate interpolation. Nothing in the abstract or title prevents this misconception.
+
+}
+
+\bigskip
+
+To the best of our knowledge, rejection based on a single review has not been a journal policy and we respectfully request additional reviews. We believe this algorithm and the accompanying code has great potential for TOMS, noting that the quadratic and cubic works preceding this have remained state-of-the-art for forty years. Thank you for both your time and consideration.
+
+Sincerely,
+
+Thomas Lux, on behalf of all authors.
+
+\bye
+
+
+%% ----------------------------------------------------------------------
+%%                        Useful TeX reference.
+%% 
+%% https://www.math.brown.edu/johsilve/ReferenceCards/TeXRefCard.v1.5.pdf
+%% 
+%% ----------------------------------------------------------------------
