@@ -35,21 +35,60 @@ differentiable, which is desirable.
 
 \heading{1.1 Related Works}
 
-These similar works exist.
+[DeVore 1977] Proves approximation error bounds for monotone spline interpolation of data from monotone functions and accompanies the previous error bounds in the context of monotone polynomial interpolation of data from a monotone function.
+
+[Beatson 1982] develops a quadratic spline curve fitting algorithm that maintains local convexity while also proving some error bounds. This method avoids inserting additional knots, but does not interpolate the data.
+
+[Gregory and Delbourgo 1982] Proves necessary and sufficient conditions for a closed form solution to monotone C1 quadratic rational spline interpolation. Does not provide formal algorithm, nor code. Then again iterates towards a solution of nonlinear equations that ensure C2 continuity of quadratic rational splines. The solution they iterate towards exists and is unique. They provide proofs and methods for setting derivatives at the ends, no formal algorithms or code in [Delbourgo and Gregory 1983].
+
+[Costantini 1986] Proves existence of splines that maintain monotonicity and convexity while having fixed continuity and order.
+
+[Dougherty, Edelman, and Hyman 1989] Proposes an algorithm for constructing C2 Hermite monotone spline interpolants using proven sufficient, but not necessary conditions. As these bounds are not sharp, the space of allowable derivative and second derivative values at knots is unnecessarily shrunk. An algorithm is provided, but no code. Recommends against the direct optimization for smoothness parameters like L2, instead promoting problem specific definitions of 'geometric niceness'.
+
+Fiorot and Tabka 1991] Proves a simple method for determining the existence of a monotone C2 cubic interpolating spline, but functions of this kind do not always exist for arbitrary convex monotone data sets.
+
+[Delbourgo 1993] Continuous previous work by incorporating a cubic numerator, proves shape preservation when the correct value for a tension parameter is set but no method for setting that parameter. Accuracy depends on accurate derivative evaluations. No code nor formal algorithm is provided.
+
+[Huynh 1993] Presents several nonlinear boundary conditions based on the median function to establish a fourth order monotonicity preserving constraints relying on divided difference initial derivative estimates. Overall generates a monotone C1 cubic interpolant to data.
+
+[Pruess 1993] Proposes a cubic C2 shape preserving spline method with free parameters (mentions quintic splines are necessary for globally C2 monotone splines). Sufficient (but not necessary) conditions are provided for monotonicity.
+
+[Manni 1997] Constructs a C2 cubic spline with two additional knots per interval. Then [Cravero and Manni 2003] Constructs C3 interpolating splines by progressively increasing tension through Bezier control polygons until shape parameters are satisfied, no code is provided.
+
+[Abbas, Majid, and Ali 2012] No extra knots, rational functions, sufficiency and necessity proven, works for unequally spaced data, no code associated with the paper, no algorithm provided for the initialization for free shape parameters.
+
+[Wang and Tan 2004] Propose a sufficient quartic C2 method with two free parameters.
+
+[Piah and Unsworth 2011] improve upon the sufficient conditions of Wang and Tan for C2 quartic rational interpolation.
+
+[Kvasov 2014] use sufficient conditions for monotonicity and convexity to form a globally weighted combination of C1 quadratic splines that satisfy shape constraints.
+
+[Zhu and Han 2015] uses sufficient conditions over three free parameters to construct C2 rational quartic shape preserving splines. Finally [Han 2018] Proposes a method for making arbitrarily smooth shape preserving spline interpolants, but uses a centered quadratic to estimate derivatives and a sufficient set of bounding conditions to ensure shape preservation in practice. No necessary conditions are applied, no algorithm is provided, neither is any code provided.
+
+[Yao and Nelson 2018] Develop novel sufficient conditions for monotone C2 quartic spline interpolation and maintain shape with added control points.
 
 \heading{1.2 Available Software}
 
-The currently available software for monotone piecewise polynomial
-interpolation includes quadratic [He and Shi 1998, McAllister and
-Roulier 1981], cubic [Fritsch and Carlson 1980], and (with limited
-application) quartic [Wang and Tan 2004; Piah and Unsworth 2011; Yao
-and Nelson 2018] cases. In addition, a statistical method for
-bootstrapping the construction of an arbitrarily smooth monotone fit
-exists [Leitenstorfer and Tutz 2006], but the method does not take
-advantage of known analytic properties of quintic polynomials.
-Conversely the work on quadratic shape preserving splines by Schumaker
-[1983] is widely utilized in theory for its conservation of both
-monotonicity and convexity, but no mathematical software is published.
+The currently available peer reviewed and published software for
+monotone piecewise polynomial interpolation is severely lacking in
+comparison with the number of published methodologies mentioned
+above. This is indicative of how difficult it is to properly handle
+the numerical conditions that arise when constructing and evaluating
+precise shape preserving splines.
+
+The piecewise quadratic $C^1$ method of [McAllister and Roulier 1981]
+is available through TOMS, as well as the sufficient $C^2$ quintic
+method of BVSPIS. The sufficient $C^1$ cubic spline method of [Fritsch and Carlson 1980],
+is available through the SciPy Python package, and the $C^1$ rational
+quadratic method of Schumaker [1983] is available as an R package.
+
+cases. In addition, a statistical method for bootstrapping the
+construction of an arbitrarily smooth monotone fit exists
+[Leitenstorfer and Tutz 2006], but the method does not take advantage
+of known analytic properties of quintic polynomials.  Conversely the
+work on quadratic shape preserving splines by Schumaker [1983] is
+widely utilized in theory for its conservation of both monotonicity
+and convexity, but no mathematical software is published.
 
 The code by Fritsch [1982] for $C^1$ cubic spline interpolation is the
 predominantly utilized code for constructing monotone interpolants at
