@@ -1,15 +1,5 @@
 \heading{5. PERFORMANCE AND APPLICATIONS}
 
-This section contains graphs of sample {\tt MQSI} results given various
-data configurations. Execution times for Algorithms 1 and 4 are given; the
-total execution time of {\tt MQSI} is utterly dominated by the time for a
-banded linear system solve computing the $3n$ $B$-spline coefficients,
-which is ${\cal O}(n)$.  The files {\tt sample\_main.f90} and {\tt
-sample\_main.dat} accompanying the subroutine {\tt MQSI} illustrate Fortran
-2003 subroutine usage with optional arguments and data points from a file.
-Compilation instructions and the full package contents are specified in
-the {\tt README} file.
-
 \topinsert
 \centerline{\epsfxsize=4truein \epsffile{vis/2-piecewise-polynomial.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/3-large-tangent.eps}}
@@ -63,6 +53,16 @@ the quadratic facet (Algorithm 1) take roughly one microsecond
 \fi
 \endinsert
 
+This section contains graphs of sample {\tt MQSI} results given various
+data configurations. Execution times for Algorithms 1 and 4 are given; the
+total execution time of {\tt MQSI} is utterly dominated by the time for a
+banded linear system solve computing the $3n$ $B$-spline coefficients,
+which is ${\cal O}(n)$.  The files {\tt sample\_main.f90} and {\tt
+sample\_main.dat} accompanying the subroutine {\tt MQSI} illustrate Fortran
+2003 subroutine usage with optional arguments and data points from a file.
+Compilation instructions and the full package contents are specified in
+the {\tt README} file.
+
 Throughout, all visuals have points that are stylized by local
 monotonicity conditions. Blue circles denote extreme points, purple
 squares are in {\it flat} regions with no change in function value,
@@ -99,6 +99,16 @@ optional argument to {\tt MQSI} returns the derivative information at the
 breakpoints (interval endpoints) for the Newton form of the interpolating
 polynomial (piece of $Q(x)$) over each interval.
 
+The binary search procedure provably converges on the boundary of the
+region of monotonicity precisely defined by Ulrich and Watson [1994]
+through the application of a boolean function that is guaranteed to be
+true at one end of an interval. Since a local quadratic interpolant is
+applied for initial function derivative estimates, the approximation
+order of the resulting fit is $O(h^3)$ (as for any second order
+approximation), but it should be noted that asymptotic approximation
+order is rarely of import when considering the scattered sparse data
+that $C^2$ approximations like MQSI provide.
+
 Comparisons between this work and lower order methods are problematic,
 especially with sparse data. For exact data from smooth functions,
 comparing derivative values, higher order methods always win (all
@@ -108,3 +118,81 @@ dependent on the specific problem. If an application demands $C^2$
 continuity and monotonicity, the target of {\tt MQSI}, then this
 package provides such interpolants while no existing published spline
 software suffices.
+
+\topinsert
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/1-toms574.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/2-schumaker.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/3-pchip.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/4-bvspis.eps}}
+{\narrower\noindent\rmVIII Fig.\ 5.
+{\ttVIII MQSI} compared with each of TOMS 574 (first, blue), Schumaker
+(second, red), PCHIP (third, green), and BVSPIS (fourth, purple)
+respectively on the {\itVIII piecewise polynomial} test function. MQSI
+is styled as a gray thin line in the background for comparison. The
+Schumaker code (second) fails to produce a monotone approximation for
+this problem while producing no errors or warnings. The primary
+comparative observation of MQSI otherwise is its exact reproduction of
+the linear segment between $0.3$ and $0.5$.
+\par}
+\endinsert
+
+
+\topinsert
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/large-tangent/1-toms574.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/large-tangent/2-schumaker.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/large-tangent/3-pchip.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/large-tangent/4-bvspis.eps}}
+{\narrower\noindent\rmVIII Fig.\ 5.
+{\ttVIII MQSI} compared with each of TOMS 574 (first, blue), Schumaker
+(second, red), PCHIP (third, green), and BVSPIS (fourth, purple)
+respectively on the {\itVIII large tangent} test function. MQSI is
+styled as a gray thin line in the background for comparison. This
+problems highlights the core weakness of the quadratic facet model
+approach to derivative estimation in MQSI, which consistently
+underestimates the actual curvature of this function. This weakness is
+accepted for its greater accuracy when estimating local lower order
+components of functions.
+\par}
+\endinsert
+
+
+\topinsert
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/signal-decay/1-toms574.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/signal-decay/2-schumaker.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/signal-decay/3-pchip.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/signal-decay/4-bvspis.eps}}
+{\narrower\noindent\rmVIII Fig.\ 6.
+{\ttVIII MQSI} compared with each of TOMS 574 (first, blue), Schumaker
+(second, red), PCHIP (third, green), and BVSPIS (fourth, purple)
+respectively on the {\itVIII signal decay} test function. MQSI is
+styled as a gray thin line in the background for comparison. The most
+notable differences between MQSI and other approaches can be observed
+near local extrema, where MQSI produces smaller magnitude second
+derivatives.
+\par}
+\endinsert
+
+
+\topinsert
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/random-monotone/1-toms574.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/random-monotone/2-schumaker.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/random-monotone/3-pchip.eps}}
+\centerline{\epsfxsize=4truein \epsffile{vis/comparisons/random-monotone/4-bvspis.eps}}
+{\narrower\noindent\rmVIII Fig.\ 7.
+{\ttVIII MQSI} compared with each of TOMS 574 (first, blue), Schumaker
+(second, red), PCHIP (third, green), and BVSPIS (fourth, purple)
+respectively on the {\itVIII random monotone} test function. MQSI is
+styled as a gray thin line in the background for comparison. Notice
+that the numerical conditions for this approximation problem are
+challenging enough that both the Schumaker and BVSPIS codes
+incorrectly produce nonmonotone segments (neither of which produced
+error codes or any form of indication that a failure
+occurred). Notably only MQSI and TOMS 574 satisfy tight monotonicity
+constraints while also correctly preserving monotonicity in their
+approximations. The main segment of divergence between the methods
+happens on the $(0.45, 0.5)$ interval, where MQSI favors maximizing
+the slope on the left side of the interval because the quadratic
+interpolant of the right sided points produces an (invalid) negative
+slope estimate on the left side of the interval.
+\par}
+\endinsert

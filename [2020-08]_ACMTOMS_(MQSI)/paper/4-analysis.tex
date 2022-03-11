@@ -1,5 +1,7 @@
 \heading{4. COMPLEXITY AND SENSITIVITY}
-Algorithms 1, 2, and 4 have ${\cal O}(1)$ runtime. Given a fixed
+
+Algorithms 1 and 4 have ${\cal O}(n)$ runtime for $n$ data
+points. Algorithm 2 has a fixed cost ${\cal O}(1)$. Given a fixed
 schedule for shrinking derivative values, Algorithm 3 has a ${\cal
   O}(n)$ runtime for $n$ data points. In execution, the majority of
 the time, still ${\cal O}(n)$, is spent solving the banded linear
@@ -13,7 +15,7 @@ derivative estimates can be produced. This phenomenon is depicted in
 Figure 1. Despite this sensitivity, the quadratic facet model is still
 preferred because it exactly captures local linear and quadratic
 behavior while empirically producing final approximations with less
-wiggle ($L^2$ norm of the second derivative) than other methods. A
+wiggle (local $L^2$ norm of the second derivative) than other methods. A
 weighted harmonic mean estimate of first derivatives may be more
 accurate when the underlying function changes at a rate greater than a
 quadratic, but that method increases the second derivative sensitivity
@@ -33,16 +35,18 @@ and has derivative values similar to the initial estimates.
 \topinsert
 \centerline{\epsfxsize=4truein \epsffile{vis/1-sensitivity.eps}}
 {\everymath={\scriptstyle}
+
 \narrower\noindent\rmVIII Fig.\ 1. A demonstration of the quadratic
   facet model's sensitivity to small data perturbations. This example is
   composed of two quadratic functions $f_1(x) = x^2$ over points $\{1$,
   $2$, $5/2\}$, and $f_2(x) = (x-2)^2 + 6$ over points $\{5/2$, $3$,
   $4\}$. Notably, $f_1(5/2) = f_2(5/2)$ and $f_1$, $f_2$ have the same
-  curvature. Given the exact five data points seen above, the quadratic
-  facet model produces the slope seen in the solid blue line at $x = 5/2$.
-  However, by subtracting the value of $f_3$ $= \epsilon(x-2)^2$ from
-  points at $x = 3$, 4, where $\epsilon$ is the machine precision
-  ($2^{-52}$ for an IEEE 64-bit real), the quadratic facet model produces
-  the slope seen in the dashed red line at $x = 5/2$. This is the nature
-  of a facet model and a side effect of associating data with local facets.
+  curvature (equal second derivatives). Given the exact five data points
+  seen above, the quadratic facet model produces the slope seen in the
+  solid blue line at $x = 5/2$. However, by subtracting the value of
+  $f_3$ $= \epsilon(x-2)^2$ from points at $x = 3$, 4, where $\epsilon$
+  is the machine precision ($2^{-52}$ for an IEEE 64-bit real), the
+  quadratic facet model produces the slope seen in the dashed red line
+  at $x = 5/2$. This is the nature of a facet model and a side effect
+  of associating data with local facets.
 \par} \endinsert
