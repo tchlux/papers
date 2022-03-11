@@ -215,19 +215,19 @@ response to this we've implemented naive $L2$ minimization algorithm
 over the second derivative that uses gradient descent over the spline
 representation to enforce local monotonicity constraints in a
 Lagrangian fashion (with an adaptive multiplier on monotonicity
-violations). The results we achieved were quite mixed and we've
-incorporated our commentary from this excursion into Section 5 of the
-manuscript. In truth, formally expanding on this trajectory would
-require an entirely new manuscript with deeper study of the problem,
-while it is not immediately obvious that the results would be {\it
-  better} than the present approach. The global $L^2$ minimizer of the
-second derivative is simply the unique $C^2$ cubic spline interpolant,
-but that is known to produce large and unnecessary local variations in
-the approximation (along with not being shape preserving). Included in
-this response (to reviewers only) are some of the preliminary visuals
-we produced in exploring this approach. This is by no means final and
-conclusive, but the results were mixed enough for us to warrant not
-including them in the paper.
+violations). The results we achieved were quite mixed and we hestiate
+to incorporate commentary from this excursion into the manuscript. In
+truth, formally expanding on this trajectory would require an entirely
+new manuscript with deeper study of the problem, while it is not
+immediately obvious that the results would be {\it better} than the
+present approach. The global $L^2$ minimizer of the second derivative
+is simply the unique $C^2$ cubic spline interpolant, but that is known
+to produce large and unnecessary local variations in the approximation
+(along with not being shape preserving). Included in this response (to
+reviewers only) are some of the preliminary visuals we produced in
+exploring this approach. This is by no means final and conclusive, but
+the results were mixed enough for us to warrant not including them in
+the paper.
 
 
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/5-l2_minimizer.eps}}
@@ -317,19 +317,19 @@ generic solution to visualization.
 For the convenience of reviewers, we are providing the code with which
 we generated the visuals for this manuscript. Although we note it has
 very specific system requirements to operate effectively. Namely: (1)
-running a POSIX shell (on macOS, Ubuntu, $\ldots$); (2) having
-{\ttVIII python3} of at least version $3.7$ and the packages {\ttVIII
-  numpy}, {\ttVIII tlux}, and {\ttVIII rpy2}; (3) having installed
-{\ttVIII gfortran} (or otherwise reconfiguring the codes to use
-another Fortran compiler of choice); and (4) having installed {\ttVIII
-  R} (for Schumaker splines). The Fortran codes associated with this
-work as well as those from TOMS 574 (quadratic $C^1$) and BVSPIS from
-TOMS 770 are all wrapped to be callable directly from {\ttVIII
-  python3}, which will be the parent process for all calls. A simple
-test usage can be seen in the provided {\ttVIII python3} file {\ttVIII
-  test.py}. To be abundantly clear, this code is {\bf not} intended
-for review and publication, but rather convenient access to various
-codes for reviewers to use for visualizing and comparing results.
+running a POSIX shell (on macOS, Ubuntu, $\ldots$); (2) having {\tt
+  python3} of at least version $3.7$ and the packages {\tt numpy},
+{\tt tlux}, and {\tt rpy2}; (3) having installed {\tt gfortran} (or
+otherwise reconfiguring the codes to use another Fortran compiler of
+choice); and (4) having installed {\tt R} (for Schumaker splines). The
+Fortran codes associated with this work as well as those from TOMS 574
+(quadratic $C^1$) and BVSPIS from TOMS 770 are all wrapped to be
+callable directly from {\tt python3}, which will be the parent process
+for all calls. A simple test usage can be seen in the provided {\tt
+  python3} file {\tt test.py}. To be abundantly clear, this code is
+{\bf not} intended for review and publication, but rather convenient
+access to various codes for reviewers to use for visualizing and
+comparing results.
 
 
 \goodbreak

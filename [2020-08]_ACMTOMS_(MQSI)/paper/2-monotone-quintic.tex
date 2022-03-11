@@ -13,14 +13,14 @@ and unnecessary {\it wiggles} in the spline when used to approximate
 second derivatives. Modern shape-preserving spline implementations use
 a weighted harmonic mean to estimate derivative values at breakpoints
 [Moler 2008], however this method also yields approximations whose
-second derivative functions often have large local $L^2$ norm
+second derivative functions often have large \red{local} $L^2$ norm
 (approximations with large {\it wiggle}). In an attempt to capture the
 local shape of the data while minimizing wiggle, this package uses a
 facet model from image processing [Haralick and Watson 1981] to
 estimate first and second derivatives at breakpoints. Rather than
 picking a local linear or quadratic fit with minimal residual, this
 work uses a quadratic facet model that selects the local quadratic
-interpolant with minimum magnitude second derivative.
+interpolant with minimum magnitude \red{second derivative}.
 
 %% ===================================================================
 %%                   Algorithm 1: QUADRATIC_FACET
@@ -31,11 +31,11 @@ interpolant with minimum magnitude second derivative.
 
 \nobreak
 where $X_j$, $Y_j$ $\in \bbb{R}$ for $j = 1$, $\ldots$, $n$, $1 \le i
-\le n$, and $n \ge 3$. Returns the first and second derivative at 
+\le n$, and $n \ge 3$. Returns the \red{first and second derivative} at 
 $X_i$ of the local quadratic interpolant with minimum magnitude
-second derivative. Approximate equality is denoted with $\approx$ and
-states that two numbers are considered equal once they are within the
-machine precision $\epsilon$ of each other.
+second derivative. \red{Approximate equality is denoted with
+$\approx$ and considers two numbers to be equal once they are within
+the machine precision $\epsilon$ of each other.}
 
 }
 {\parindent=3mm
@@ -62,7 +62,7 @@ $(i\ne n\wedge Y_i \approx Y_{i+1})\bigr)$ {\tt then return $(0,0)$}
 \item{} {\tt else if} $\bigl(1<i<n\wedge (Y_{i+1} - Y_i)(Y_i - Y_{i-1}) < 0
 \bigr)$ {\tt then}
 \itemitem{} The point $(X_i$, $Y_i)$ is an extreme point. The
-quadratic with minimum magnitude second derivative that has slope
+quadratic with minimum magnitude \red{second derivative} that has slope
 zero at $X_i$ will be the facet chosen.
 \itemitem{} $f_1\:\hbox{interpolant to }(X_{i-1},Y_{i-1})$, $(X_i,Y_i)$,
   and $Df_1(X_i) = 0$.
@@ -77,7 +77,7 @@ zero at $X_i$ will be the facet chosen.
 \itemitem{} {The point $(X_i$, $Y_i)$ is in a monotone segment of
 data. In the following, it is possible that $f_1$ or $f_3$ do
 not exist because $i \in \{2, n-1\}$. In those cases, the minimum
-magnitude second derivative among existing quadratics is chosen.}
+magnitude \red{second derivative} among existing quadratics is chosen.}
 \itemitem{} $f_1\:\hbox{interpolant to }(X_{i-2},Y_{i-2})$,
   $(X_{i-1},Y_{i-1})$, and $(X_i,Y_i)$.
 \itemitem{} $f_2\:\hbox{interpolant to }(X_{i-1},Y_{i-1})$,
@@ -124,12 +124,13 @@ case is handled similarly.
 $D^2f(x_0)$, $f(x_1)$, $Df(x_1)$, $D^2f(x_1) \bigr)$
 
 \nobreak
+
 where $x_0$, $x_1 \in {\bbb R}$, $x_0 < x_1$, and $f$ is an order six
 polynomial defined by $f(x_0)$, $Df(x_0)$, $D^2f(x_0)$, $f(x_1)$,
 $Df(x_1)$, $D^2f(x_1)$. Returns {\tt TRUE} if $f$ is monotone
-increasing on $[x_0,x_1]$. Approximate equality is denoted with
-$\approx$ and states that two numbers are considered equal once they
-are within the machine precision $\epsilon$ of each other.
+increasing on $[x_0,x_1]$. \red{Approximate equality is denoted with
+$\approx$ and considers two numbers to be equal once they are within
+the machine precision $\epsilon$ of each other.}
 
 }
 {\parindent=6mm
@@ -154,7 +155,7 @@ are within the machine precision $\epsilon$ of each other.
   Step 8 checks $\alpha < 0$, Step 10 checks $\beta < \alpha - 2
   \sqrt{\alpha \delta}$, and Step 11 checks $\gamma < \delta - 2
   \sqrt{\alpha \delta}$. If none of the monotonicity conditions are
-  violated, then the degree five piece is monotone and Step 12
+  violated, then the \red{degree five} piece is monotone and Step 12
   concludes.}
 
 \item{7.} {\tt if} $\bigl(Df(x_0) \approx 0$ {\tt or} $Df(x_1) \approx
@@ -249,7 +250,7 @@ Algorithm 3 produces $Q(x)$ that is monotone increasing (decreasing)
 over exactly the same intervals that the data $(X_i$, $Y_i)$ is
 monotone increasing (decreasing).
 
-Given the minimum curvature (minimum magnitude of the second derivative)
+Given the minimum \red{curvature (minimum magnitude of the second derivative)}
 nature of the initial derivative estimates, it is desirable to make
 the smallest necessary changes to the initial interpolating spline $Q$
 while enforcing monotonicity. In practice a binary search for the

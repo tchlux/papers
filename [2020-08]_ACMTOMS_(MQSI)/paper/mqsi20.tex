@@ -21,7 +21,8 @@
 
 % Color definitions.
 \input colordvi
-\def\BEGINC{\textPeach} \def\ENDC{\textBlack}
+\def\BEGINC{\textRed}
+\def\ENDC{\textBlack}
 \def\red#1{\BEGINC#1\ENDC}
 \let\beginred=\BEGINC
 \let\endred=\ENDC
@@ -155,10 +156,10 @@ University, Rock Hill, SC 29733; {\ttVIII thackerw@winthrop.edu}.
 
 % Abstract and Introduction
 {\rmVIII\parindent=0pt MQSI is a Fortran 2003 subroutine for constructing
-monotone quintic spline interpolants to univariate monotone data. Using sharp
+monotone quintic spline interpolants to \red{univariate} monotone data. Using sharp
 theoretical monotonicity constraints, first and second derivative estimates
 at data provided by a quadratic facet model are refined to produce a
-univariate $\scriptstyle C^2$ monotone interpolant.  Algorithm and implementation
+\red{univariate} $\scriptstyle C^2$ monotone interpolant.  Algorithm and implementation
 details, complexity and sensitivity analyses, usage information, a
 brief performance study, and comparisons with other spline approaches are included.
 
