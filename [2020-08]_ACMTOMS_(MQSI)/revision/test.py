@@ -117,11 +117,11 @@ print()
 
 methods = dict(
     BVSPIS    = bvspis_spline, # C2 quintic spline
-    L2_Min    = l2min_spline, # C2 quintic spline
-    MQSI      = mqsi_spline,
-    PCHIP     = pchip_spline,
-    # Schumaker = schumaker_spline,
-    TOMS_574  = toms_574_spline,
+    # L2_Min    = l2min_spline, # C2 quintic spline
+    MQSI      = mqsi_spline, # C2 quintic spline
+    PCHIP     = pchip_spline, # C1 cubic spline
+    # Schumaker = schumaker_spline, # C1 quadratic spline
+    TOMS_574  = toms_574_spline, # C1 quadratic spline
 )
 
 show_fits(x, y, methods=methods,                       show=False)
