@@ -1,7 +1,7 @@
 \heading{4. COMPLEXITY AND SENSITIVITY}
 
-Algorithms 1 and 4 have ${\cal O}(n)$ runtime for $n$ data
-points. Algorithm 2 has a fixed cost ${\cal O}(1)$. Given a fixed
+Algorithms \red{1 and 4 have ${\cal O}(n)$ runtime for $n$ data
+points. Algorithm 2 has a fixed cost ${\cal O}(1)$.} Given a fixed
 schedule for shrinking derivative values, Algorithm 3 has a ${\cal
   O}(n)$ runtime for $n$ data points. In execution, the majority of
 the time, still ${\cal O}(n)$, is spent solving the banded linear
@@ -15,7 +15,7 @@ derivative estimates can be produced. This phenomenon is depicted in
 Figure 1. Despite this sensitivity, the quadratic facet model is still
 preferred because it exactly captures local linear and quadratic
 behavior while empirically producing final approximations with less
-wiggle (local $L^2$ norm of the second derivative) than other methods. A
+wiggle (\red{local} $L^2$ norm of the second derivative) than other methods. A
 weighted harmonic mean estimate of first derivatives may be more
 accurate when the underlying function changes at a rate greater than a
 quadratic, but that method increases the second derivative sensitivity
@@ -41,7 +41,7 @@ and has derivative values similar to the initial estimates.
   composed of two quadratic functions $f_1(x) = x^2$ over points $\{1$,
   $2$, $5/2\}$, and $f_2(x) = (x-2)^2 + 6$ over points $\{5/2$, $3$,
   $4\}$. Notably, $f_1(5/2) = f_2(5/2)$ and $f_1$, $f_2$ have the same
-  curvature (equal second derivatives). Given the exact five data points
+  curvature \red{(equal second derivatives)}. Given the exact five data points
   seen above, the quadratic facet model produces the slope seen in the
   solid blue line at $x = 5/2$. However, by subtracting the value of
   $f_3$ $= \epsilon(x-2)^2$ from points at $x = 3$, 4, where $\epsilon$

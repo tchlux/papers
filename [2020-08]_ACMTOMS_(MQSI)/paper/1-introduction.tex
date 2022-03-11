@@ -33,6 +33,8 @@ cumulative distribution function (CDF) would produce a corresponding
 probability density function (PDF) that is continuously
 differentiable, which is desirable.
 
+\beginred
+
 The existing research in shape preserving interpolatory splines is
 rich and filled with many approaches for many different
 applications. In the context of this work, the unique quality of shape
@@ -123,7 +125,9 @@ it is assumed that the code by Fritsch [1982] for monotone $C^1$ cubic
 spline interpolation is the predominant code for constructing monotone
 interpolants at present.
 
-The theory for sufficient and {\it sharp} necessary bounds for
+\endred
+
+The theory for sufficient and \red{{\it sharp}} necessary bounds for
 monotone quintic interpolation has been provided [Ulrich and Watson
   1994; He{\ss} and Schmidt 1994] and that theory was recently
 utilized in a proposed algorithm [Lux 2020] for monotone quintic
@@ -139,7 +143,11 @@ binary search to reduce the magnitude of the modifications made to
 initial derivative estimates when constructing a monotone spline
 interpolant.
 
+\beginred
+
 \heading{Overview}
+
+\endred
 
 This work provides a Fortran 2003 subroutine {\tt MQSI} based on the
 sharp necessary and sufficient conditions in Ulrich and Watson [1994]
@@ -158,5 +166,6 @@ the algorithms for constructing a $C^2$ monotone quintic spline interpolant
 to monotone data, Section 3 outlines the method of spline representation
 ($B$-spline basis) and evaluation, Section 4 analyzes the complexity and
 sensitivity of the algorithms in {\tt MQSI}, and Section 5 presents 
-timing data and some graphs of constructed interpolants.
+timing data and some graphs of constructed interpolants \red{as well
+  as a visual comparison with existing monotone spline packages}.
 
