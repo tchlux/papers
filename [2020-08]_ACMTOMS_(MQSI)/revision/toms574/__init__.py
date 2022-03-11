@@ -167,7 +167,7 @@ _fort_compiler = "gfortran"
 _shared_object_name = "toms574.so"
 _this_directory = os.path.dirname(os.path.abspath(__file__))
 _path_to_lib = os.path.join(_this_directory, _shared_object_name)
-_compile_options = ['-fPIC', '-shared', '-O3']
+_compile_options = ['-std=legacy', '-fPIC', '-shared', '-O3']
 _ordered_dependencies = ['toms574.f', 'toms574_c_wrapper.f90']
 # 
 # --------------------------------------------------------------------
