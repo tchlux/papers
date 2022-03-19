@@ -108,12 +108,12 @@ For constructing a quadratic interpolant in $x$ over the interval
 $[L,R]$, the Chebyshev basis $1$, $z$, $2z^2-1$ is used, where
 $z={x-(L+R)/2 \over (R-L)/2}$. The estimated derivative values by the
 quadratic facet model are not guaranteed to produce monotone quintic
-polynomial segments. Ulrich and Watson [1994] established tight
-constraints on the monotonicity of a quintic polynomial piece, while
-deferring to He{\ss} and Schmidt [1994] for a relevant simplified
-case. The following algorithm implements a sharp check for
-monotonicity by considering the nondecreasing case. The nonincreasing
-case is handled similarly.
+polynomial segments. Ulrich and Watson [1990] established tight
+constraints on the monotonicity of a quintic polynomial piece and
+He{\ss} and Schmidt [1994] gave simpler conditions for a special case.
+The following algorithm implements a sharp check for monotonicity by
+considering the nondecreasing case. The nonincreasing case is handled
+similarly.
 
 %% ===================================================================
 %%                    Algorithm 2: IS_MONOTONE

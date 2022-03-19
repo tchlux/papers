@@ -86,7 +86,7 @@ approximate[x_,y_,u_,exc_:"./mqsi"] := {
 
 (* Make a plot of the MQSI to data, including stylized markers for all
    data determined by local function change conditions. *)
-makePlot[name_, x_, y_, executable_, color_, m_:100, width_:400, height_:170, markSize_:markerSize] := {
+makePlot[name_, x_, y_, executable_, color_, m_:100, height_:170, width_:400, markSize_:markerSize] := {
   ClearAll[u, qu, points, graphic];
   Print[""];
   Print["Making '"<>name<>"'.."];
@@ -129,7 +129,7 @@ makePlot[dirname<>"/3-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, g
 algname = "bvspis";
 makePlot[dirname<>"/4-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, purple, m=1000];
 algname = "l2_minimizer";
-makePlot[dirname<>"/5-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, darkBlue, m=1000];
+makePlot[dirname<>"/5-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, darkBlue, m=1000, height=150];
 
 
 (* Large tangent *)
@@ -137,15 +137,15 @@ x = { 0.0, 0.2098765432098766, 0.39506172839506193, 0.5555555555555556, 0.691358
 y = { -0.00990099009900991, 0.249807128529548, 0.626179482031721, 1.2004889975550124, 2.138318481208833, 3.818560380725758, 7.25688073394495, 15.839916839916839, 43.751381215469486, 98.99999999999991 };
 dirname = "comparisons/large-tangent";
 algname = "toms574";
-makePlot[dirname<>"/1-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, blue, m=1000];
+makePlot[dirname<>"/1-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, blue, m=1000, height=165];
 algname = "schumaker";
-makePlot[dirname<>"/2-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, red, m=1000];
+makePlot[dirname<>"/2-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, red, m=1000, height=165];
 algname = "pchip";
-makePlot[dirname<>"/3-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, green, m=1000];
+makePlot[dirname<>"/3-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, green, m=1000, height=165];
 algname = "bvspis";
-makePlot[dirname<>"/4-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, purple, m=1000];
+makePlot[dirname<>"/4-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, purple, m=1000, height=165];
 algname = "l2_minimizer";
-makePlot[dirname<>"/5-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, darkBlue, m=1000];
+makePlot[dirname<>"/5-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, darkBlue, m=1000, height=150];
 
 
 (* Signal decay *)
@@ -161,7 +161,7 @@ makePlot[dirname<>"/3-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, g
 algname = "bvspis";
 makePlot[dirname<>"/4-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, purple, m=1000];
 algname = "l2_minimizer";
-makePlot[dirname<>"/5-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, darkBlue, m=1000];
+makePlot[dirname<>"/5-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, darkBlue, m=1000, height=150];
 
 
 (* Random monotone, with sub-window showing smoothness. *)
@@ -169,12 +169,12 @@ x = { 0.025926231827891333, 0.13457994534493356, 0.18443986564691528, 0.20464863
 y = { 0.06528650438687811, 0.079645477009061, 0.09653091566061256, 0.10694568430998297, 0.12715997170127746, 0.20174322626496533, 0.2203062070705597, 0.22601200060423587, 0.34982628500329926, 0.42812232759738944, 0.46778748458230024, 0.4942368373819278, 0.505246090121704, 0.5967453089785958, 0.846561485357468, 0.8539752926394888 };
 dirname = "comparisons/random-monotone";
 algname = "toms574";
-makePlot[dirname<>"/1-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, blue, m=1000];
+makePlot[dirname<>"/1-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, blue, m=1000, height=153];
 algname = "schumaker";
-makePlot[dirname<>"/2-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, red, m=1000];
+makePlot[dirname<>"/2-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, red, m=1000, height=153];
 algname = "pchip";
-makePlot[dirname<>"/3-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, green, m=1000];
+makePlot[dirname<>"/3-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, green, m=1000, height=153];
 algname = "bvspis";
-makePlot[dirname<>"/4-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, purple, m=1000];
+makePlot[dirname<>"/4-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, purple, m=1000, height=153];
 algname = "l2_minimizer";
-makePlot[dirname<>"/5-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, darkBlue, m=1000];
+makePlot[dirname<>"/5-"<>algname<>fileExtension, x, y, "python3 -m "<>algname, darkBlue, m=1000, height=150];

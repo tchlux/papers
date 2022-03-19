@@ -9,7 +9,7 @@
 !   to a file. Compile with:
 ! 
 !    $F03 $OPTS REAL_PRECISION.f90 EVAL_BSPLINE.f90 SPLINE.f90 MQSI.f90 \
-!       cli.f90 -o cli $LIB
+!       mqsi_cli.f90 -o mqsi $LIB
 !
 !   where '$F03' is the name of the Fortran 2003 compiler, '$OPTS' are
 !   compiler options such as '-O3', and '$LIB' provides a flag to link

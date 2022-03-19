@@ -17,8 +17,8 @@ _fort_compiler = "gfortran"
 _shared_object_name = "monotone_fit.so"
 _this_directory = os.path.dirname(os.path.abspath(__file__))
 _path_to_lib = os.path.join(_this_directory, _shared_object_name)
-_compile_options = ['-fPIC', '-shared', '-O3', '-lblas', '-llapack']
-_ordered_dependencies = ['monotone_fit.f90', 'monotone_fit_c_wrapper.f90']
+_compile_options = ['-fPIC', '-shared', '-O3'] #, '-lblas', '-llapack',]
+_ordered_dependencies = ['blas.f90', 'lapack.f', 'monotone_fit.f90', 'monotone_fit_c_wrapper.f90']
 # 
 # --------------------------------------------------------------------
 #               AUTO-COMPILING
