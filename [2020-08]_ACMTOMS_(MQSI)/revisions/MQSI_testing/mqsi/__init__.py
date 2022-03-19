@@ -11,7 +11,7 @@ import numpy
 #               CONFIGURATION
 # 
 _verbose = True
-_link_lapack = True
+_link_lapack = False
 _fort_compiler = "gfortran"
 _shared_object_name = "MQSI.so"
 _this_directory = os.path.dirname(os.path.abspath(__file__))
