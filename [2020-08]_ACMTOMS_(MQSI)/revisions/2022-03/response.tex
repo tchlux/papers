@@ -37,6 +37,9 @@
   \textfont1=\capit
   \textfont2=\capsy
 }
+%% Literal "underscore" character that can be copied.
+\font\underscorefont=ecrm1000
+\def\_{{\underscorefont\char"5F}}
 
 
 %% EPS figures.
@@ -383,7 +386,7 @@ Thomas Lux, on behalf of all authors.
 
 {\headingbf Installing dependencies and running tests in} {\hskip 2mm} {\headingtt MQSI\_testing.zip}
 
-\vskip 5mm
+\vskip 3mm
 
 {\tt Ubuntu 20+} command line instructions.
 
@@ -393,7 +396,7 @@ Thomas Lux, on behalf of all authors.
 \item{} sudo apt install gfortran
 }
 
-\vskip 5mm
+\vskip 3mm
 
 {\tt macOS 12+} command line instructions (installs CommandLineTools and Homebrew first).
 
@@ -402,13 +405,13 @@ Thomas Lux, on behalf of all authors.
 \item{} \textMaroon \# install CommandLineTools if you do not have it already \textBlack
 \item{} xcode-select -p || xcode-select --install
 \item{} \textMaroon \# install Homebrew for package management \textBlack
-\item{} brew --version || /bin/bash -c "\$(curl -fsSL $\backslash$
+\item{} brew --version || /bin/bash -c "\$(curl -fsSL $ $
 \item{} \hskip 10mm https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 \item{} \textMaroon \# install gfortran \textBlack
 \item{} brew install gfortran
 }
 
-\vskip 5mm
+\vskip 3mm
 
 Common instructions: Python package installation, unzipping archive, and running {\hskip 1mm} {\tt test.py}.
 
@@ -421,9 +424,13 @@ Common instructions: Python package installation, unzipping archive, and running
 \item{} cd MQSI\_testing
 \item{} python3 test.py
 \item{}
-\item{} \textMaroon \# install R (if comparisons with Schumaker are desired) \textBlack
-\item{} \textMaroon \# install Schumaker package through R graphical user interface \textBlack
-\item{} \textMaroon \# run the following to install a Python package that wraps calls into R \textBlack
+\item{} \textMaroon \# download and install R (if comparisons with Schumaker are desired) \textBlack
+\item{} echo {\char13}Visit https://cran.r-project.org and follow installation instructions.{\char13}
+\item{} \textMaroon \# download install Schumaker package for R \textBlack
+\item{} curl --output schumaker.tar.gz $ $
+\item{} \hskip 10mm https://cran.r-project.org/src/contrib/schumaker\_1.2.1.tar.gz
+\item{} R CMD INSTALL schumaker.tar.gz
+\item{} \textMaroon \# install a Python package that wraps calls into R \textBlack
 \item{} python3 -m pip install --user rpy2
 \item{}
 \item{} \textMaroon \# make any desired modifications to test data at bottom of \textBlack test.py 
