@@ -1,2 +1,4 @@
+*.so
 code/SPLINE/
 code/MQSI/
+*.mod
