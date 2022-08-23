@@ -1,0 +1,134 @@
+\vfil\break
+
+\heading{APPENDIX}
+
+The quiet failure of two published codes for shape
+preserving spline interpolation is surprising, and accentuates how
+difficult it is to correctly handle the numerical intricacies of
+polynomial function evaluation. For the sake of reproducibility, coded
+minimum working examples of the failure modes for the Schumaker spline
+package in {\tt R} and the {\tt BVSPIP} package in Fortran are
+provided.
+
+\vskip 5mm
+
+\noindent{\bf Schumaker error in {\tt R}}
+
+\vskip 3mm
+
+{\parskip=-1pt \parindent=10pt \ttVIII
+\item{} \textMaroon \# Load the library and set up the problem data. \textBlack
+\item{} library(schumaker)
+\item{} x = c(0.0, 0.001, 0.02, 0.03)
+\item{} y = c(0.0, 0.09, 0.1, 0.11)
+\item{} \textMaroon \# Construct the spline fit, rename its evaluator as {\char13}f{\char13}. \textBlack
+\item{} SchumakerSpline = schumaker::Schumaker(x, y)
+\item{} f = SchumakerSpline\$Spline
+\item{} \textMaroon \# Evaluate at 0.01 to get 0.28, greater than all {\char13}y{\char13}. \textBlack
+\item{} f(0.01) > max(y)
+\item{} \textMaroon \# Plot the results to see the failed approximation. \textBlack
+\item{} plot(x, y, col=1, ylim=c(-0.1,0.35), main="Schumaker", ylab="y", xlab="x")
+\item{} lines(seq(0,0.03,0.0001), f(seq(0,0.03,0.0001)), col=4)
+}
+
+\vskip 5mm
+
+\noindent{\bf BVSPIS error in Fortran}
+
+\vskip 3mm
+
+{\parskip=0pt \parindent=10pt \ttVIII
+\item{} \textMaroon ! Compile and execute the following program with: \textBlack
+\item{} \textMaroon ! \$F03 bvspis.f \$FILENAME -o \$EXECNAME \textBlack
+\item{} \textMaroon ! ./\$EXECNAME \textBlack
+\item{} \textMaroon ! Where some placeholder values for the above shell variables might result in: \textBlack
+\item{} \textMaroon ! gfortran bvspis.f test\_bvspis\_errors.f03 -o test\_bvspis\_errors \textBlack
+\item{} \textMaroon ! ./test\_bvspis\_errors \textBlack
+\item{} \textCyan PROGRAM \textBlue TEST\_BVSPIS \textBlack
+\item{}   \textCyan IMPLICIT \textGreen NONE\textBlack
+\item{}   \textCyan EXTERNAL \textBlack :: \textBlue DBVSSC\textBlack, \textBlue DBVSSE\textBlack
+\item{}   \textGreen INTEGER \textBlack :: NP, N, K, R, Q, P, OPT, KMAX, MAXSTP, NWORK, SBOPT, NTAB, \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm Y0OPT, Y1OPT, Y2OPT, ERRC, ERRE
+\item{}   \textGreen DOUBLE PRECISION \textBlack :: EPS, D0, DNP, D20, D2NP, BETA, BETAI, RHO, RHOI
+\item{}   \textGreen INTEGER\textBlack, \textCyan ALLOCATABLE \textBlack :: CONSTR(:), DIAGN(:) 
+\item{}   \textGreen DOUBLE PRECISION\textBlack, \textCyan ALLOCATABLE \textBlack :: X(:), Y(:), XTAB(:), D(:), D2(:), \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm WORK(:), Y0TAB(:), Y1TAB(:), Y2TAB(:)
+\item{}   \textMaroon ! Set parameters. \textBlack
+\item{}   EPS = \textCyan SQRT\textBlack(\textCyan EPSILON\textBlack(0.0D0)) \textMaroon ! Default precision. \textBlack
+\item{}   NP = 3-1 \textMaroon ! Number of points minus one. \textBlack
+\item{}   N = 6 \textMaroon ! Degree of the spline (minimum of 3*k). \textBlack
+\item{}   K = 2 \textMaroon ! Class of continuity (C2). \textBlack
+\item{}   R = 1 \textMaroon ! Enforce monotonicity constraints. \textBlack
+\item{}   Q = 1 \textMaroon ! No boundary conditions are imposed. \textBlack
+\item{}   P = 1 \textMaroon ! Derivative estimation by constraints only. \textBlack
+\item{}   OPT = 100*P + 10*Q + R \textMaroon ! Contains PQR in decimal format. \textBlack
+\item{}   NWORK = 5+(2+7)*NP+(N*(N+11))/2+9 \textMaroon ! Explained in DBVSSC comments. \textBlack
+\item{}   SBOPT = 2 \textMaroon ! Do a binary search to find intervals for evaluation. \textBlack
+\item{}   NTAB = 3-1 \textMaroon ! Number of evaluation points minus one. \textBlack
+\item{}   Y0OPT = 1 \textMaroon ! Enable evaluation of the zeroth derivative. \textBlack
+\item{}   Y1OPT = 0 \textMaroon ! Disable evaluation of the first derivative. \textBlack
+\item{}   Y2OPT = 0 \textMaroon ! Disable evaluation of the second derivative. \textBlack
+\item{}   ERRC = 0 \textMaroon ! Error code, initialize to 0, should be overwritten. \textBlack
+\item{}   ERRE = 0 \textMaroon ! Error code, Initialize to 0, should be overwritten. \textBlack
+\item{}   \textMaroon ! Allocate and initialize arrays. \textBlack
+\item{}   \textCyan ALLOCATE\textBlack( \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm X(0:NP), \textCyan\& \textBlack \textMaroon ! X values that cause failure. \textBlack $ $
+\item{}   \hskip 10mm Y(0:NP), \textCyan\& \textBlack \textMaroon ! Y values that cause failure. \textBlack $ $
+\item{}   \hskip 10mm CONSTR(0:NP), \textCyan\& \textBlack \textMaroon ! Used for setting shape preserving constraints. \textBlack $ $
+\item{}   \hskip 10mm XTAB(0:NTAB), \textCyan\& \textBlack \textMaroon ! Z evaluation point (known failure location). \textBlack $ $
+\item{}   \hskip 10mm D(0:NP), \textCyan\& \textBlack \textMaroon ! Derivative values (on output). \textBlack $ $
+\item{}   \hskip 10mm D2(0:NP), \textCyan\& \textBlack \textMaroon ! Referenced with K=2. \textBlack $ $
+\item{}   \hskip 10mm DIAGN(0:NP-1), \textCyan\& \textBlack \textMaroon ! Diagnostic info. \textBlack $ $
+\item{}   \hskip 10mm WORK(1:NWORK), \textCyan\& \textBlack \textMaroon ! Work space. \textBlack $ $
+\item{}   \hskip 10mm Y0TAB(0:NTAB), \textCyan\& \textBlack \textMaroon ! Spline values. \textBlack $ $
+\item{}   \hskip 10mm Y1TAB(0:NTAB), \textCyan\& \textBlack \textMaroon ! First derivative values. \textBlack $ $
+\item{}   \hskip 10mm Y2TAB(0:NTAB) \textCyan\& \textBlack \textMaroon ! Second derivative values. \textBlack $ $
+\item{}   )
+\item{}   X(0:NP) = (/ 0.0D0, 0.09D0, 0.091D0 /)
+\item{}   Y(0:NP) = (/ 0.0D0, 0.1D0, 0.2D0 /)
+\item{}   XTAB(0:NTAB) = (/ 0.0D0, 0.06D0, 0.09D0 /)
+\item{}   CONSTR(0:NP) = 1
+\item{}   D(0:NP) = 0.0D0
+\item{}   D2(0:NP) = 0.0D0
+\item{}   DIAGN(0:NP-1) = 0.0D0
+\item{}   WORK(1:NWORK) = 0.0D0
+\item{}   Y0TAB(0:NTAB) = 0.0D0
+\item{}   Y1TAB(0:NTAB) = 0.0D0
+\item{}   Y2TAB(0:NTAB) = 0.0D0
+\item{}   \textMaroon ! Unused parameters, ignored unless Q=3. \textBlack
+\item{}   D0 = 0.0D0
+\item{}   DNP = 0.0D0
+\item{}   D20 = 0.0D0
+\item{}   D2NP = 0.0D0
+\item{}   \textMaroon ! Unused parameters, ignored unless Q=2. \textBlack
+\item{}   BETA = 0.0D0
+\item{}   BETAI = 0.0D0
+\item{}   RHO = 0.0D0
+\item{}   RHOI = 0.0D0
+\item{}   KMAX = 0
+\item{}   MAXSTP = 0
+\item{}   \textMaroon ! Construct the fit. \textBlack
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}Constructing fit.{\char13}\textBlack
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}X(:){\char13}\textBlack, X(:)
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}Y(:){\char13}\textBlack, Y(:)
+\item{}   \textCyan CALL \textBlue DBVSSC\textBlack( \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm X(:), Y(:), NP, N, K, OPT, D0, DNP, D20, D2NP, CONSTR(:), \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm EPS, BETA, BETAI, RHO, RHOI, KMAX, MAXSTP, ERRC, \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm D(:), D2(:), DIAGN(:), WORK(:), NWORK \textCyan\&\textBlack $ $
+\item{}   )
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}ERRC {\char13}\textBlack, ERRC \textMaroon ! = 0 \textBlack
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}{\char13}\textBlack
+\item{}   \textMaroon ! Evaluate the fit. \textBlack
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}Evaluate the spline.{\char13}\textBlack
+\item{}   \textCyan CALL \textBlue DBVSSE\textBlack( \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm X(:), Y(:), NP, N, K, XTAB(:), NTAB, SBOPT, Y0OPT, Y1OPT, \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm Y2OPT, ERRC, D(:), D2(:), Y0TAB(:), Y1TAB(:), Y2TAB(:), \textCyan\&\textBlack $ $
+\item{}   \hskip 10mm ERRE, WORK(:), NWORK \textCyan\&\textBlack $ $
+\item{}   )
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}XTAB(:) {\char13}\textBlack, XTAB(:) \textMaroon ! = 0.0, 0.06, 0.09 as expected.\textBlack
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}Y0TAB(:){\char13}\textBlack, Y0TAB(:) \textMaroon ! = 0.0, 0.152, 0.1 not monotone, unexpected.\textBlack
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}ERRE {\char13}\textBlack, ERRE \textMaroon ! = 0 no error code, unexpected.\textBlack
+\item{}   \textCyan PRINT \textBlack *, \textRed{\char13}ERRC {\char13}\textBlack, ERRC \textMaroon ! = 0 no error code, unexpected.\textBlack
+\item{} \textCyan END PROGRAM \textBlue TEST\_BVSPIS \textBlack
+
+}
