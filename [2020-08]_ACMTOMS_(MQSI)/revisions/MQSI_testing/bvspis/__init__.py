@@ -1530,6 +1530,7 @@ def dal2dp(a2, np, info, comm, part, d):
 def spline_fit(x, y):
     import numpy as numpy
     ftype = dict(dtype="float64", order='F')
+    itype = dict(dtype="int32", order='F')
     np = x.size - 1
     x = numpy.asarray(x, **ftype)
     y = numpy.asarray(y, **ftype)
@@ -1553,12 +1554,12 @@ def spline_fit(x, y):
     kmax = 0
     maxstp = 0
     # Impose monotonicity constraints on all intervals, referenced for r=4.
-    constr = numpy.ones(np+1, dtype="int32", order='F')
+    constr = numpy.ones(np+1, **itype)
     # Derivative values (on output)
     d = numpy.zeros(np+1, **ftype)
     errc = 0 # error flag
     d2 = numpy.zeros(np+1, **ftype) # referenced when k=2
-    diagn = numpy.zeros(np, dtype="int32", order='F') # diagnostic info
+    diagn = numpy.zeros(np, **itype) # diagnostic info
     nwork = 5 + (2+7)*np + (n*(n+11))//2 + 9
     work = numpy.zeros(nwork, **ftype)
     # Call the routine to fit the spline.
@@ -1575,7 +1576,6 @@ def spline_fit(x, y):
     def function(xtab, x=x, y=y, np=np, n=n, k=k, sbopt=sbopt,
                  errc=errc, d=d, d2=d2, work=work, nwork=nwork):
         ntab = xtab.size-1
-        active_opt = numpy.ones(ntab+1)
         y0opt = 1
         y1opt = 0
         y2opt = 0
@@ -1595,7 +1595,6 @@ def spline_fit(x, y):
     def df(xtab, x=x, y=y, np=np, n=n, k=k, sbopt=sbopt,
            errc=errc, d=d, d2=d2, work=work, nwork=nwork):
         ntab = xtab.size-1
-        active_opt = numpy.ones(ntab+1)
         y0opt = 0
         y1opt = 1
         y2opt = 0
@@ -1615,7 +1614,6 @@ def spline_fit(x, y):
     def ddf(xtab, x=x, y=y, np=np, n=n, k=k, sbopt=sbopt,
             errc=errc, d=d, d2=d2, work=work, nwork=nwork):
         ntab = xtab.size-1
-        active_opt = numpy.ones(ntab+1)
         y0opt = 0
         y1opt = 0
         y2opt = 1
