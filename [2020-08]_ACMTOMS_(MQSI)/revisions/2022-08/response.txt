@@ -1,0 +1,14 @@
+Thank you reviewers for your suggestions.
+
+ - All remaining uses of "curvature" in reference to the magnitude of the second derivative have been removed. (page 8, second paragraph, first sentence) (page 10, Figure 1, third sentence)
+ 
+ - A comment attempting to clarify the meaning of the term quadratic facet model has been added. (page 5, end of first paragraph)
+ 
+ - A search for published and peer reviewed shape preserving rational spline interpolation software was done (for the sake of inclusion in the present paper), but no viable candidates were found. Since producing a high quality rational spline interpolation code warrants its own publication, including this specific comparison is out of the scope of this work.
+ 
+ - Most importantly, an Appendix has been added with accompanying supplemental files that contain minimum working demonstrations of the failures of the Schumaker R package and BVSPIS Fortran code. A comment mentioning this Appendix was added to the paper (page 13, second paragraph, third sentence).
+
+All edits are marked in the revised document in red.
+
+Sincerely,
+Thomas Lux, on behalf of all authors.
