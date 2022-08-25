@@ -92,7 +92,7 @@ def generate_test_data(name):
         # Store the test.
         f = Spline(x, y)
         x = np.linspace(0, 1, 16)
-        y = np.asarray(f_df_ddf[0](x), dtype=float)
+        y = np.asarray(f(x), dtype=float)
     elif name == "RANDOM_MONOTONE":
         # RANDOM MONOTONE.
         x = [ 0.025926231827891333, 0.13457994534493356, 0.18443986564691528,
@@ -123,6 +123,14 @@ if __name__ == "__main__":
     # x, y = generate_test_data("PIECEWISE_POLYNOMIAL")
     x, y = generate_test_data("RANDOM_MONOTONE")
 
+    # # Schumaker failure. (0.01 is greater than all values)
+    # x = [0.0, 0.001, 0.02, 0.03]
+    # y = [0.0, 0.09, 0.1, 0.11]
+
+    # # BVSPIS failure. (0.06 is greater than 0.09)
+    # x = [0., 0.09, 0.091]
+    # y = [0., 0.1, 0.2]
+
     print()
     print("x: ",x)
     print("y: ",y)
@@ -130,7 +138,7 @@ if __name__ == "__main__":
 
     methods = dict(
         TOMS_574  = toms_574_spline, # C1 quadratic spline
-        # Schumaker = schumaker_spline, # C1 quadratic spline
+        Schumaker = schumaker_spline, # C1 quadratic spline
         PCHIP     = pchip_spline, # C1 cubic spline
         BVSPIS    = bvspis_spline, # C2 quintic spline
         MQSI      = mqsi_spline, # C2 quintic spline
