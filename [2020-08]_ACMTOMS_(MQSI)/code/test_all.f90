@@ -72,7 +72,7 @@ IMPLICIT NONE
 ! and the number of repeated trials used when collecting timing data.
 INTEGER, PARAMETER :: TRIALS = 100
 ! The maximum allowable error in spline approximations to data.
-REAL(KIND=R8), PARAMETER :: ERROR_TOLERANCE = SQRT(EPSILON(1.0_R8))
+REAL(KIND=R8), PARAMETER :: ERROR_TOLERANCE = SQRT(SQRT(EPSILON(1.0_R8)))
 ! The different sizes of data provided for testing monotone interpolation.
 INTEGER, PARAMETER :: NS(6) = (/ 2**3, 2**4, 2**5, 2**6, 2**7, 2**8 /)
 ! A switch determining whether data is randomly spaced or equally spaced.
@@ -182,14 +182,14 @@ J = TIMING_PERCENTILES
 DO I = 1, J
   IF (I .EQ. 1) THEN
     WRITE (*,116) 'min',FIT_TIMES(I,1,1)
-116 FORMAT(A9,':',F10.6,' seconds')
+116 FORMAT(A9,':',F13.9,' seconds')
   ELSE IF ((I-1 .EQ. (J-1)/2) .AND. (MOD(J,2) .EQ. 1)) THEN
     WRITE (*,116) 'median',FIT_TIMES(I,1,1)
   ELSE IF (I .EQ. J) THEN
     WRITE (*,116) 'max',FIT_TIMES(I,1,1)
   ELSE
     K = INT(1.0 + REAL((99)*(I-1))/REAL(J-1))
-    WRITE (*,'(I9,":",F10.6," seconds")') K, FIT_TIMES(I,1,1)
+    WRITE (*,'(I9,":",F13.9," seconds")') K, FIT_TIMES(I,1,1)
   END IF
 END DO
 WRITE (*,117) TIME_SIZE
@@ -203,7 +203,7 @@ DO I = 1, J
     WRITE (*,116) 'max',EVAL_TIMES(I,1,1)
   ELSE
     K = INT(1.0 + REAL((99)*(I-1))/REAL(J-1))
-    WRITE (*,'(I9,":",F10.6," seconds")') K, EVAL_TIMES(I,1,1)
+    WRITE (*,'(I9,":",F13.9," seconds")') K, EVAL_TIMES(I,1,1)
   END IF
 END DO
 END IF run_timing_test
@@ -337,13 +337,14 @@ LOGICAL, INTENT(OUT) :: PASSES
 INTEGER, INTENT(IN) :: N_TEST
 ! Local variables.
 !  Maximum absolute observed error.
-REAL(KIND=R8) :: MAX_ERROR
+REAL(KIND=R8) :: MAX_ERROR, SCALE
 !  Spline coefficients SC, spline knots SK, temporary
 !  input/output storage U, and test point storage Z.
 REAL(KIND=R8) :: SC(1:3*SIZE(X)), SK(1:3*SIZE(X)+6), U(1:SIZE(X)), Z(1:N_TEST)
 !  Iteration variables I, J, and subroutine status integer INFO.
 INTEGER :: I, INFO, J
 ! Construct the monotone quintic spline interpolant.
+SCALE = 2.0_R8 ** INT(LOG((1.0_R8+MAXVAL(ABS(Y(:))))/MAXVAL(ABS(X(:)))) / LOG(2.0_R8))
 CALL MQSI(X, Y, SK, SC, INFO)
 IF (INFO .NE. 0) THEN
    WRITE (*,100)  INFO
@@ -360,7 +361,7 @@ IF (INFO .NE. 0) THEN
    PASSES = .FALSE.
    RETURN
 END IF
-MAX_ERROR = MAXVAL( ABS((U(:) - Y(:))) / (1.0_R8 + ABS(Y(:))) )
+MAX_ERROR = MAXVAL( ABS((U(:) - Y(:))) / (SCALE + ABS(Y(:))) )
 IF (MAX_ERROR .GT. ERROR_TOLERANCE) THEN
    WRITE (*,102) MAX_ERROR, ERROR_TOLERANCE
 102 FORMAT(/,'Value test: FAILED',/,'  relative error:', ES11.3,/, &
@@ -624,4 +625,3 @@ SUBROUTINE SORT(VALUES)
 END SUBROUTINE SORT
 
 END PROGRAM TEST_ALL
-
