@@ -22,12 +22,10 @@ maintenance of function properties through interpolation/regression is
 referred to as {\it shape preserving} [Fritsch and Carlson 1980;
 Gregory 1985]. The specific properties the present algorithm will
 preserve in approximations are monotonicity and $C^2$ continuity. 
-\beginred
 Notably this work does not consider convexity preservation, as Mulansky
 and Neamtu [1991] prove that there exists strictly convex data sets which
 do not allow convex interpolation with $C^2$ splines of fixed degree.
-\endred
-In addition to previously mentioned applications, \red{being $C^2$ and monotonicity preserving is}
+In addition to previously mentioned applications, being $C^2$ and monotonicity preserving is
 crucially important in statistics to the approximation of a cumulative
 distribution function and subsequently the effective generation of
 random numbers from a specified distribution [Ramsay 1988].  A spline
@@ -37,8 +35,6 @@ intervals. A twice continuously differentiable approximation to a
 cumulative distribution function (CDF) would produce a corresponding
 probability density function (PDF) that is continuously
 differentiable, which is desirable.
-
-\beginred
 
 The existing research in shape preserving interpolatory splines is
 rich and filled with many approaches for many different
@@ -130,17 +126,15 @@ available download records, it is assumed that the code by Fritsch
 [1982] for monotone $C^1$ cubic spline interpolation is the
 predominant code for constructing monotone interpolants at present.
 
-\endred
-
-The theory for \red{{\it sharp}} necessary and sufficient bounds for
+The theory for {\it sharp} necessary and sufficient bounds for
 monotone $C^2$ quintic interpolation has been provided [Ulrich and
   Watson 1990; 1994] and that theory was recently utilized in a
 proposed algorithm [Lux et al. 2020; Lux 2020] for monotone $C^2$
 quintic spline construction, however no published mathematical
-software exists for the quintic case \red{based on sharp monotonicity
-conditions}. The software presented here represents the first published
+software exists for the quintic case based on sharp monotonicity
+conditions. The software presented here represents the first published
 software package for producing $C^2$ shape preserving splines
-\red{based on sharp monotonicity conditions}. This work improves upon
+based on sharp monotonicity conditions. This work improves upon
 the algorithm presented by Lux et\ al.\ [2020] by refactoring
 computations for improved numerical stability, estimating minimum
 magnitude second derivatives at breakpoints with a quadratic facet
@@ -148,12 +142,7 @@ model, and using a binary search to reduce the magnitude of the
 modifications made to initial derivative estimates when constructing a
 monotone spline interpolant.
 
-\beginred
-
 \heading{Overview}
-
-\endred
-
 This work provides a Fortran 2003 subroutine {\tt MQSI} based on the
 sharp necessary and sufficient conditions in Ulrich and Watson [1994]
 for the construction of monotone $C^2$ quintic spline interpolants of
@@ -172,6 +161,6 @@ spline interpolant to monotone data, Section 3 outlines the method of
 spline representation ($B$-spline basis) and evaluation, Section 4
 analyzes the complexity and sensitivity of the algorithms in {\tt
   MQSI}, and Section 5 presents timing data and some graphs of
-constructed interpolants \red{as well as a visual comparison with
-  existing monotone spline packages}.
+constructed interpolants as well as a visual comparison with
+  existing monotone spline packages.
 

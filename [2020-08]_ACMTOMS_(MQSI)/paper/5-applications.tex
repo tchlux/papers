@@ -100,8 +100,6 @@ optional argument to {\tt MQSI} returns the derivative information at the
 breakpoints (interval endpoints) for the Newton form of the interpolating
 polynomial (piece of $Q(x)$) over each interval.
 
-\beginred
-
 Lastly, comparisons between {\tt MQSI} and four published spline
 software packages are provided that allow subjective inspection on the
 same four test problems as presented above. In each of Figures 5
@@ -110,39 +108,35 @@ can be contrasted with two monotone $C^1$ quadratic splines (TOMS 574,
 and Schumaker), the popular $C^1$ piecewise cubic method {\tt PCHIP},
 and the $C^2$ piecewise quintic method {\tt BVSPIS} of TOMS
 770. Figures 5 and 8 demonstrate glaring numerical errors in the
-Schumaker and {\tt BVSPIS} implementations, and overall it can be
-observed that the minimal and tight conditions on monotonicity
-provided by TOMS 574 tend to be more visually appealing than the
-weaker sufficient conditions utilized by {\tt PCHIP}. In general the
-major determining factor for the quality of {\tt MQSI} is the local
-quadratic facet model. For applications where the underlying function
-is presumed to be a piecewise polynomial (of relatively low order),
-the choice of local quadratic interpolants is reasonable. However the
-consequence of this decision is that functions with superquadratic
-rates of change will tend to have consistently underestimated first
-and second derivatives. This limitation is accepted in favor of
-perfectly capturing lower order phenomena. Were future research to
-supply alternative initializations for $C^2$ quintic splines, those
-could comfortably be made monotone by the procedures of {\tt MQSI} and
-most importantly by the application of these sharp monotonicity
-conditions.
-
-\endred
+Schumaker and {\tt BVSPIS} implementations, \textRed minimum working
+examples that reproduce similar errors are discussed in the Appendix.
+\textBlack Overall it can be observed that the minimal and tight
+conditions on monotonicity provided by TOMS 574 tend to be more
+visually appealing than the weaker sufficient conditions utilized by
+{\tt PCHIP}. In general the major determining factor for the quality
+of {\tt MQSI} is the local quadratic facet model. For applications
+where the underlying function is presumed to be a piecewise polynomial
+(of relatively low order), the choice of local quadratic interpolants
+is reasonable. However the consequence of this decision is that
+functions with superquadratic rates of change will tend to have
+consistently underestimated first and second derivatives. This
+limitation is accepted in favor of perfectly capturing lower order
+phenomena. Were future research to supply alternative initializations
+for $C^2$ quintic splines, those could comfortably be made monotone by
+the procedures of {\tt MQSI} and most importantly by the application
+of these sharp monotonicity conditions.
 
 If an application demands $C^2$ continuity and monotonicity, the
-target of {\tt MQSI}, then this package \red{uniquely} provides such
-interpolants \red{based on sharp monotonicity constraints.}
+target of {\tt MQSI}, then this package uniquely provides such
+interpolants based on sharp monotonicity constraints.
 
 \goodbreak
-
-\beginred
 
 \topinsert
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/1-toms574.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/2-schumaker.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/3-pchip.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/piecewise-polynomial/4-bvspis.eps}}
-\beginred
 {\narrower\noindent\rmVIII Fig.\ 5.
 {\ttVIII MQSI} compared with each of TOMS 574 (first, blue), Schumaker
 (second, red), {\ttVIII PCHIP} (third, green), and {\ttVIII BVSPIS}
@@ -154,7 +148,6 @@ errors or warnings. The primary comparative observation of {\ttVIII
   MQSI} otherwise is its exact reproduction of the linear segment
 between $0.3$ and $0.5$.
 \par}
-\endred
 \endinsert
 
 \topinsert
@@ -162,20 +155,18 @@ between $0.3$ and $0.5$.
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/large-tangent/2-schumaker.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/large-tangent/3-pchip.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/large-tangent/4-bvspis.eps}}
-\beginred
 {\narrower\noindent\rmVIII Fig.\ 6.
 {\ttVIII MQSI} compared with each of TOMS 574 (first, blue), Schumaker
 (second, red), {\ttVIII PCHIP} (third, green), and {\ttVIII BVSPIS}
 (fourth, purple) respectively on the {\itVIII large tangent} test
 function. {\ttVIII MQSI} is styled as a gray thin line in the
-background for comparison. This problems highlights the core weakness
+background for comparison. This problem highlights the core weakness
 of the quadratic facet model approach to derivative estimation in
 {\ttVIII MQSI}, which consistently underestimates the actual
-\red{second derivative} of this function. This weakness is accepted
+second derivative of this function. This weakness is accepted
 for its greater accuracy when estimating local lower order components
 of functions.
 \par}
-\endred
 \endinsert
 
 \topinsert
@@ -183,7 +174,6 @@ of functions.
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/signal-decay/2-schumaker.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/signal-decay/3-pchip.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/signal-decay/4-bvspis.eps}}
-\beginred
 {\narrower\noindent\rmVIII Fig.\ 7.
 {\ttVIII MQSI} compared with each of TOMS 574 (first, blue), Schumaker
 (second, red), {\ttVIII PCHIP} (third, green), and {\ttVIII BVSPIS}
@@ -194,7 +184,6 @@ background for comparison. The most notable differences between
 extrema, where {\ttVIII MQSI} produces continuous and smaller
 magnitude second derivatives.
 \par}
-\endred
 \endinsert
 
 \topinsert
@@ -202,7 +191,6 @@ magnitude second derivatives.
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/random-monotone/2-schumaker.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/random-monotone/3-pchip.eps}}
 \centerline{\epsfxsize=4truein \epsffile{vis/comparisons/random-monotone/4-bvspis.eps}}
-\beginred
 {\narrower\noindent\rmVIII Fig.\ 8.
 {\ttVIII MQSI} compared with each of TOMS 574 (first, blue), Schumaker
 (second, red), {\ttVIII PCHIP} (third, green), and {\ttVIII BVSPIS}
@@ -221,7 +209,4 @@ slope on the left side of the interval because the quadratic
 interpolant of the right sided points produces a negative
 slope estimate (invalid) on the left side of the interval.
 \par}
-\endred
 \endinsert
-
-\endred
