@@ -380,15 +380,19 @@ DO WHILE (SEARCHING .OR. (NS .GT. 0))
       END IF
       ! Set this point and its neighboring intervals to be checked for
       ! monotonicity.
-      IF ((I .GT. 1) .AND. (.NOT. CHECKING(I-1))) THEN
-         CHECKING(I-1) = .TRUE.
-         NC = NC+1
-         TO_CHECK(NC) = I-1
+      IF (I .GT. 1) THEN
+         IF (.NOT. CHECKING(I-1)) THEN
+            CHECKING(I-1) = .TRUE.
+            NC = NC+1
+            TO_CHECK(NC) = I-1
+         END IF
       END IF
-      IF ((I .LT. ND) .AND. (.NOT. CHECKING(I))) THEN
-         CHECKING(I) = .TRUE.
-         NC = NC+1
-         TO_CHECK(NC) = I
+      IF (I .LT. ND) THEN
+         IF (.NOT. CHECKING(I)) THEN
+            CHECKING(I) = .TRUE.
+            NC = NC+1
+            TO_CHECK(NC) = I
+         END IF
       END IF
    END DO shrink_values
    ! Identify which spline segments are nonmonotone after the updates.

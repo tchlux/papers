@@ -353,22 +353,25 @@ evaluate_at_x : DO I = 1, SIZE(XY)
    IF ((XY(I) .LT. T(1)) .OR. (XY(I) .GE. T(NK))) THEN
       XY(I) = 0.0_R8
       CYCLE evaluate_at_x
-   ELSE IF ( (T(I2) .LE. XY(I)) .AND. (XY(I) .LT. T(I2+1)) ) THEN
-      CONTINUE
-   ELSE IF ( (I2 .NE. NB*NCC) .AND. (T(I2+NCC) .LE. XY(I)) .AND. &
-      (XY(I) .LT. T(I2+NCC+1)) ) THEN
-      I1 = I1 + NCC; I2 = I2 + NCC
-   ELSE ! Find breakpoint interval containing XY(I) using a bisection method
-        ! on the breakpoint indices.
-      I1 = 1; I2 = NB
-      DO WHILE (I2 - I1 .GT. 1)
-         J = (I1+I2)/2 ! Breakpoint J = knot T((J+1)*NCC).
-         IF ( T((J+1)*NCC) .LE. XY(I) ) THEN; I1 = J; ELSE; I2 = J; END IF
-      END DO ! Now I2 = I1 + 1, and XY(I) lies in the breakpoint interval
-             ! [ T((I1+1)*NCC), T((I1+2)*NCC) ).
-      I2 = (I1 + 1)*NCC ! Spline index = knot index.
-      I1 = I2 + 1 - K ! The index range of B-splines with support containing
-                      ! XY(I) is I1 to I2.
+   ! If the point does not lie in the previous breakpoint interval, recompute.
+   ELSE IF ((XY(I) .GE. T(MIN(NK,I2+1))) .OR. (XY(I) .LT. T(I2))) THEN
+      ! Check if the point is in the next interval (for sequential points).
+      IF ( (I2 .LT. NK) .AND. (T(MIN(NK,I2+1)) .LE. XY(I)) .AND. &
+           (XY(I) .LT. T(MIN(NK,I2+NCC+1))) ) THEN
+         I1 = I1 + NCC; I2 = I2 + NCC
+      ! Find breakpoint interval containing XY(I) using a bisection method
+      ! on the breakpoint indices.
+      ELSE 
+         I1 = 1; I2 = NB
+         DO WHILE (I2 - I1 .GT. 1)
+            J = (I1+I2)/2 ! Breakpoint J = knot T((J+1)*NCC).
+            IF ( T((J+1)*NCC) .LE. XY(I) ) THEN; I1 = J; ELSE; I2 = J; END IF
+         END DO ! Now I2 = I1 + 1, and XY(I) lies in the breakpoint interval
+                ! [ T((I1+1)*NCC), T((I1+2)*NCC) ).
+         I2 = (I1 + 1)*NCC ! Spline index = knot index.
+         I1 = I2 - K + 1 ! The index range of B-splines with support containing
+                         ! XY(I) is I1 to I2.
+      END IF
    END IF
    ! Store only the single X value that is relevant to this iteration.
    BIATX(1:K) = XY(I) ! K = I2-I1+1.
