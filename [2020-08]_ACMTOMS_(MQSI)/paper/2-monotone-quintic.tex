@@ -19,12 +19,10 @@ local shape of the data while minimizing wiggle, this package uses a
 facet model from image processing [Haralick and Watson 1981] to
 estimate first and second derivatives at breakpoints. Rather than
 picking a local linear or quadratic fit with minimal residual, this
-work \red{instead} % uses a quadratic facet model that
-selects the local quadratic
-interpolant with minimum magnitude second derivative \red{(hereafter
-referred to as a {\it quadratic facet model}). The term ``facet'' 
-refers to one piece of an image surface modelled by a two-dimensional
-piecewise polynomial.}.
+work instead selects the local quadratic interpolant with minimum
+magnitude second derivative (hereafter referred to as a {\it quadratic
+  facet model}). The term ``facet'' refers to one piece of an image
+surface modelled by a two-dimensional piecewise polynomial.
 
 %% ===================================================================
 %%                   Algorithm 1: QUADRATIC_FACET
@@ -254,8 +252,8 @@ Algorithm 3 produces $Q(x)$ that is monotone increasing (decreasing)
 over exactly the same intervals that the data $(X_i$, $Y_i)$ is
 monotone increasing (decreasing).
 
-Given \red{that} the \red{initial derivative estimates locally minimize 
-the magnitude of the second derivative}, it is desirable to make
+Given that the initial derivative estimates locally minimize 
+the magnitude of the second derivative, it is desirable to make
 the smallest necessary changes to the initial interpolating spline $Q$
 while enforcing monotonicity. In practice a binary search for the
 boundary of monotonicity is used in place of solely shrinking $DQ$ and

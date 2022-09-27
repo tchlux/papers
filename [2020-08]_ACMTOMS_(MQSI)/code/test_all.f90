@@ -235,6 +235,11 @@ FUNCTION PASSES_TEST(F_NUM, N, EQUALLY_SPACED_X, TRIALS, EVAL_TIME, FIT_TIME)
   INTEGER :: I, INFO, J
   !  Storage for seeding the random number generator (for repeatability).
   INTEGER, DIMENSION(:), ALLOCATABLE :: SEED
+  ! Initialize random seed.
+  CALL RANDOM_SEED(SIZE=J)
+  ALLOCATE(SEED(J))
+  SEED(:) = 7919
+  CALL RANDOM_SEED(PUT=SEED)
   ! Initialize X values.
   IF (EQUALLY_SPACED_X) THEN
      DO I = 1, N
@@ -242,11 +247,6 @@ FUNCTION PASSES_TEST(F_NUM, N, EQUALLY_SPACED_X, TRIALS, EVAL_TIME, FIT_TIME)
      END DO
      X(:) = X(:) / REAL(N-1, KIND=R8)
   ELSE
-     ! Initialize random seed.
-     CALL RANDOM_SEED(SIZE=J)
-     ALLOCATE(SEED(J))
-     SEED(:) = 7919
-     CALL RANDOM_SEED(PUT=SEED)
      ! Generate random (increasing) data.
      CALL RANDOM_NUMBER(X)
      CALL SORT(X)
@@ -338,11 +338,11 @@ INTEGER, INTENT(IN) :: N_TEST
 ! Local variables.
 !  Maximum absolute observed error.
 REAL(KIND=R8) :: MAX_ERROR, SCALE
-!  Spline coefficients SC, spline knots SK, temporary
-!  input/output storage U, and test point storage Z.
-REAL(KIND=R8) :: SC(1:3*SIZE(X)), SK(1:3*SIZE(X)+6), U(1:SIZE(X)), Z(1:N_TEST)
+!  Random number R, spline coefficients SC, spline knots SK,
+!  temporary input/output storage U, and test point storage Z.
+REAL(KIND=R8) :: R, SC(1:3*SIZE(X)), SK(1:3*SIZE(X)+6), U(1:SIZE(X)), Z(1:N_TEST)
 !  Iteration variables I, J, and subroutine status integer INFO.
-INTEGER :: I, INFO, J
+INTEGER :: I, INFO, J, K, ORDER(1:SIZE(X))
 ! Construct the monotone quintic spline interpolant.
 SCALE = 2.0_R8 ** INT(LOG((1.0_R8+MAXVAL(ABS(Y(:))))/MAXVAL(ABS(X(:)))) / LOG(2.0_R8))
 CALL MQSI(X, Y, SK, SC, INFO)
@@ -352,8 +352,19 @@ IF (INFO .NE. 0) THEN
    PASSES = .FALSE.
    RETURN
 END IF
+! Generate a random ordering to evaluate points in a nonmonotonic order.
+DO I = 1, SIZE(ORDER)
+   ORDER(I) = I
+END DO
+DO I = SIZE(ORDER)-1, 1, -1
+   CALL RANDOM_NUMBER(R)
+   J = 1 + INT(R * REAL(I))
+   K = ORDER(I)
+   ORDER(I) = ORDER(J)
+   ORDER(J) = K
+END DO
 ! Check that the spline reproduces the function values correctly.
-U(:) = X(:)
+U(:) = X(ORDER(:))
 CALL EVAL_SPLINE(SK, SC, U, INFO, D=0)
 IF (INFO .NE. 0) THEN
    WRITE (*,101) INFO
@@ -361,7 +372,7 @@ IF (INFO .NE. 0) THEN
    PASSES = .FALSE.
    RETURN
 END IF
-MAX_ERROR = MAXVAL( ABS((U(:) - Y(:))) / (SCALE + ABS(Y(:))) )
+MAX_ERROR = MAXVAL( ABS((U(:) - Y(ORDER(:)))) / (SCALE + ABS(Y(ORDER(:)))) )
 IF (MAX_ERROR .GT. ERROR_TOLERANCE) THEN
    WRITE (*,102) MAX_ERROR, ERROR_TOLERANCE
 102 FORMAT(/,'Value test: FAILED',/,'  relative error:', ES11.3,/, &

@@ -108,23 +108,28 @@ can be contrasted with two monotone $C^1$ quadratic splines (TOMS 574,
 and Schumaker), the popular $C^1$ piecewise cubic method {\tt PCHIP},
 and the $C^2$ piecewise quintic method {\tt BVSPIS} of TOMS
 770. Figures 5 and 8 demonstrate glaring numerical errors in the
-Schumaker and {\tt BVSPIS} implementations, \textRed minimum working
-examples that reproduce similar errors are discussed in the Appendix.
-\textBlack Overall it can be observed that the minimal and tight
-conditions on monotonicity provided by TOMS 574 tend to be more
-visually appealing than the weaker sufficient conditions utilized by
-{\tt PCHIP}. In general the major determining factor for the quality
-of {\tt MQSI} is the local quadratic facet model. For applications
-where the underlying function is presumed to be a piecewise polynomial
-(of relatively low order), the choice of local quadratic interpolants
-is reasonable. However the consequence of this decision is that
-functions with superquadratic rates of change will tend to have
-consistently underestimated first and second derivatives. This
-limitation is accepted in favor of perfectly capturing lower order
-phenomena. Were future research to supply alternative initializations
-for $C^2$ quintic splines, those could comfortably be made monotone by
-the procedures of {\tt MQSI} and most importantly by the application
-of these sharp monotonicity conditions.
+Schumaker and {\tt BVSPIS} implementations. Minimum working examples
+that reproduce similar errors are provided in the associated software
+{\tt test\_schumaker.r} and {\tt test\_bvspis.f03}. The failure modes
+of these published codes are surprising, but also accentuate how
+difficult it is to correctly handle the numerical complexities of
+polynomial function evaluation.
+
+Overall it can be observed that the minimal and tight conditions on
+monotonicity provided by TOMS 574 tend to be more visually appealing
+than the weaker sufficient conditions utilized by {\tt PCHIP}. In
+general the major determining factor for the quality of {\tt MQSI} is
+the local quadratic facet model. For applications where the underlying
+function is presumed to be a piecewise polynomial (of relatively low
+order), the choice of local quadratic interpolants is
+reasonable. However the consequence of this decision is that functions
+with superquadratic rates of change will tend to have consistently
+underestimated first and second derivatives. This limitation is
+accepted in favor of perfectly capturing lower order phenomena. Were
+future research to supply alternative initializations for $C^2$
+quintic splines, those could comfortably be made monotone by the
+procedures of {\tt MQSI} and most importantly by the application of
+these sharp monotonicity conditions.
 
 If an application demands $C^2$ continuity and monotonicity, the
 target of {\tt MQSI}, then this package uniquely provides such
