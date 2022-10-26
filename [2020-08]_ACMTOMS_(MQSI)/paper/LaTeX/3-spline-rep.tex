@@ -1,0 +1,13 @@
+
+\section{SPLINE REPRESENTATION}
+The monotone quintic spline interpolant $Q(x)$ is represented in terms
+of a B-spline basis. The routine {\tt FIT\_SPLINE} in this package
+computes the B-spline coefficients $\alpha_i$ of $Q(x)=\sum_{i=1}^{3n}
+\alpha_i B_{i,6,t}(x)$ to match the piecewise quintic polynomial
+values and (first two) derivatives at the breakpoints $X_i$, where the
+spline order is six and the knot sequence $t$ has the breakpoint
+multiplicities (6, 3, $\ldots$, 3, 6).  The routine {\tt EVAL\_SPLINE}
+evaluates a spline represented in terms of a B-spline basis. A Fortran
+2003 implementation {\tt EVAL\_BSPLINE} of the B-spline recurrence
+relation evaluation code by C. de Boor [1978] for the value,
+derivatives, and integral of a B-spline is also provided.
