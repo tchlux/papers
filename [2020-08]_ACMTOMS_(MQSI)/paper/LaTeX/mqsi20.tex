@@ -1,0 +1,419 @@
+%%
+%% This is file `sample-manuscript.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% samples.dtx  (with options: `manuscript')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from sample-manuscript.tex.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file samples.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%%
+%%
+%% Commands for TeXCount
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+%%
+%%
+%% The first command in your LaTeX source must be the \documentclass
+%% command.
+%%
+%% For submission and review of your manuscript please change the
+%% command to \documentclass[manuscript, screen, review]{acmart}.
+%%
+%% When submitting camera ready or to TAPS, please change the command
+%% to \documentclass[sigconf]{acmart} or whichever template is required
+%% for your publication.
+%%
+%%
+%% \documentclass[manuscript,screen,review]{acmart}
+\documentclass[manuscript]{acmart}
+
+
+%% Graphics package.
+\usepackage{graphicx}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+%% complete the rights form.
+\setcopyright{acmcopyright}
+\acmJournal{TOMS}
+\acmYear{2022} \acmVolume{1} \acmNumber{1} \acmArticle{1} \acmMonth{1} \acmPrice{15.00}\acmDOI{10.1145/3570157}
+\acmDOI{10.1145/3570157}
+%% \copyrightyear{2022}
+
+%% %% These commands are for a PROCEEDINGS abstract or paper.
+%% \acmConference[Conference acronym 'XX]{Make sure to enter the correct
+%%   conference title from your rights confirmation emai}{June 03--05,
+%%   2018}{Woodstock, NY}
+%%
+%%  Uncomment \acmBooktitle if the title of the proceedings is different
+%%  from ``Proceedings of ...''!
+%%
+\acmBooktitle{TOMS '22: ACM Transactions on Mathematical Software,
+ October 01--10, 2022, Blacksburg, VA}
+\acmPrice{0.00}
+\acmISBN{978-1-4503-XXXX-X/22/10}
+
+
+%% Find references with:
+%%   frex '[\a][[\s\w.\][[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[[\s\w.\]?[\d][\d][\d][\d]' '[.]tex{.}'
+
+%%
+%% Submission ID.
+%% Use this when submitting an article to a sponsored event. You'll
+%% receive a unique submission ID from the organizers
+%% of the event, and this ID should be used as the parameter to this command.
+%%\acmSubmissionID{123-A56-BU3}
+
+%%
+%% For managing citations, it is recommended to use bibliography
+%% files in BibTeX format.
+%%
+%% You can then either use BibTeX with the ACM-Reference-Format style,
+%% or BibLaTeX with the acmnumeric or acmauthoryear sytles, that include
+%% support for advanced citation of software artefact from the
+%% biblatex-software package, also separately available on CTAN.
+%%
+%% Look at the sample-*-biblatex.tex files for templates showcasing
+%% the biblatex styles.
+%%
+
+%%
+%% The majority of ACM publications use numbered citations and
+%% references.  The command \citestyle{authoryear} switches to the
+%% "author year" style.
+%%
+%% If you are preparing content for an event
+%% sponsored by ACM SIGGRAPH, you must use the "author year" style of
+%% citations and references.
+%% Uncommenting the next command will enable that style.
+%% \citestyle{acmauthoryear}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+\title{Algorithm XXXX: MQSI---Monotone Quintic Spline Interpolation}
+
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+%% Of note is the shared affiliation of the first two authors, and the
+%% "authornote" and "authornotemark" commands
+%% used to denote shared contribution to the research.
+\author{Thomas C. H. Lux}
+\email{tchlux@vt.edu}
+\orcid{0000-0002-1858-4724}
+\author{Layne T. Watson}
+\email{ltwatson@computer.org}
+\orcid{0000-0003-2009-107X}
+\affiliation{%
+  \institution{Virginia Polytechnic Institute and State University}
+  \streetaddress{Departments of Computer Science, Mathematics, and Aerospace and Ocean Engineering}
+  \city{Blacksburg}
+  \state{Virginia}
+  \postcode{24061}
+  \country{USA}
+}
+
+\author{Tyler H. Chang}
+\email{thchang@vt.edu}
+\orcid{0000-0001-9541-7041}
+\affiliation{%
+  \institution{Argonne National Laboratory}
+  \streetaddress{9700 South Cass Avenue, Bldg. 240}
+  \city{Lemont}
+  \state{Illinois}
+  \postcode{60439}
+  \country{USA}
+}
+
+\author{William I. Thacker}
+\email{thackerw@winthrop.edu}
+\orcid{0000-0001-7806-6593}
+\affiliation{%
+  \institution{Winthrop University}
+  \city{Rock Hill}
+  \state{South Carolina}
+  \postcode{29733}
+  \country{USA}
+}
+
+%%
+%% By default, the full list of authors will be used in the page
+%% headers. Often, this list is too long, and will overlap
+%% other information printed in the page headers. This command allows
+%% the author to define a more concise list
+%% of authors' names for this purpose.
+\renewcommand{\shortauthors}{Lux et al.}
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{abstract}
+  MQSI is a Fortran 2003 subroutine for constructing monotone quintic
+  spline interpolants to univariate monotone data. Using sharp
+  theoretical monotonicity constraints, first and second derivative
+  estimates at data provided by a quadratic facet model are refined to
+  produce a univariate $\scriptstyle C^2$ monotone interpolant.
+  Algorithm and implementation details, complexity and sensitivity
+  analyses, usage information, a brief performance study, and
+  comparisons with other spline approaches are included.
+\end{abstract}
+
+%%
+%% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
+%% Please copy and paste the code instead of the example below.
+%%
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10002950.10003714.10003715.10003722</concept_id>
+<concept_desc>Mathematics of computing~Interpolation</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10002950.10003714.10003715.10003720</concept_id>
+<concept_desc>Mathematics of computing~Computations on polynomials</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10002950.10003705.10011686</concept_id>
+<concept_desc>Mathematics of computing~Mathematical software performance</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10010405.10010432.10010442</concept_id>
+<concept_desc>Applied computing~Mathematics and statistics</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+<concept>
+<concept_id>10002950.10003714.10003740</concept_id>
+<concept_desc>Mathematics of computing~Quadrature</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+<concept>
+<concept_id>10002950.10003648.10003703</concept_id>
+<concept_desc>Mathematics of computing~Distribution functions</concept_desc>
+<concept_significance>100</concept_significance>
+</concept>
+<concept>
+<concept_id>10010147.10010371.10010396.10010399</concept_id>
+<concept_desc>Computing methodologies~Parametric curve and surface models</concept_desc>
+<concept_significance>100</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Mathematics of computing~Interpolation}
+\ccsdesc[500]{Mathematics of computing~Computations on polynomials}
+\ccsdesc[500]{Mathematics of computing~Mathematical software performance}
+\ccsdesc[300]{Applied computing~Mathematics and statistics}
+\ccsdesc[300]{Mathematics of computing~Quadrature}
+\ccsdesc[100]{Mathematics of computing~Distribution functions}
+\ccsdesc[100]{Computing methodologies~Parametric curve and surface models}
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+\keywords{Software, Quintic spline, Interpolation, B-spline, Univariate, Shape preserving}
+
+\received{28 August 2020}
+\received[revised]{29 March 2021}
+\received[revised]{28 March 2022}
+\received[accepted]{14 September 2022}
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+%% Define some custom commands.
+\def\thickrule{\hrule\hrule\hrule}
+\def\codent{\hskip 1.0em} % <- 'tab' for indentation.
+
+% fonts
+\font\itVIII=cmti8 \font\slVIII=cmsl8 \font\bfVIII=cmbx8
+\font\ttVIII=cmtt8 \font\caps=cmcsc10 \font\capsVIII=cmcsc10 at 8pt
+\font\ttXVIII=cmtt12 at 18pt \font\eightmi=cmmi8 \font\eightsy=cmsy8
+\font\rmeight=cmr8  \def\rmVIII{\rmeight \baselineskip=10pt plus 2pt
+minus 1pt \lineskiplimit=2pt \lineskip=2pt plus 1pt
+\parskip=0pt \textfont0=\rmeight \textfont1=\eightmi \textfont2=\eightsy}
+\font\hlvXVIII=phvr at 18pt \font\hlvVIII=phvr at 8pt \font\hlv=phvr
+% math definition
+\def\:{\mathrel{:\mathord=}}
+
+%% Section 1
+\input 1-introduction
+
+%% Section 2
+\input 2-monotone-quintic
+
+%% Section 3
+\input 3-spline-rep
+
+%% Section 4
+\input 4-analysis
+
+%% Section 5
+\input 5-applications
+
+
+%% \section{Figures}
+
+%% The ``\verb|figure|'' environment should be used for figures. One or
+%% more images can be placed within a figure. If your figure contains
+%% third-party material, you must clearly identify it as such, as shown
+%% in the example below.
+%% \begin{figure}[h]
+%%   \centering
+%%   \includegraphics[width=\linewidth]{sample-franklin}
+%%   \caption{1907 Franklin Model D roadster. Photograph by Harris \&
+%%     Ewing, Inc. [Public domain], via Wikimedia
+%%     Commons. (\url{https://goo.gl/VLCRBB}).}
+%%   \Description{A woman and a girl in white dresses sit in an open car.}
+%% \end{figure}
+
+%% Your figures should contain a caption which describes the figure to
+%% the reader.
+
+%% Figure captions are placed {\itshape below} the figure.
+
+%% Every figure should also have a figure description unless it is purely
+%% decorative. These descriptions convey what’s in the image to someone
+%% who cannot see it. They are also used by search engine crawlers for
+%% indexing images, and when images cannot be loaded.
+
+%% A figure description must be unformatted plain text less than 2000
+%% characters long (including spaces).  {\bfseries Figure descriptions
+%%   should not repeat the figure caption – their purpose is to capture
+%%   important information that is not already provided in the caption or
+%%   the main text of the paper.} For figures that convey important and
+%% complex new information, a short text description may not be
+%% adequate. More complex alternative descriptions can be placed in an
+%% appendix and referenced in a short figure description. For example,
+%% provide a data table capturing the information in a bar chart, or a
+%% structured list representing a graph.  For additional information
+%% regarding how best to write figure descriptions and why doing this is
+%% so important, please see
+%% \url{https://www.acm.org/publications/taps/describing-figures/}.
+
+%% \subsection{The ``Teaser Figure''}
+
+%% A ``teaser figure'' is an image, or set of images in one figure, that
+%% are placed after all author and affiliation information, and before
+%% the body of the article, spanning the page. If you wish to have such a
+%% figure in your article, place the command immediately before the
+%% \verb|\maketitle| command:
+%% \begin{verbatim}
+%%   \begin{teaserfigure}
+%%     \includegraphics[width=\textwidth]{sampleteaser}
+%%     \caption{figure caption}
+%%     \Description{figure description}
+%%   \end{teaserfigure}
+%% \end{verbatim}
+
+%% \section{Citations and Bibliographies}
+
+%% The use of \BibTeX\ for the preparation and formatting of one's
+%% references is strongly recommended. Authors' names should be complete
+%% --- use full first names (``Donald E. Knuth'') not initials
+%% (``D. E. Knuth'') --- and the salient identifying features of a
+%% reference should be included: title, year, volume, number, pages,
+%% article DOI, etc.
+
+%% The bibliography is included in your source document with these two
+%% commands, placed just before the \verb|\end{document}| command:
+%% \begin{verbatim}
+%%   \bibliographystyle{ACM-Reference-Format}
+%%   \bibliography{bibfile}
+%% \end{verbatim}
+%% where ``\verb|bibfile|'' is the name, without the ``\verb|.bib|''
+%% suffix, of the \BibTeX\ file.
+
+%% Citations and references are numbered by default. A small number of
+%% ACM publications have citations and references formatted in the
+%% ``author year'' style; for these exceptions, please include this
+%% command in the {\bfseries preamble} (before the command
+%% ``\verb|\begin{document}|'') of your \LaTeX\ source:
+%% \begin{verbatim}
+%%   \citestyle{acmauthoryear}
+%% \end{verbatim}
+
+
+%%   Some examples.  A paginated journal article \cite{Abril07}, an
+%%   enumerated journal article \cite{Cohen07}, a reference to an entire
+%%   issue \cite{JCohen96}, a monograph (whole book) \cite{Kosiur01}, a
+%%   monograph/whole book in a series (see 2a in spec. document)
+%%   \cite{Harel79}, a divisible-book such as an anthology or compilation
+%%   \cite{Editor00} followed by the same example, however we only output
+%%   the series if the volume number is given \cite{Editor00a} (so
+%%   Editor00a's series should NOT be present since it has no vol. no.),
+%%   a chapter in a divisible book \cite{Spector90}, a chapter in a
+%%   divisible book in a series \cite{Douglass98}, a multi-volume work as
+%%   book \cite{Knuth97}, a couple of articles in a proceedings (of a
+%%   conference, symposium, workshop for example) (paginated proceedings
+%%   article) \cite{Andler79, Hagerup1993}, a proceedings article with
+%%   all possible elements \cite{Smith10}, an example of an enumerated
+%%   proceedings article \cite{VanGundy07}, an informally published work
+%%   \cite{Harel78}, a couple of preprints \cite{Bornmann2019,
+%%     AnzarootPBM14}, a doctoral dissertation \cite{Clarkson85}, a
+%%   master's thesis: \cite{anisi03}, an online document / world wide web
+%%   resource \cite{Thornburg01, Ablamowicz07, Poker06}, a video game
+%%   (Case 1) \cite{Obama08} and (Case 2) \cite{Novak03} and \cite{Lee05}
+%%   and (Case 3) a patent \cite{JoeScientist001}, work accepted for
+%%   publication \cite{rous08}, 'YYYYb'-test for prolific author
+%%   \cite{SaeediMEJ10} and \cite{SaeediJETC10}. Other cites might
+%%   contain 'duplicate' DOI and URLs (some SIAM articles)
+%%   \cite{Kirschmer:2010:AEI:1958016.1958018}. Boris / Barbara Beeton:
+%%   multi-volume works as books \cite{MR781536} and \cite{MR781537}. A
+%%   couple of citations with DOIs:
+%%   \cite{2004:ITE:1009386.1010128,Kirschmer:2010:AEI:1958016.1958018}. Online
+%%   citations: \cite{TUGInstmem, Thornburg01, CTANacmart}.
+%%   Artifacts: \cite{R} and \cite{UMassCitations}.
+
+%%
+%% The acknowledgments section is defined using the "acks" environment
+%% (and NOT an unnumbered section). This ensures the proper
+%% identification of the section in the article metadata, and the
+%% consistent spelling of the heading.
+\begin{acks}
+This work was supported by National Science Foundation Grants
+CNS-1565314, CNS-1838271, and DGE-154362.
+\end{acks}
+
+%%
+%% The next two lines define the bibliography style to be used, and
+%% the bibliography file.
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{mqsi20}
+%% \printbibliography
+
+\end{document}
+\endinput
+%%
+%% End of file `sample-manuscript.tex'.

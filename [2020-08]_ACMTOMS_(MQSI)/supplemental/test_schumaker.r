@@ -11,7 +11,7 @@ f = SchumakerSpline$Spline
 f(0.01) > max(y)
 
 # Plot the results to see the failed approximation.
-pdf(file="schumaker_test.pdf")
+pdf(file="test_schumaker.pdf")
 plot(x, y, col=1, ylim=c(-0.1,0.35), main="Schumaker", ylab="y", xlab="x")
 lines(seq(0,0.03,0.0001), f(seq(0,0.03,0.0001)), col=4)
 dev.off()

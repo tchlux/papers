@@ -1,0 +1,537 @@
+%% No extra knots, rational functions, sufficiency and necessity
+%% proven, works for unequally spaced data, no code associated with
+%% the paper, no algorithm provided for the initialization for free
+%% shape parameters.
+% abbas2012monotonicity
+@article{abbas2012monotonicity,
+  author={Abbas, M. and Majid, A. A. and Ali, J. M.},
+  year={2012},
+  title={Monotonicity-preserving $C^2$ rational cubic spline for monotone data},
+  journal={Applied Mathematics and Computation},
+  volume={219},
+  number={6},
+  pages={2885--2895}
+}
+
+%% Develops a quadratic spline curve fitting algorithm that maintains
+%% local convexity while also proving some error bounds. This method
+%% avoids inserting additional knots, but does not interpolate the
+%% data.
+%% \refj{Beatson, R. K.}{1982}{Monotone and convex approximation by
+%%   splines: error estimates and a curve fitting algorithm}{SIAM Journal
+%%   on Numerical Analysis}{19(6):1278--1285}
+
+% berglund2009planning
+@article{berglund2009planning,
+  author={Berglund, T. and Brodnik, A. and Jonsson, H. and Staffanson, M. and Soderkvist, I.},
+  year={2009},
+  title={Planning smooth and obstacle-avoiding B-spline paths for autonomous mining vehicles},
+  journal={IEEE Transactions on Automation Science and Engineering},
+  volume={7},
+  number={1},
+  pages={167--172}
+}
+
+% brennan2019measure
+@article{brennan2019measure,
+  author={Brennan, A.},
+  year={2020},
+  title={Measure, modulation and metadesign: NC fabrication in industrial design and architecture},
+  journal={Journal of Design History},
+  volume={33},
+  number={1},
+  pages={66--82}
+}
+
+% deboor1978practical
+@book{deboor1978practical,
+  author={de Boor, C.},
+  year={1978},
+  title={A Practical Guide to Splines},
+  publisher={Springer, Verlag, New York}
+}
+
+% cameron2019moana
+@article{cameron2019moana,
+  author={Cameron, K. W. and Anwar, A. and Cheng, Y. and Xu, L. and Li, B. and Ananth, U. and Bernard, J. and Jearls, C. and Lux, T. C. H. and Hong, Y. and Watson, L. T. and Butt, A. R.},
+  year={2019},
+  title={MOANA: modeling and analyzing I/O variability in parallel system experimental design},
+  journal={IEEE Transactions on Parallel and Distributed Systems},
+  volume={30},
+  number={8},
+  pages={1843--1856}
+}
+
+%% Proves existence of splines that maintain monotonicity and
+%% convexity while having fixed continuity and order.
+% constantini1986monotone
+@article{constantini1986monotone,
+  author={Costantini, P.},
+  year={1986},
+  title={On monotone and convex spline interpolation},
+  journal={Mathematics of Computation},
+  volume={46},
+  number={173},
+  pages={203--214}
+}
+
+%% Source paper accompanying the BVSPIS publication.
+% constantini1997boundary
+@article{constantini1997boundary,
+  author={Costantini, P.},
+  year={1997},
+  title={Boundary-valued shape-preserving interpolating splines},
+  journal={ACM Transactions on Mathematical Software (TOMS)},
+  volume={23},
+  number={2},
+  pages={229--251}
+}
+
+%% BVSPIS Algorithm.
+% constantini1997bvspis
+@article{constantini1997bvspis,
+  author={Costantini, P.},
+  year={1997},
+  title={Algorithm 770: BVSPIS -- A package for computing boundary-valued shape-preserving interpolating splines},
+  journal={ACM Transactions on Mathematical Software (TOMS)},
+  volume={23},
+  number={2},
+  pages={252--254}
+}
+
+%% Constructs C3 interpolating splines by progressively increasing
+%% tension through Bezier control polygons until shape parameters are
+%% satisfied, no code is provided.
+% cravero2003shape
+@article{cravero2003shape,
+  author={Cravero, I. and C. Manni},
+  year={2003},
+  title={Shape-preserving interpolants with high smoothness},
+  journal={Journal of computational and applied mathematics},
+  volume={157},
+  number={2},
+  pages={383--405}
+}
+
+%% Iterates towards a solution of nonlinear equations that ensure C2
+%% continuity of quadratic rational splines. The solution they iterate
+%% towards exists and is unique. They provide proofs and methods for
+%% setting derivatives at the ends, no formal algorithms or code.
+% delbourgo1983rational
+@article{delbourgo1983rational,
+  author={Delbourgo, R. and Gregory, J. A.},
+  year={1983},
+  title={$C^2$ rational quadratic spline interpolation to monotonic data},
+  journal={IMA Journal of Numerical Analysis},
+  volume={3},
+  number={2},
+  pages={141--152}
+}
+
+%% Continuous previous work by incorporating a cubic numerator, proves
+%% shape preservation when the correct value for a tension parameter
+%% is set but no method for setting that parameter. Accuracy depends
+%% on accurate derivative evaluations. No code nor formal algorithm is
+%% provided.
+% delbourgo1993accurate
+@article{delbourgo1993accurate,
+  author={Delbourgo, R.},
+  year={1993},
+  title={Accurate $C^2$ rational interpolations in tension},
+  journal={SIAM Journal on Numerical Analysis},
+  volume={30},
+  number={2},
+  pages={595--607}
+}
+
+%% Proves approximation error bounds for monotone spline interpolation
+%% of data from monotone functions.
+% devore1977monotone
+@article{devore1977monotone,
+  author={DeVore, R. A.},
+  year={1977},
+  title={Monotone approximation by splines},
+  journal={SIAM Journal on Mathematical Analysis},
+  volume={8},
+  number={5},
+  pages={891--905}
+}
+
+%% Proposes an algorithm for constructing C2 Hermite monotone spline
+%% interpolants using proven sufficient, but not necessary
+%% conditions. As these bounds are not sharp, the space of allowable
+%% derivative and second derivative values at knots is unnecessarily
+%% shrunk. An algorithm is provided, but no code. Recommends against
+%% the direct optimization for smoothness parameters like L2, instead
+%% promoting problem specific definitions of 'geometric niceness'.
+% dougherty1989nonnegativity
+@article{dougherty1989nonnegativity,
+  author={Dougherty, R. L. and Edelman, A. and Hyman, J. M.},
+  year={1989},
+  title={Nonnegativity-, monotonicity- convexity-preserving cubic and quintic Hermite interpolation},
+  journal={Mathematics of Computation},
+  volume={52},
+  number={186},
+  pages={471--494}
+}
+
+%% Proves a simple method for determining the existence of a monotone
+%% C2 cubic interpolating spline, but functions of this kind do not
+%% always exist for arbitrary convex monotone data sets.
+% fiorot1991shape
+@article{fiorot1991shape,
+  author={Fiorot, J. C. and Tabka, J.},
+  year={1991},
+  title={Shape-preserving $C^2$ cubic polynomial interpolating splines},
+  journal={Mathematics of Computation},
+  volume={57},
+  number={195},
+  pages={291--298}
+}
+
+% fritsch1980monotone
+@article{fritsch1980monotone,
+  author={Fritsch., F and Carlson., R.},
+  year={1980},
+  title={Monotone piecewise cubic interpolation},
+  journal={SIAM Journal on Numerical Analysis},
+  volume={17},
+  number={2},
+  pages={238--246}
+}
+
+% fritsch1982LLNL
+@article{fritsch1982LLNL,
+  author={Fritsch, F. N.},
+  year={1982},
+  title={Piecewise cubic Hermite interpolation package, final specifications},
+  journal={Computer Documentation UCID-30194, Lawrence Livermore National Laboratory}
+}
+
+%% Proves necessary and sufficient conditions for a closed form
+%% solution to monotone C1 quadratic rational spline
+%% interpolation. Does not provide formal algorithm, nor code.
+% gregory1982piecewise
+@article{gregory1982piecewise,
+  author={Gregory, J. A. and Delbourgo, R.},
+  year={1982},
+  title={Piecewise rational quadratic interpolation to monotonic data},
+  journal={IMA Journal of Numerical Analysis},
+  volume={2},
+  number={2},
+  pages={123--130}
+}
+
+% gregory1985shape
+@techreport{gregory1985shape,
+  author={Gregory, J. A.},
+  year={1985},
+  title={Shape preserving spline interpolation},
+  volume={NASA, Langley Research Center Computational Geometry and Computer-Aided Design}
+}
+
+% The paper where a linear facet model is proposed.
+% haralick1981facet
+@article{haralick1981facet,
+  author={Haralick, R. M. and Watson, L. T.},
+  year={1981},
+  title={A facet model for image data},
+  journal={Computer Graphics Image Processing},
+  volume={15:113--129}
+}
+
+%% Proposes a method for making arbitrarily smooth shape preserving
+%% spline interpolants, but uses a centered quadratic to estimate
+%% derivatives and a sufficient set of bounding conditions to ensure
+%% shape preservation in practice. No necessary conditions are
+%% applied, no algorithm is provided, neither is any code provided.
+% han2018shape
+@article{han2018shape,
+  author={Han, X.},
+  year={2018},
+  title={Shape-preserving piecewise rational interpolation with higher order continuity},
+  journal={Applied Mathematics and Computation},
+  volume={337:1--13}
+}
+
+% herman2015techniques
+@techreport{herman2015techniques,
+  author={Herman, D. L. and Oftedal, M. J.},
+  year={2015},
+  title={Techniques and workflows for computer graphics animation systems},
+  volume={US Patent 9,216,351}
+}
+
+% hess1994positive
+@article{hess1994positive,
+  author={He{\ss}, W. and Schmidt, J. W.},
+  year={1994},
+  title={Positive quartic, monotone quintic $\scriptstyle C^2$-spline interpolation in one and two dimensions},
+  journal={Journal of Computational and Applied Mathematics},
+  volume={55},
+  number={1},
+  pages={51--67}
+}
+
+%% Presents several nonlinear boundary conditions based on the median
+%% function to establish a fourth order monotonicity preserving
+%% constraints relying on divided difference initial derivative
+%% estimates. Overall generates a monotone C1 cubic interpolant to
+%% data.
+% huynh1993accurate
+@article{huynh1993accurate,
+  author={Huynh, H. T.},
+  year={1993},
+  title={Accurate monotone cubic interpolation},
+  journal={SIAM Journal of Numerical Analysis},
+  volume={30},
+  number={1},
+  pages={57--100}
+}
+
+% knott2012interpolating
+@article{knott2012interpolating,
+  author={Knott, G. D.},
+  year={2012},
+  title={Interpolating cubic splines},
+  journal={Springer Science \& Business Media},
+  volume={18}
+}
+
+%% Use sufficient conditions for monotonicity and convexity to form a
+%% globally weighted combination of C1 quadratic splines that satisfy
+%% shape constraints.
+%% \refj{Kvasov, B. I.}{2014}{Monotone and convex interpolation by
+%%   weighted quadratic splines}{Advances in Computational
+%%   Mathematics}{40(1):91--116}
+
+% leitenstorfer2006generalized
+@article{leitenstorfer2006generalized,
+  author={Leitenstorfer, F. and Tutz, G.},
+  year={2006},
+  title={Generalized monotonic regression based on B-splines with an application to air pollution data},
+  journal={Biostatistics},
+  volume={8},
+  number={3},
+  pages={654--673}
+}
+
+% lux2020thesis
+@phdthesis{lux2020thesis,
+  author={Lux, T. C. H.},
+  year={2020},
+  title={Interpolants and error bounds for modeling and predicting variability in computer systems},
+  school={Ph.D. thesis, Department of Computer Science, Virginia Polytechnic Institute and State University, Blacksburg, Virginia}
+}
+
+% Monotone quintic algorithm.
+% lux2020algorithm
+@article{lux2020algorithm,
+  author={Lux, T. C. H. and Watson, L. T. and Chang, T. H. and Xu, L. and Wang, Y. and Hong, Y.},
+  year={2020},
+  title={An algorithm for constructing monotone quintic interpolating splines},
+  journal={SCS {\sl Spring Simulation Multiconference, High Performance Computing Symposium}},
+  volume={Article 33, 1--12}
+}
+
+%% Constructs a C2 cubic spline with two additional knots per
+%% interval. No code (paywall).
+% manni1997monotone
+@article{manni1997monotone,
+  author={Manni, C. and Sablonni\`ere, P.},
+  year={1997},
+  title={Monotone interpolation of order 3 by $C^2$ cubic splines},
+  journal={IMA Journal of Numerical Analysis},
+  volume={17},
+  number={2},
+  pages={305--320}
+}
+
+%% Uses sufficient conditions to generate C2 cubic spline. No code
+%% (paywall).
+% manni2001shape
+@article{manni2001shape,
+  author={Manni, C.},
+  year={2001},
+  title={On shape preserving $C^2$ Hermite interpolation},
+  journal={BIT Numerical Mathematics},
+  volume={41},
+  number={1},
+  pages={127--148}
+}
+
+% mcallister1981algorithm
+@article{mcallister1981algorithm,
+  author={McAllister, D. F. and Roulier, J. A.},
+  year={1981},
+  title={An algorithm for computing a shape-preserving osculatory quadratic spline},
+  journal={ACM Transactions on Mathematical Software (TOMS)},
+  volume={7},
+  number={3},
+  pages={331--347}
+}
+
+% mcallister1981shape
+@article{mcallister1981shape,
+  author={McAllister, D. F. and Roulier, J. A.},
+  year={1981},
+  title={Algorithm 574: Shape-Preserving Osculatory Quadratic Splines [E1, E2]},
+  journal={ACM Transactions on Mathematical Software (TOMS)},
+  volume={7},
+  number={3},
+  pages={384--386}
+}
+
+% moler2004numerical
+@book{moler2004numerical,
+  author={Moler, C. B.},
+  year={2008},
+  title={Numerical Computing with {\caps Matlab}},
+  publisher={ The MathWorks Inc., Natick, Massachusetts}
+}
+
+% Proves that C2 convexity preserving splines do not always exist.
+% mulansky1991existence
+@phdthesis{mulansky1991existence,
+  author={Mulansky, B. and Neamtu, M.},
+  year={1991},
+  title={On the existence of shape preserving interpolation operators},
+  school={Dissertation, University of Twente, Vancouver}
+}
+
+% piah2011improved
+@article{piah2011improved,
+  author={Piah, A. R. M. and Unsworth, K.},
+  year={2011},
+  title={Improved sufficient conditions for monotonic piecewise rational quartic interpolation},
+  journal={Sains Malaysiana},
+  volume={40},
+  number={10},
+  pages={1173--1178}
+}
+
+%% Proposes a cubic C2 shape preserving spline method with free
+%% parameters (mentions quintic splines are necessary for globally C2
+%% monotone splines). Sufficient (but not necessary) conditions are
+%% provided for monotonicity.
+% pruess1993shape
+@article{pruess1993shape,
+  author={Pruess, S.},
+  year={1993},
+  title={Shape preserving $C^2$ cubic spline interpolation},
+  journal={IMA Journal of Numerical Analysis},
+  volume={13},
+  number={4},
+  pages={493--507}
+}
+
+% quint2003scalable
+@article{quint2003scalable,
+  author={Quint, A.},
+  year={2003},
+  title={Scalable vector graphics},
+  journal={IEEE MultiMedia},
+  volume={10(3):99--102}
+}
+
+% ramsay1988monotone
+@article{ramsay1988monotone,
+  author={Ramsay, J. O.},
+  year={1988},
+  title={Monotone regression splines in action},
+  journal={Statistical Science},
+  volume={3},
+  number={4},
+  pages={425--441}
+}
+
+% schmidt1988positivity
+@article{schmidt1988positivity,
+  author={Schmidt, J. W. and He{\ss}, W.},
+  year={1988},
+  title={Positivity of cubic polynomials on intervals and positive spline interpolation},
+  journal={BIT Numerical Mathematics},
+  volume={28},
+  number={2},
+  pages={340--352}
+}
+
+% schumaker1983shape
+@article{schumaker1983shape,
+  author={Schumaker, Larry L.},
+  year={1983},
+  title={On shape preserving quadratic spline interpolation},
+  journal={SIAM Journal on Numerical Analysis},
+  volume={20},
+  number={4},
+  pages={854--864}
+}
+
+% Tech report first published by Ulrich and Watson.
+% ulrich1990positivity
+@techreport{ulrich1990positivity,
+  author={Ulrich, G. and Watson, L. T.},
+  year={1990},
+  title={Positivity conditions for quartic polynomials},
+  institution={Department of Computer Science, Virginia Polytechnic Institute and State University},
+  address={Blacksburg, Virginia},
+  number={Technical Report 90-57}
+}
+
+% ulrich1994positivity
+@article{ulrich1994positivity,
+  author={Ulrich, G. and Watson, L. T.},
+  year={1994},
+  title={Positivity conditions for quartic polynomials},
+  journal={SIAM Journal on Scientific Computing},
+  volume={15},
+  number={3},
+  pages={528--544}
+}
+
+% wang2004rational
+@article{wang2004rational,
+  author={Wang, Q. and Tan, J.},
+  year={2004},
+  title={Rational quartic spline involving shape parameters},
+  journal={Journal of Information and Computational Science},
+  volume={1},
+  number={1},
+  pages={127--130}
+}
+
+% yao2018unconditionally
+@article{yao2018unconditionally,
+  author={Yao, J. and Nelson, K. E.},
+  year={2018},
+  title={An unconditionally monotone $\scriptstyle C^2$ quartic spline method with nonoscillation derivatives},
+  journal={Advances in Pure Mathematics},
+  volume={8},
+  number={1},
+  pages={25--40}
+}
+
+%% Uses sufficient conditions over three free parameters to construct
+%% C2 rational quartic shape preserving splines.
+% zhu2015rational
+@article{zhu2015rational,
+  author={Zhu, Y. and Han, X.},
+  year={2015},
+  title={$C^2$ rational quartic interpolation spline with local shape preserving property},
+  journal={Applied Mathematics Letters},
+  volume={46},
+  pages={57--63}
+}
+
+%% Uses sufficient conditions over two free parameters to construct C2
+%% rational quartic shape preserving splines.
+% zhu2015shape
+@article{zhu2015shape,
+  author={Zhu, Y. and Han, X.},
+  year={2015},
+  title={Shape preserving $C^2$ rational quartic interpolation spline with two parameters},
+  journal={International Journal of Computer Mathematics},
+  volume={92},
+  number={10},
+  pages={2160--2177}
+}

@@ -1,268 +1,8 @@
-% Algorithm XXXX: MQSI---Monotone quintic spline interpolation,
-% Thomas C.H. Lux, Layne T. Watson, Tyler H. Chang,
-% and William Thacker
-% ACM Trans. Math. Software, ?/?/202?.
-% 
-%
-\magnification=1000 \hsize=30pc \vsize=47pc
-\parindent=10pt
-\parskip=0pt plus 3pt
-\baselineskip=13pt plus 2pt minus 1pt
-\lineskiplimit=2pt
-\lineskip=2pt plus 2pt %\raggedright
-\tolerance=800
-%\abovedisplayskip=6pt plus 6pt minus 3pt
-%\abovedisplayshortskip=0pt plus 3pt
-%\belowdisplayskip=6pt plus 6pt minus 3pt
-%\belowdisplayshortskip=6pt plus 2pt minus 3pt
-
-% \cite is a placeholder to use for references while writing.
-\def\cite#1{[{\tt REF}]}
-
-% Color definitions.
-\input colordvi
-\def\BEGINC{\textRed}
-\def\ENDC{\textBlack}
-\def\red#1{\BEGINC#1\ENDC}
-\let\beginred=\BEGINC
-\let\endred=\ENDC
-
-% Commands for inserting an 'algorithm' section.
-\def\thickrule{\hrule\hrule\hrule}
-\def\codent{\hskip 1.0em} % <- 'tab' for indentation.
-
-% fonts
-\font\itVIII=cmti8 \font\slVIII=cmsl8 \font\bfVIII=cmbx8
-\font\ttVIII=cmtt8 \font\caps=cmcsc10 \font\capsVIII=cmcsc10 at 8pt
-\font\ttXVIII=cmtt12 at 18pt \font\eightmi=cmmi8 \font\eightsy=cmsy8
-\font\rmeight=cmr8  \def\rmVIII{\rmeight \baselineskip=10pt plus 2pt
-minus 1pt \lineskiplimit=2pt \lineskip=2pt plus 1pt
-\parskip=0pt \textfont0=\rmeight \textfont1=\eightmi \textfont2=\eightsy}
-\font\hlvXVIII=phvr at 18pt \font\hlvVIII=phvr at 8pt \font\hlv=phvr
-
-% math blackboard font
-\font\tenamsb=msbm10 \font\sevenamsb=msbm7 \font\fiveamsb=msbm5
-\newfam\bbfam
-\textfont\bbfam=\tenamsb
-\scriptfont\bbfam=\sevenamsb
-\scriptscriptfont\bbfam=\fiveamsb
-\def\bbb{\fam\bbfam}
-
-%Postscript figures.
-\input epsf
-\def\lcaption#1#2{{\noindent\rmVIII Fig.~#1. #2\par}}
-\def\ltabcaption#1#2{{\noindent\rmVIII Table #1. #2\par}}
-
-
-% other definitions.
-\def\h{\par\hangindent=10pt\hangafter=1\noindent}
-\def\heading#1{\par\bigskip\leftline{\hlv#1}\nobreak\smallskip
-\noindent\ignorespaces}
-\newdimen\headdigit{\setbox11=\hbox{\hlv 8. }\global\headdigit=\wd11}
-\def\footnoterule{\bigskip\kern-3pt \hrule \kern 2.6pt \smallskip}
-\def\bullitem{\par\vskip 2pt plus 2pt\hangindent=15pt \hangafter=1
-\noindent\hbox to 15pt{---\hfil}\ignorespaces}
-\def\bulllitem{\par\vskip 2pt plus 2pt\hangindent=30pt
-\hangafter=1 \noindent\hskip 15pt\hbox to
-15pt{---\hfil}\ignorespaces}
-\def\Th#1 #2\par{\par\medskip{\it{\caps#1}. #2}\par\medskip}
-\def\btable#1{\topinsert \rmVIII \let\bf=\bfVIII \textfont0=\scriptfont0
-\scriptfont0=\scriptscriptfont0 \textfont1=\scriptfont1
-\scriptfont1=\scriptscriptfont1 \centerline{#1}}
-\let\xpar=\par
-\def\ds{\displaystyle}\def\ab{\allowbreak}
-
-% math definitions
-\def\tn#1{\left\Vert #1\right\Vert_2}
-\def\mn#1{\left\Vert #1\right\Vert_\infty}
-\def\lee{\mathrel{\vcenter{\hbox{$\scriptstyle\mathord<$}\nointerlineskip
-\vskip 1pt\hbox{$\scriptstyle\mathord=$}}}}
-\def\gee{\mathrel{\vcenter{\hbox{$\scriptstyle\mathord>$}\nointerlineskip
-\vskip 1pt\hbox{$\scriptstyle\mathord=$}}}}
-\def\real{\mathop{\rm I\!R}\nolimits}
-\def\R{{\bf R}}
-\def\Rd{{\bf R}^d}
-\def\Rdd{{\bf R}^{d\times d}}
-%\def\bull{\hfill \vrule height6pt width6pt depth0pt}
-\def\:{\mathrel{:\mathord=}}
-
-% OUTPUT
-\def\rightheadline{\hfill\hlvVIII\rightrh\hskip20pt$\scriptstyle\bullet$\hskip
-20pt\folio}
-\def\leftheadline{\hlvVIII\folio\hskip20pt$\scriptstyle\bullet$\hskip
-20pt\leftrh\hfill}
-\footline={\hfill}%no page number on first page
-\output{\plainoutput}
-\def\plainoutput{\shipout\vbox{\makeheadline\pagebody\makefootline}
-  \advancepageno \global\footline={\hfill}
-  \ifodd\pageno
-        \global\headline={\rightheadline}
-  \else
-        \global\headline={\leftheadline}
-  \fi
-  \ifnum\outputpenalty>-20000 \else\dosupereject\fi}
-\def\pagebody{\vbox to\vsize{\boxmaxdepth\maxdepth \pagecontents}}
-\def\makeheadline{\vbox to 0pt{\vskip-22.5pt
-  \line{\vbox to8.5pt{}\the\headline}\vss}\nointerlineskip}
-\def\makefootline{\baselineskip24pt\vskip-6pt\line{\the\footline}}
-\def\dosupereject{\ifnum\insertpenalties>0pt
-  \line{}\kern-\topskip\nobreak\vfill\supereject\fi}
-%\def\footnoterule{\vskip10pt\kern-3pt \hrule width 3em \kern 2.6pt}
-
-\def\leftrh{Lux et al.}
-\def\rightrh{Algorithm XXXX: MQSI}
-
-{\baselineskip=24pt
-\leftline{\hlvXVIII Algorithm XXXX: MQSI---Monotone Quintic}
-\leftline{\hlvXVIII Spline Interpolation}}
-\bigskip\medskip
-\leftline{\hlv THOMAS C. H. LUX and LAYNE T. WATSON}
-\smallskip
-\leftline{\hlv Virginia Polytechnic Institute and State University}
-\smallskip
-\leftline{\hlv TYLER H. CHANG}
-\smallskip
-\leftline{\hlv Argonne National Laboratory}
-\smallskip
-\leftline{\hlv WILLIAM I. THACKER}
-\smallskip
-\leftline{\hlv Winthrop University}
-\bigskip
-
-\hrule\bigskip\smallskip \footnote{}{\hskip
--\parindent{\parindent=0pt\rmVIII
-This work was supported by National Science Foundation Grants CNS-1565314,
-CNS-1838271, and DGE-154362.
-Authors' addresses:
-T. C. H. Lux, L. T. Watson, Departments of Computer Science, Mathematics,
-and Aerospace and Ocean Engineering, Virginia Polytechnic Institute \&
-State University, Blacksburg, VA 24061; e-mails: {\ttVIII tchlux@vt.edu,
-ltwatson@computer.org}; T. H. Chang, Mathematics and Computer Science
-Division, Argonne National Laboratory, 9700 South Cass Avenue, Bldg. 240,
-Lemont, IL 60439; e-mail: {\ttVIII thchang@vt.edu}; W. I. Thacker, Winthrop
-University, Rock Hill, SC 29733; {\ttVIII thackerw@winthrop.edu}.
-
-\xpar
-% Permission to make digital/hard copy of
-%part or all of this work for personal or classroom use is granted
-%without fee provided that the copies are not made or distributed for
-%profit or commercial advantage, the copyright notice, the title of
-%the publication, and its date appear, and notice is given that
-%copying is by permission of the ACM, Inc. To copy otherwise, to
-%republish, to post on servers, or to redistribute to lists, requires
-%specific permission and/or fee. \xpar\copyright\ 2018 by the
-%Association for Computing Machinery, Inc. \xpar 
-}}
-
-% Abstract and Introduction
-{\rmVIII\parindent=0pt MQSI is a Fortran 2003 subroutine for constructing
-monotone quintic spline interpolants to univariate monotone data. Using sharp
-theoretical monotonicity constraints, first and second derivative estimates
-at data provided by a quadratic facet model are refined to produce a
-univariate $\scriptstyle C^2$ monotone interpolant.  Algorithm and implementation
-details, complexity and sensitivity analyses, usage information, a
-brief performance study, and comparisons with other spline approaches are included.
-
-\medskip
-Categories and Subject Descriptors: G.1.1 [{\bfVIII Numerical Analysis}]:
-Interpolation --- Spline and piecewise polynomial interpolation;
-J.2 [{\bfVIII Computer Applications}]: Physical Science and Engineering
---- {\itVIII Mathematics};
-G.4 [{\bfVIII Mathematics of Computing}]: Mathematical Software
-
-
-%% 10002950.10003705
-%% Mathematics of computing~Mathematical software
-%% 
-%% 10002950.10003648.10003649.10003657.10003659
-%% Mathematics of computing~Spline models
-%% 
-%% 10002950.10003714.10003715.10003722
-%% Mathematics of computing~Interpolation
-%% 
-%% 10002950.10003714.10003715
-%% Mathematics of computing~Numerical analysis
-%% 
-%% 10002950.10003648.10003649.10003657
-%% Mathematics of computing~Nonparametric representations
-
-
-\medskip
-General Terms: Algorithms, Monotonicity, Spline
-
-\medskip
-Additional Key Words and Phrases: quintic spline, interpolation
-
-}
-
-\bigskip\hrule\bigskip
-
-%% Section 1
-\input 1-introduction
-
-%% Section 2
-\input 2-monotone-quintic
-
-%% Section 3
-\input 3-spline-rep
-
-%% Section 4
-\input 4-analysis
-
-%% Section 5
-\input 5-applications
-
-%% Acknowledgements
-%% \heading{Acknowledgments}
-%% This work was supported by the National Science Foundation Grants CNS-1565314 and CNS-1838271.
-
-% ====================================================================
-%                            Bibliography
-% \vfil\goodbreak
-\heading{\hlvVIII BIBLIOGRAPHY} {
-\baselineskip=2pt%\parskip=100mm
-\frenchspacing
-% Temporary 'caps', 'sl', and 'rm'.
-\let\caps=\capsVIII
-\let\sl=\slVIII
-\let\rm=\rmeight \rmVIII
-
-% \ys makes a half-em horizontal space.
-\def\ys{\hskip 1em minus .5em}
-
-%\refj is for regular journal articles
-%  #1 -- Author(s)
-%  #2 -- Year
-%  #3 -- Title
-%  #4 -- Journal
-%  #5 -- Volume, number, and pages
-\def\refj#1#2#3#4#5{\noindent\hangindent=10pt\hangafter=1
-{\caps #1}\ys #2.\ys {\rm #3}. {\sl #4}, #5.\vskip 6pt minus 3pt}
-
-%\refb is for books
-%  #1 -- Author(s)
-%  #2 -- Year
-%  #3 -- Title
-%  #4 -- Publisher, City, State
-\def\refb#1#2#3#4{\noindent\hangindent=10pt\hangafter=1
-{\caps #1}\ys #2.\ys{\sl #3}. {\rm #4}.\vskip 6pt minus 3pt}
-
-%\reft is for tech. reports, theses, and conferences
-%  #1 -- Author(s)
-%  #2 -- Year
-%  #3 -- Title
-%  #4 -- Technical report ID, Publisher, City, State
-\def\reft#1#2#3#4{\noindent\hangindent=10pt\hangafter=1
-{\caps #1}\ys #2.\ys{\rm #3}. {\rm #4}.\vskip 6pt minus 3pt}
-
-
-
-%% -------------------------------------------------------------------
-  
 %% No extra knots, rational functions, sufficiency and necessity
 %% proven, works for unequally spaced data, no code associated with
 %% the paper, no algorithm provided for the initialization for free
 %% shape parameters.
+% abbas2012monotonicity
 \refj{Abbas M., Majid, A. A. and Ali,
   J. M.}{2012}{Monotonicity-preserving $C^2$ rational cubic spline for
   monotone data}{Applied Mathematics and
@@ -300,15 +40,18 @@ Additional Key Words and Phrases: quintic spline, interpolation
 
 %% Proves existence of splines that maintain monotonicity and
 %% convexity while having fixed continuity and order.
+% constantini1986monotone
 \refj{Costantini, P.}{1986}{On monotone and convex spline
   interpolation}{Mathematics of Computation}{46(173):203--214}
 
 %% Source paper accompanying the BVSPIS publication.
+% constantini1997boundary
 \refj{Costantini, P.}{1997a}{Boundary-valued shape-preserving
   interpolating splines}{ACM Transactions on Mathematical Software
   (TOMS)}{23(2):229--251}
 
 %% BVSPIS Algorithm.
+% constantini1997bvspis
 \refj{Costantini, P.}{1997b}{Algorithm 770: BVSPIS -- A package for
   computing boundary-valued shape-preserving interpolating
   splines}{ACM Transactions on Mathematical Software
@@ -317,6 +60,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% Constructs C3 interpolating splines by progressively increasing
 %% tension through Bezier control polygons until shape parameters are
 %% satisfied, no code is provided.
+% cravero2003shape
 \refj{Cravero, I. and C. Manni}{2003}{Shape-preserving interpolants with
   high smoothness}{Journal of computational and applied
   mathematics}{157(2):383--405}
@@ -325,6 +69,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% continuity of quadratic rational splines. The solution they iterate
 %% towards exists and is unique. They provide proofs and methods for
 %% setting derivatives at the ends, no formal algorithms or code.
+% delbourgo1983rational
 \refj{Delbourgo, R. and Gregory, J. A.}{1983}{$C^2$ rational quadratic
   spline interpolation to monotonic data}{IMA Journal of Numerical
   Analysis}{3(2):141--152}
@@ -334,11 +79,13 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% is set but no method for setting that parameter. Accuracy depends
 %% on accurate derivative evaluations. No code nor formal algorithm is
 %% provided.
+% delbourgo1993accurate
 \refj{Delbourgo, R.}{1993}{Accurate $C^2$ rational interpolations in
   tension}{SIAM Journal on Numerical Analysis}{30(2):595--607}
 
 %% Proves approximation error bounds for monotone spline interpolation
 %% of data from monotone functions.
+% devore1977monotone
 \refj{DeVore, R. A.}{1977}{Monotone approximation by splines}{SIAM
   Journal on Mathematical Analysis}{8(5):891--905}
 
@@ -349,6 +96,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% shrunk. An algorithm is provided, but no code. Recommends against
 %% the direct optimization for smoothness parameters like L2, instead
 %% promoting problem specific definitions of 'geometric niceness'.
+% dougherty1989nonnegativity
 \refj{Dougherty, R. L., Edelman, A. and Hyman,
   J. M.}{1989}{Nonnegativity-, monotonicity- convexity-preserving
   cubic and quintic Hermite interpolation}{Mathematics of
@@ -357,6 +105,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% Proves a simple method for determining the existence of a monotone
 %% C2 cubic interpolating spline, but functions of this kind do not
 %% always exist for arbitrary convex monotone data sets.
+% fiorot1991shape
 \refj{Fiorot, J. C. and Tabka, J.}{1991}{Shape-preserving $C^2$ cubic
   polynomial interpolating splines}{Mathematics of
   Computation}{57(195):291--298} \goodbreak
@@ -373,6 +122,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% Proves necessary and sufficient conditions for a closed form
 %% solution to monotone C1 quadratic rational spline
 %% interpolation. Does not provide formal algorithm, nor code.
+% gregory1982piecewise
 \refj{Gregory, J. A. and Delbourgo, R.}{1982}{Piecewise rational
   quadratic interpolation to monotonic data}{IMA Journal of Numerical
   Analysis}{2(2):123--130}
@@ -383,6 +133,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
   and Computer-Aided Design}
 
 % The paper where a linear facet model is proposed.
+% haralick1981facet
 \refj{Haralick, R. M. and Watson, L. T.}{1981}{A facet model for image
   data}{Computer Graphics Image Processing}{15:113--129}
 
@@ -391,6 +142,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% derivatives and a sufficient set of bounding conditions to ensure
 %% shape preservation in practice. No necessary conditions are
 %% applied, no algorithm is provided, neither is any code provided.
+% han2018shape
 \refj{Han, X.}{2018}{Shape-preserving piecewise rational interpolation
   with higher order continuity}{Applied Mathematics and
   Computation}{337:1--13}
@@ -411,6 +163,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% constraints relying on divided difference initial derivative
 %% estimates. Overall generates a monotone C1 cubic interpolant to
 %% data.
+% huynh1993accurate
 \refj{Huynh, H. T.}{1993}{Accurate monotone cubic interpolation}{SIAM
   Journal of Numerical Analysis}{30(1):57--100}
 
@@ -437,6 +190,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
   State University, Blacksburg, Virginia}
 
 % Monotone quintic algorithm.
+% lux2020algorithm
 \refj{Lux, T. C. H., Watson, L. T., Chang, T. H., Xu, L.,
   Wang, Y. and Hong, Y.}{2020}{An algorithm for constructing monotone
   quintic interpolating splines}{SCS {\sl Spring Simulation
@@ -445,12 +199,14 @@ Additional Key Words and Phrases: quintic spline, interpolation
 
 %% Constructs a C2 cubic spline with two additional knots per
 %% interval. No code (paywall).
+% manni1997monotone
 \refj{Manni, C. and Sablonni\`ere, P.}{1997}{Monotone interpolation of
   order 3 by $C^2$ cubic splines}{IMA Journal of Numerical
   Analysis}{17(2):305--320}
 
 %% Uses sufficient conditions to generate C2 cubic spline. No code
 %% (paywall).
+% manni2001shape
 \refj{Manni, C.}{2001}{On shape preserving $C^2$ Hermite
   interpolation}{BIT Numerical Mathematics}{41(1):127--148}
 
@@ -469,6 +225,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
   The MathWorks Inc., Natick, Massachusetts}
 
 % Proves that C2 convexity preserving splines do not always exist.
+% mulansky1991existence
 \reft{Mulansky, B. and Neamtu, M.}{1991}{On the existence of shape
   preserving interpolation operators}{Dissertation, University of
   Twente, Vancouver}
@@ -482,6 +239,7 @@ Additional Key Words and Phrases: quintic spline, interpolation
 %% parameters (mentions quintic splines are necessary for globally C2
 %% monotone splines). Sufficient (but not necessary) conditions are
 %% provided for monotonicity.
+% pruess1993shape
 \refj{Pruess, S.}{1993}{Shape preserving $C^2$ cubic spline
   interpolation}{IMA Journal of Numerical Analysis}{13(4):493--507}
 
@@ -502,7 +260,8 @@ Additional Key Words and Phrases: quintic spline, interpolation
 \refj{Schumaker, Larry L.}{1983}{On shape preserving quadratic spline
   interpolation}{SIAM Journal on Numerical Analysis}{20(4):854--864}
 
-% ulrich1990positivity tech report
+% Tech report first published by Ulrich and Watson.
+% ulrich1990positivity
 \reft{Ulrich, G. and Watson, L. T.}{1990}{Positivity conditions for
   quartic polynomials}{Technical Report 90-57, Department of Computer
   Science, Virginia Polytechnic Institute and State University,
@@ -525,19 +284,16 @@ Additional Key Words and Phrases: quintic spline, interpolation
 
 %% Uses sufficient conditions over three free parameters to construct
 %% C2 rational quartic shape preserving splines.
+% zhu2015rational
 \refj{Zhu, Y. and Han, X.}{2015a}{$C^2$ rational quartic interpolation
   spline with local shape preserving property}{Applied Mathematics
   Letters}{46:57--63}
 
 %% Uses sufficient conditions over two free parameters to construct C2
 %% rational quartic shape preserving splines.
+% zhu2015shape
 \refj{Zhu, Y. and Han, X.}{2015b}{Shape preserving $C^2$ rational quartic
   interpolation spline with two parameters}{International Journal of
   Computer Mathematics}{92(10):2160--2177}
 }
-%% -------------------------------------------------------------------
-
-\input appendix
-
-\vfill\eject\end
 

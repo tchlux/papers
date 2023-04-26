@@ -59,8 +59,9 @@ StyledPoints[x_, y_, ms_:markerSize] := {
 }[[1]];
 
 
-(* Use the MQSI command line interface to generate output for given points. *)
-mqsi[x_,y_,u_] := {
+(* Use the MQSI command line interface to fit a quintic spline to x and y,
+   then evaluate the spline (derivative D) at points u and return results. *)
+mqsi[x_,y_,u_,D_:0] := {
   ClearAll[n, m, qu];
   (* Read the data that was given to make an MQSI. *)
   n = Length[x];
@@ -73,7 +74,7 @@ mqsi[x_,y_,u_] := {
   (* Write a file containing all the points to get the MQSI
      evaluations by using the MQSI command line interface. *)
   Run["rm temp.out"]; (* Remove the existing file. *)
-  Run["./mqsi temp.data temp.pts temp.out"];
+  Run[StringJoin[{"./mqsi -d ", ToString[D], " temp.data temp.pts temp.out"}]];
   (* Read the values of the MQSI at all points. *)
   qu = Map[Internal`StringToMReal,StringSplit[Import["temp.out","Text"],Whitespace]];
   Run["rm temp.data temp.pts temp.out "]; (* Remove the files *)

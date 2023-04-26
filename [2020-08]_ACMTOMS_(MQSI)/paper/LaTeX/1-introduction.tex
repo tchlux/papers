@@ -1,0 +1,179 @@
+\section{INTRODUCTION}
+
+Many domains of science rely on smooth approximations to real-valued
+functions over a closed interval. Piecewise polynomial functions
+(splines) provide the smooth approximations for animation in graphics
+\cite{herman2015techniques,quint2003scalable}, aesthetic structural
+support in architecture \cite{brennan2019measure}, efficient
+aerodynamic surfaces in automotive and aerospace engineering
+\cite{brennan2019measure}, prolonged effective operation of electric
+motors \cite{berglund2009planning}, and accurate nonparametric
+approximations in statistics \cite{knott2012interpolating}. While
+polynomial interpolants and regressors apply broadly, splines are
+often a good choice because they can approximate globally complex
+functions while minimizing the local complexity of an approximation.
+
+It is often the case that the true underlying function or phenomenon
+being modeled has known properties like convexity, positivity, various
+levels of continuity, or monotonicity. Given a reasonable amount of
+data, it quickly becomes difficult to achieve desirable properties in
+a single polynomial function. In general, the maintenance of function
+properties through interpolation/regression is referred to as {\it
+  shape preserving} \cite{fritsch1980monotone,gregory1985shape}. The
+specific properties the present algorithm will preserve in
+approximations are monotonicity and $C^2$ continuity.  Notably this
+work does not consider convexity preservation, as Mulansky and Neamtu
+\cite{mulansky1991existence} prove that there exists strictly convex
+data sets which do not allow convex interpolation with $C^2$ splines
+of fixed degree.  In addition to previously mentioned applications,
+being $C^2$ and monotonicity preserving is crucially important in
+statistics to the approximation of a cumulative distribution function
+and subsequently the effective generation of random numbers from a
+specified distribution \cite{ramsay1988monotone}.  A spline function
+with these properties could approximate a cumulative distribution
+function to a high level of accuracy with relatively few intervals. A
+twice continuously differentiable approximation to a cumulative
+distribution function (CDF) would produce a corresponding probability
+density function (PDF) that is continuously differentiable, which is
+desirable.
+
+The existing research in shape preserving interpolatory splines is
+rich and filled with many approaches for many different
+applications. In the context of this work, the unique quality of shape
+preserving spline algorithms can be observed through: (1) the type of
+spline (rational or Hermite), (2) the polynomial order and level of
+continuity, and (3) the sharpness, sufficiency, and necessity of the
+conditions used to establish shape preserving properties. While the
+choice of spline representation is less important, achieving higher
+levels of continuity is often more difficult than lower levels of
+continuity. Furthermore, all referenced algorithms establish
+sufficient conditions for shape preservation, but it is less common
+and much more difficult to provide {\it sharp and necessary}
+conditions for monotonicity. The following two paragraphs highlight a
+collection of research related to the construction of $C^1$ and $C^2$
+shape preserving splines. From this foundation, the value and utility
+of the code presented here can be more readily appreciated.
+
+DeVore \cite{devore1977monotone} proves that monotone spline
+interpolants have improved accuracy over their nonmonotone
+counterparts when approximating monotone functions, while Costantini
+\cite{constantini1986monotone} proves that monotone spline
+interpolants to data of fixed continuity and order exist in
+general. This groundwork establishes the potential for monotone spline
+interpolation. Schumaker \cite{schumaker1983shape} and McAllister and
+Roulier \cite{mcallister1981algorithm} (independently) establish
+necessary and sufficient conditions for monotone $C^1$ quadratic
+splines through the insertion of additional knots and Fritsch
+\cite{fritsch1982LLNL} establishes simplified sufficient conditions
+for monotone $C^1$ cubic splines that require no knot insertion.
+Gregory and Delbourgo \cite{gregory1982piecewise} prove necessary and
+sufficient conditions for a closed form solution to monotone $C^1$
+quadratic rational spline interpolation with nonlinear boundary
+equations and an iterative approach. Delbourgo and Gregory
+\cite{delbourgo1983rational} extend that same work to achieve
+sufficient conditions for $C^2$ continuity with a cubic rational
+spline given additional tension parameters defined by users. Huynh
+\cite{huynh1993accurate} similarly arrives at monotone $C^1$ cubic
+spline interpolants and several necessary nonlinear boundary
+conditions on monotonicity.
+
+Continuing towards monotone $C^2$ spline interpolation, Fiorot and
+Tabka \cite{fiorot1991shape} prove a simple method for determining the
+existence of a monotone $C^2$ cubic interpolating spline, but note
+that functions of this kind do not always exist for arbitrary convex
+monotone data sets.  Pruess \cite{pruess1993shape} proposes sufficient
+conditions for a cubic $C^2$ shape preserving spline method while
+acknowledging that quintic splines are generally necessary for
+monotone $C^2$ spline interpolants that do not insert new
+knots. Similarly, Manni and Sablonni\`ere \cite{manni1997monotone}
+construct sufficient conditions for a monotone $C^2$ cubic spline by
+adding two additional knots per interval, then Cravero and Manni
+\cite{cravero2003shape} extend that methodology to arrive at monotone
+$C^3$ interpolating splines by progressively increasing tension
+through Bezier control polygons. Costantini
+\cite{constantini1997boundary} provides a method for monotone $C^2$
+quintic spline interpolation based on sufficient and necessary
+boundary value conditions, but the necessary conditions are not
+sharp. Dougherty, et\ al.\ \cite{dougherty1989nonnegativity} construct
+monotone $C^2$ Hermite splines and in commentary recommend against the
+direct optimization for smoothness parameters like global $L^2$,
+rather promoting problem specific definitions of geometric
+niceness. Both Wang and Tan \cite{wang2004rational} as well as Yao and
+Nelson \cite{yao2018unconditionally} propose sufficient conditions for
+$C^2$ quartic splines, while Piah and Unsworth \cite{piah2011improved}
+improve upon those sufficient conditions for $C^2$ quartic rational
+spline interpolation. Abbas, et\ al.\ \cite{abbas2012monotonicity}
+formulate a set of sufficient conditions for monotone $C^2$ cubic
+rational splines and similar work is extended to $C^2$ quartic
+rationals (and splines with arbitrary smoothness) by Zhu and Han
+\cite{zhu2015rational,zhu2015shape}. Ulrich and Watson
+\cite{ulrich1990positivity} arrive at sharp necessary and sufficient
+conditions for monotone $C^2$ quintic splines, while He{\ss} and
+Schmidt \cite{hess1994positive} produce similar sufficient conditions
+for $C^2$ quintic splines. In addition, a method for constructing an
+arbitrarily smooth monotone fit exists
+\cite{leitenstorfer2006generalized} as well as a method for
+arbitrarily smooth shape preservation \cite{han2018shape}, but these
+methods are enabled by sufficient conditions only.
+
+The currently available peer reviewed and published software for
+monotone piecewise polynomial interpolation is severely limited in
+comparison with the number of published approaches mentioned
+above. This is partially indicative of how difficult it is to properly
+handle the numerical conditions that arise when constructing and
+evaluating precise shape preserving splines, as well as how difficult
+it is to create code that correctly conforms with the theoretical
+expectations. The sufficient $C^1$ cubic spline method PCHIP of
+Fritsch and Carlson \cite{fritsch1980monotone} is available through
+the SciPy Python package ($>$1 billion downloads), and the $C^1$
+piecewise quadratic method of Schumaker \cite{schumaker1983shape} is
+available as an R package (300,000 downloads). The $C^1$ piecewise
+quadratic method of McAllister and Roulier
+\cite{mcallister1981algorithm,mcallister1981shape} is available in
+FORTRAN (1000 downloads) and the sufficient $C^2$ piecewise quintic
+method of Costantini
+\cite{constantini1997boundary,constantini1997bvspis} BVSPIS in FORTRAN
+as well (500 downloads). Based on publicly available download records,
+it is assumed that the code by Fritsch \cite{fritsch1980monotone} for
+monotone $C^1$ cubic spline interpolation is the predominant code for
+constructing monotone interpolants at present.
+
+The theory for {\it sharp} necessary and sufficient bounds for
+monotone $C^2$ quintic interpolation has been provided
+\cite{ulrich1990positivity,ulrich1994positivity} and that theory was
+recently utilized in a proposed algorithm
+\cite{lux2020algorithm,lux2020thesis} for monotone $C^2$ quintic
+spline construction, however no published mathematical software exists
+for the quintic case based on sharp monotonicity conditions. The
+software presented here represents the first published software
+package for producing $C^2$ shape preserving splines based on sharp
+monotonicity conditions. This work improves upon the algorithm
+presented by Lux et\ al.\ \cite{lux2020algorithm} by refactoring
+computations for improved numerical stability, estimating minimum
+magnitude second derivatives at breakpoints with a quadratic facet
+model, and using a binary search to reduce the magnitude of the
+modifications made to initial derivative estimates when constructing a
+monotone spline interpolant.
+
+\subsection*{Overview}
+This work provides a Fortran 2003 subroutine {\tt MQSI} based on the
+sharp necessary and sufficient conditions in Ulrich and Watson
+\cite{ulrich1994positivity} for the construction of monotone $C^2$
+quintic spline interpolants of monotone data. Precisely, the problem
+is, given a strictly increasing sequence $X_1<X_2< \cdots <X_n$ of
+breakpoints with corresponding monotone increasing function values
+$Y_1\le Y_2\le \cdots \le Y_n$, find a $C^2$ monotone increasing
+quintic spline $Q(x)$ with the same breakpoints satisfying
+$Q(X_i)=Y_i$ for $1\le i\le n$. ({\tt MQSI} actually does something
+slightly more general, producing $Q(x)$ that is monotone increasing
+(decreasing) wherever the data is monotone increasing (decreasing).)
+
+The remainder of this paper is structured as follows: Section 2
+provides the algorithms for constructing a monotone $C^2$ quintic
+spline interpolant to monotone data, Section 3 outlines the method of
+spline representation ($B$-spline basis) and evaluation, Section 4
+analyzes the complexity and sensitivity of the algorithms in {\tt
+  MQSI}, and Section 5 presents timing data and some graphs of
+constructed interpolants as well as a visual comparison with existing
+monotone spline packages.
+
