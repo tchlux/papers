@@ -77,10 +77,13 @@ END INTERFACE
 
 ! MQSI status integer INFO, number of command line arguments C, number
 ! of points to approximate M, and number of data points N.
-INTEGER :: INFO, C, M, N
+INTEGER :: INFO, C, M, N, I, D
 ! Holder for the input data point file name FILE_NAME, reused as the
 ! file name for the output file of approximated values. 
+CHARACTER(LEN=8) :: ARG
 CHARACTER(LEN=218) :: FILE_NAME
+! Boolean declaring whether a derivative setting was found.
+LOGICAL :: SET_DERIV
 ! Spline coefficients SC, spline knots SK, approximation points U,
 ! data locations X, and data values Y.
 REAL(KIND=R8), ALLOCATABLE :: SC(:), SK(:), U(:), X(:), Y(:)
@@ -88,10 +91,43 @@ REAL(KIND=R8), ALLOCATABLE :: SC(:), SK(:), U(:), X(:), Y(:)
 ! Get the number of command line arguments provided.
 C = COMMAND_ARGUMENT_COUNT()
 
+
+! Set the derivative to evaluate to 0.
+SET_DERIV = .FALSE.
+D = 0
+! Extract an argument of the form:
+!   "-d 0"
+!   "-d 1"
+extract_derivative_setting : DO I = 1, C
+   CALL GET_COMMAND_ARGUMENT(I, ARG)
+   IF (TRIM(ARG) == "-d") THEN
+      IF (COMMAND_ARGUMENT_COUNT() < I+1) THEN
+         WRITE (*,121)
+         STOP
+      END IF
+      CALL GET_COMMAND_ARGUMENT(I+1, ARG)
+      ! Read the next argument into the "D" integer variable.
+      READ(ARG, *) D
+      SET_DERIV = .TRUE.
+      ! Update the count of remaining command line arguments.
+      C = C - 2
+      ! Exit the loop.
+      EXIT extract_derivative_setting
+   END IF
+END DO extract_derivative_setting
+
+! Depending on whether or not arguments setting the derivative were provdied
+!  set the index of the next command line argument for the program to retrieve.
+IF (SET_DERIV) THEN
+   I = 3
+ELSE
+   I = 1
+END IF
+
 ! Correct usage of this CLI provides either 2 or 3 command line arguments.
 IF ((C .EQ. 2) .OR. (C .EQ. 3)) THEN
    ! Open the data file and read the number of points.
-   CALL GET_COMMAND_ARGUMENT(1,FILE_NAME)
+   CALL GET_COMMAND_ARGUMENT(I,FILE_NAME)
    OPEN(10,FILE=FILE_NAME,STATUS='OLD')
    READ(10,*) N
    ! Allocate storage based on N.
@@ -102,7 +138,8 @@ IF ((C .EQ. 2) .OR. (C .EQ. 3)) THEN
    CLOSE(10)
 
    ! Open the points file and read the number of points.
-   CALL GET_COMMAND_ARGUMENT(2,FILE_NAME)
+   I = I + 1
+   CALL GET_COMMAND_ARGUMENT(I,FILE_NAME)
    OPEN(11,FILE=FILE_NAME,STATUS='OLD')
    READ(11,*) M
    ! Allocate storage based on M.
@@ -116,13 +153,16 @@ IF ((C .EQ. 2) .OR. (C .EQ. 3)) THEN
    IF (INFO .NE. 0) WRITE(*,101) INFO
 101 FORMAT('MQSI returned info =',I4)
    ! Evaluate the spline at all points (result is updated in-place in U).
-   CALL EVAL_SPLINE(SK, SC, U, INFO)
+   CALL EVAL_SPLINE(SK, SC, U, INFO, D=D)
    IF (INFO .NE. 0) WRITE(*,111) INFO
 111 FORMAT(/,'EVAL_SPLINE returned info = ',I4)
 
    ! Set the output file name (if it was provided).
-   IF (C .EQ. 3) THEN ; CALL GET_COMMAND_ARGUMENT(3,FILE_NAME)      
-   ELSE;                FILE_NAME = "output.txt"
+   IF (C .EQ. 3) THEN
+      I = I + 1
+      CALL GET_COMMAND_ARGUMENT(I,FILE_NAME)      
+   ELSE
+      FILE_NAME = "output.txt"
    END IF
 
    ! Write the output.
@@ -138,8 +178,10 @@ ELSE
    WRITE (*,121) 
 121 FORMAT(/,&
          'MQSI command line interface. Usage:',/,/,&
-         '   cli <data-file> <points-file> [<output-file>]',/,/,&
-         'where "<data-file>" is a path to a file whose contents begin',/,&
+         '   cli [-d INTEGER] <data-file> <points-file> [<output-file>]',/,/,&
+         'where the optional argument "-d INTEGER" can be provided to specify',/,&
+         'which derivative to evaluate (by default the value is computed, "-d 0"),',/,&
+         'and where "<data-file>" is a path to a file whose contents begin',/,&
          'with an integer N immediately followed by real valued locations',/,&
          'X(1:N) and real function values Y(1:N), and "<points-file>" is',/,&
          'a path to a file starting with an integer M immediately followed',/,&
